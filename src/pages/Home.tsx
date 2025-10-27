@@ -5,6 +5,7 @@ import whiteLogo from "@/assets/white_logo.png";
 
 const Home = () => {
   const [userName, setUserName] = useState("");
+  const [selectedTab, setSelectedTab] = useState("Robot");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +40,7 @@ const Home = () => {
             <img src={whiteLogo} alt="Logo" style={{ width: '75px' }} />
           </div>
           <nav className="flex items-center gap-[10px]">
-            <span className="text-white text-base cursor-pointer hover:opacity-80 font-semibold">Configuration</span>
+            <span className={`text-white text-base cursor-pointer hover:opacity-80 ${selectedTab ? 'font-semibold' : ''}`}>Configuration</span>
             <span className="text-white text-base cursor-pointer hover:opacity-80">Tasks</span>
             <span className="text-white text-base cursor-pointer hover:opacity-80">Camera</span>
             <span className="text-white text-base cursor-pointer hover:opacity-80">Reports</span>
@@ -76,51 +77,58 @@ const Home = () => {
         <span 
           className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium relative group" 
           style={{ color: '#555' }}
+          onClick={() => setSelectedTab("Robot")}
         >
           Robot
-          <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-600"></span>
+          <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "Robot" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
         <span 
-          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:shadow-md relative group" 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium relative group" 
           style={{ color: '#555' }}
+          onClick={() => setSelectedTab("Racks")}
         >
           Racks
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
+          <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "Racks" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
         <span 
-          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:shadow-md relative group" 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium relative group" 
           style={{ color: '#555' }}
+          onClick={() => setSelectedTab("Trays")}
         >
           Trays
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
+          <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "Trays" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
         <span 
-          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:shadow-md relative group" 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium relative group" 
           style={{ color: '#555' }}
+          onClick={() => setSelectedTab("Slots")}
         >
           Slots
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
+          <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "Slots" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
         <span 
-          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:shadow-md relative group" 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium relative group" 
           style={{ color: '#555' }}
+          onClick={() => setSelectedTab("Station")}
         >
           Station
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
+          <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "Station" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
         <span 
-          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:shadow-md relative group" 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium relative group" 
           style={{ color: '#555' }}
+          onClick={() => setSelectedTab("Extremes")}
         >
           Extremes
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
+          <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "Extremes" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
         <span 
-          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:shadow-md relative group" 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium relative group" 
           style={{ color: '#555' }}
+          onClick={() => setSelectedTab("APK Link")}
         >
           APK Link
-          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
+          <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "APK Link" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
       </nav>
     </div>
