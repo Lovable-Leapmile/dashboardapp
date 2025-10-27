@@ -68,6 +68,40 @@ const Home = () => {
           </div>
         </div>
       </header>
+
+      <nav 
+        className="flex items-center px-4 gap-[20px]"
+        style={{ backgroundColor: '#eeeeee', height: '55px' }}
+      >
+        <span 
+          className="text-base cursor-pointer px-4 py-2 rounded-lg font-medium transition-all"
+          style={{ 
+            backgroundColor: '#351C75', 
+            color: 'white',
+            boxShadow: '0 2px 4px rgba(53, 28, 117, 0.2)'
+          }}
+        >
+          Robot
+        </span>
+        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+          Racks
+        </span>
+        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+          Trays
+        </span>
+        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+          Slots
+        </span>
+        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+          Station
+        </span>
+        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+          Extremes
+        </span>
+        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+          APK Link
+        </span>
+      </nav>
     </div>
   );
 };
