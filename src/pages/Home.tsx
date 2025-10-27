@@ -33,8 +33,8 @@ const Home = () => {
       >
         <div className="flex items-center gap-[10px]">
           <div 
-            className="rounded-full flex items-center justify-center p-2"
-            style={{ backgroundColor: 'rgba(53, 28, 117, 0.15)' }}
+            className="rounded-full flex items-center justify-center"
+            style={{ backgroundColor: 'rgba(53, 28, 117, 0.20)', padding: '15px' }}
           >
             <img src={whiteLogo} alt="Logo" style={{ width: '75px' }} />
           </div>
@@ -47,13 +47,25 @@ const Home = () => {
         </div>
         
         <div className="flex items-center gap-[10px]">
-          <ScrollText className="text-white cursor-pointer hover:opacity-80" size={20} />
-          <Activity className="text-white cursor-pointer hover:opacity-80" size={20} />
-          <LogOut 
-            className="text-white cursor-pointer hover:opacity-80" 
-            size={20}
+          <div 
+            className="rounded-full flex items-center justify-center cursor-pointer hover:opacity-80"
+            style={{ backgroundColor: 'rgba(53, 28, 117, 0.20)', padding: '15px' }}
+          >
+            <ScrollText className="text-white" size={20} />
+          </div>
+          <div 
+            className="rounded-full flex items-center justify-center cursor-pointer hover:opacity-80"
+            style={{ backgroundColor: 'rgba(53, 28, 117, 0.20)', padding: '15px' }}
+          >
+            <Activity className="text-white" size={20} />
+          </div>
+          <div 
+            className="rounded-full flex items-center justify-center cursor-pointer hover:opacity-80"
+            style={{ backgroundColor: 'rgba(53, 28, 117, 0.20)', padding: '15px' }}
             onClick={handleLogout}
-          />
+          >
+            <LogOut className="text-white" size={20} />
+          </div>
         </div>
       </header>
     </div>
