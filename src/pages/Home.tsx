@@ -70,36 +70,61 @@ const Home = () => {
       </header>
 
       <nav 
-        className="flex items-center px-4 gap-[20px]"
+        className="flex items-center px-6 gap-[8px] border-b border-gray-200"
         style={{ backgroundColor: '#eeeeee', height: '55px' }}
       >
         <span 
-          className="text-base cursor-pointer px-4 py-2 rounded-lg font-medium transition-all"
+          className="text-sm cursor-pointer px-5 py-2 rounded-md font-semibold transition-all relative"
           style={{ 
             backgroundColor: '#351C75', 
             color: 'white',
-            boxShadow: '0 2px 4px rgba(53, 28, 117, 0.2)'
+            boxShadow: '0 4px 12px rgba(53, 28, 117, 0.25)',
+            transform: 'translateY(-2px)'
           }}
         >
           Robot
         </span>
-        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+        <span 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:bg-white hover:shadow-md relative group" 
+          style={{ color: '#555' }}
+        >
           Racks
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </span>
-        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+        <span 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:bg-white hover:shadow-md relative group" 
+          style={{ color: '#555' }}
+        >
           Trays
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </span>
-        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+        <span 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:bg-white hover:shadow-md relative group" 
+          style={{ color: '#555' }}
+        >
           Slots
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </span>
-        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+        <span 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:bg-white hover:shadow-md relative group" 
+          style={{ color: '#555' }}
+        >
           Station
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </span>
-        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+        <span 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:bg-white hover:shadow-md relative group" 
+          style={{ color: '#555' }}
+        >
           Extremes
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </span>
-        <span className="text-base cursor-pointer hover:bg-white/50 px-4 py-2 rounded-lg transition-all" style={{ color: '#333' }}>
+        <span 
+          className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium hover:bg-white hover:shadow-md relative group" 
+          style={{ color: '#555' }}
+        >
           APK Link
+          <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-purple-600 transition-all duration-300 group-hover:w-full"></span>
         </span>
       </nav>
     </div>
