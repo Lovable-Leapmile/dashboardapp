@@ -39,7 +39,7 @@ const Home = () => {
             <img src={whiteLogo} alt="Logo" style={{ width: '75px' }} />
           </div>
           <nav className="flex items-center gap-[10px]">
-            <span className="text-white text-base cursor-pointer hover:opacity-80">Configuration</span>
+            <span className="text-white text-base cursor-pointer hover:opacity-80 font-semibold">Configuration</span>
             <span className="text-white text-base cursor-pointer hover:opacity-80">Tasks</span>
             <span className="text-white text-base cursor-pointer hover:opacity-80">Camera</span>
             <span className="text-white text-base cursor-pointer hover:opacity-80">Reports</span>
