@@ -117,7 +117,7 @@ const LoginForm = () => {
                   setMobileNumber(value);
                 }
               }}
-              className="w-full rounded-xl border-2 border-gray-200 focus:border-primary transition-all py-6 text-base"
+              className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base"
               placeholder="Enter your mobile number"
               minLength={10}
               maxLength={10}
@@ -140,7 +140,7 @@ const LoginForm = () => {
                   setPassword(value);
                 }
               }}
-              className="w-full rounded-xl border-2 border-gray-200 focus:border-primary transition-all py-6 text-base"
+              className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base"
               placeholder="Enter your password"
               maxLength={10}
               required
