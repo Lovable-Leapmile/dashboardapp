@@ -78,22 +78,28 @@ const LoginForm = () => {
 
       {/* Login Container with Enhanced Design */}
       <div className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl overflow-hidden border border-white/20 hover:shadow-[0_20px_60px_-15px_rgba(53,28,117,0.3)] transition-all duration-500">
-        {/* Decorative Top Border */}
-        <div className="h-1.5 bg-gradient-to-r from-primary via-accent to-primary"></div>
+        {/* Decorative Top Border with Animation */}
+        <div className="h-2 bg-gradient-to-r from-primary via-accent to-primary relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2s_infinite]"></div>
+        </div>
         
-        {/* Login Illustration and Title - Side by Side */}
-        <div className="flex items-center justify-center gap-6 pt-6 pb-4">
-          <div className="relative">
-            <div className="absolute inset-0 bg-accent/20 blur-2xl rounded-full"></div>
-            <img 
-              src={loginIllustration} 
-              alt="Login illustration" 
-              className="w-24 h-24 object-contain relative z-10 hover:scale-110 transition-transform duration-300"
-            />
+        {/* Login Illustration and Title - Side by Side with Enhanced Design */}
+        <div className="relative bg-gradient-to-b from-primary/5 to-transparent pt-8 pb-6">
+          <div className="flex items-center justify-center gap-6">
+            <div className="relative animate-scale-in">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/30 to-accent/30 blur-2xl rounded-full animate-pulse"></div>
+              <div className="relative z-10 bg-white/80 rounded-full p-3 shadow-lg">
+                <img 
+                  src={loginIllustration} 
+                  alt="Login illustration" 
+                  className="w-20 h-20 object-contain hover:scale-110 transition-transform duration-300"
+                />
+              </div>
+            </div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent animate-fade-in">
+              Login
+            </h1>
           </div>
-          <h1 className="text-2xl font-bold" style={{ color: '#8E77C3' }}>
-            Login
-          </h1>
         </div>
 
         {/* Form */}
