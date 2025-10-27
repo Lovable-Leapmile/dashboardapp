@@ -18,7 +18,7 @@ const Index = () => {
       <div 
         className="absolute inset-0 w-full h-full"
         style={{ 
-          backgroundColor: '#351c7580',
+          backgroundColor: '#351c754D',
           width: '100%',
           height: '100%'
         }}
