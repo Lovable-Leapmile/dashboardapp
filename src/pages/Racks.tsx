@@ -3,25 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { ScrollText, Activity, LogOut } from "lucide-react";
 import whiteLogo from "@/assets/white_logo.png";
 
-const Home = () => {
+const Racks = () => {
   const [userName, setUserName] = useState("");
-  const [selectedTab] = useState("Robot");
+  const [selectedTab, setSelectedTab] = useState("Racks");
   const navigate = useNavigate();
-
-  const handleTabClick = (tab: string) => {
-    const routes: { [key: string]: string } = {
-      "Robot": "/home",
-      "Racks": "/racks",
-      "Trays": "/home",
-      "Slots": "/home",
-      "Station": "/home",
-      "Extremes": "/home",
-      "APK Link": "/home"
-    };
-    if (routes[tab]) {
-      navigate(routes[tab]);
-    }
-  };
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("user_name");
@@ -39,6 +24,22 @@ const Home = () => {
     localStorage.removeItem("user_id");
     localStorage.removeItem("user_name");
     navigate("/");
+  };
+
+  const handleTabClick = (tab: string) => {
+    setSelectedTab(tab);
+    const routes: { [key: string]: string } = {
+      "Robot": "/home",
+      "Racks": "/racks",
+      "Trays": "/home",
+      "Slots": "/home",
+      "Station": "/home",
+      "Extremes": "/home",
+      "APK Link": "/home"
+    };
+    if (routes[tab]) {
+      navigate(routes[tab]);
+    }
   };
 
   return (
@@ -146,8 +147,12 @@ const Home = () => {
           <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "APK Link" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
       </nav>
+
+      <main className="p-6">
+        <h1 className="text-2xl font-bold" style={{ color: '#351C75' }}>Racks Management</h1>
+      </main>
     </div>
   );
 };
 
-export default Home;
+export default Racks;
