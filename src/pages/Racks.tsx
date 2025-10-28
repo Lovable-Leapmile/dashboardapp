@@ -151,7 +151,7 @@ const Racks = () => {
           </div>
         )}
         <div className="text-xs font-medium relative z-10" style={{ color: '#351c75' }}>
-          {slot.slot_name}
+          {slot.slot_id}
         </div>
         {!isInactive && (
           <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center gap-0.5 pb-1">
