@@ -78,7 +78,13 @@ const AppHeader = ({ selectedTab }: AppHeaderProps) => {
             >
               Configuration
             </span>
-            <span className="text-base cursor-pointer hover:opacity-80" style={{ color: '#80ffffff' }}>Tasks</span>
+            <span 
+              className="text-base cursor-pointer hover:opacity-80" 
+              style={{ color: '#80ffffff' }}
+              onClick={() => navigate("/tasks")}
+            >
+              Tasks
+            </span>
             <span className="text-base cursor-pointer hover:opacity-80" style={{ color: '#80ffffff' }}>Camera</span>
             <span className="text-base cursor-pointer hover:opacity-80" style={{ color: '#80ffffff' }}>Reports</span>
           </nav>

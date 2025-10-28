@@ -12,6 +12,7 @@ import Station from "./pages/Station";
 import Extremes from "./pages/Extremes";
 import ApkLink from "./pages/ApkLink";
 import Monitor from "./pages/Monitor";
+import Tasks from "./pages/Tasks";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
           <Route path="/extremes" element={<Extremes />} />
           <Route path="/apk-link" element={<ApkLink />} />
           <Route path="/monitor" element={<Monitor />} />
+          <Route path="/tasks" element={<Tasks />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
