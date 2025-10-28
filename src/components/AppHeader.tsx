@@ -1,6 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { ScrollText, Activity, LogOut } from "lucide-react";
 import whiteLogo from "@/assets/white_logo.png";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface AppHeaderProps {
   selectedTab: string;
@@ -57,27 +63,52 @@ const AppHeader = ({ selectedTab }: AppHeaderProps) => {
           </nav>
         </div>
         
-        <div className="flex items-center gap-[10px]">
-          <div 
-            className="rounded-full flex items-center justify-center cursor-pointer hover:opacity-80"
-            style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)', width: '40px', height: '40px' }}
-          >
-            <ScrollText className="text-white" size={18} />
+        <TooltipProvider>
+          <div className="flex items-center gap-[10px]">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  className="rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/30"
+                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)', width: '40px', height: '40px' }}
+                >
+                  <ScrollText className="text-white" size={18} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="bg-white text-gray-800 border border-gray-200">
+                <p>Logs</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  className="rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/30"
+                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)', width: '40px', height: '40px' }}
+                >
+                  <Activity className="text-white" size={18} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="bg-white text-gray-800 border border-gray-200">
+                <p>Monitor</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  className="rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/30"
+                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)', width: '40px', height: '40px' }}
+                  onClick={handleLogout}
+                >
+                  <LogOut className="text-white" size={18} />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="bg-white text-gray-800 border border-gray-200">
+                <p>Logout</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
-          <div 
-            className="rounded-full flex items-center justify-center cursor-pointer hover:opacity-80"
-            style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)', width: '40px', height: '40px' }}
-          >
-            <Activity className="text-white" size={18} />
-          </div>
-          <div 
-            className="rounded-full flex items-center justify-center cursor-pointer hover:opacity-80"
-            style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)', width: '40px', height: '40px' }}
-            onClick={handleLogout}
-          >
-            <LogOut className="text-white" size={18} />
-          </div>
-        </div>
+        </TooltipProvider>
       </header>
 
       <nav 
