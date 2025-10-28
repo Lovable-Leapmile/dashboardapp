@@ -116,26 +116,21 @@ All colors MUST be HSL.
 }
 
 .ag-theme-quartz .ag-header-cell {
-  padding-top: 16px !important;
-  padding-bottom: 16px !important;
+  padding: 16px 12px !important;
+  line-height: 1.5;
 }
 
 .ag-theme-quartz .ag-cell {
-  padding-top: 12px !important;
-  padding-bottom: 12px !important;
+  padding: 14px 12px !important;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
 }
 
 .ag-theme-quartz .ag-row {
   border-bottom: 1px solid hsl(var(--border));
-  min-height: fit-content !important;
-}
-
-.ag-theme-quartz .ag-row-border {
-  border-bottom-color: hsl(var(--border)) !important;
-  border-bottom-width: 1px !important;
 }
 
 .ag-theme-quartz .ag-header {
   border-bottom: 2px solid hsl(var(--border));
-  min-height: fit-content !important;
 }
