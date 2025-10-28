@@ -118,11 +118,21 @@ All colors MUST be HSL.
 
 .ag-theme-quartz .ag-header-cell-label {
   font-weight: 700;
+  color: white !important;
 }
 
 .ag-theme-quartz .ag-header-cell {
   padding: 20px 12px !important;
   line-height: 1.5;
+  color: white !important;
+}
+
+.ag-theme-quartz .ag-icon {
+  color: white !important;
+}
+
+.ag-theme-quartz .ag-header-icon {
+  color: white !important;
 }
 
 .ag-theme-quartz .ag-cell {
@@ -142,8 +152,4 @@ All colors MUST be HSL.
   top: 0 !important;
   z-index: 10 !important;
   background-color: #8e77c3 !important;
-}
-
-.ag-theme-quartz .ag-header-cell-label {
-  color: white;
 }
