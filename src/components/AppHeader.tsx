@@ -1,7 +1,16 @@
 import { useNavigate } from "react-router-dom";
 import { ScrollText, Activity, LogOut } from "lucide-react";
 import whiteLogo from "@/assets/white_logo.png";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
+import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
+import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
+import noRecordsImage from "@/assets/no_records.png";
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 import {
   Tooltip,
   TooltipContent,
@@ -18,6 +27,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
+interface LogData {
+  created_at: string;
+  message: any;
+  station_slot_id: string;
+  station_name: string;
+  tray_id: string;
+  slot_id: string;
+  state: string;
+}
 
 interface AppHeaderProps {
   selectedTab: string;
@@ -26,12 +51,130 @@ interface AppHeaderProps {
   isMonitorPage?: boolean;
   isCameraPage?: boolean;
   isReportsPage?: boolean;
-  isLogsPage?: boolean;
 }
 
-const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isCameraPage, isReportsPage, isLogsPage }: AppHeaderProps) => {
+const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isCameraPage, isReportsPage }: AppHeaderProps) => {
   const navigate = useNavigate();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const [showLogsDialog, setShowLogsDialog] = useState(false);
+  const [logsData, setLogsData] = useState<LogData[]>([]);
+  const [logsLoading, setLogsLoading] = useState(false);
+  const gridApiRef = useRef<any>(null);
+  const { toast } = useToast();
+
+  const columnDefs: ColDef<LogData>[] = [
+    { 
+      field: "created_at", 
+      headerName: "Created At", 
+      sortable: true, 
+      filter: true, 
+      flex: 1.5,
+      valueFormatter: (params) => {
+        if (!params.value) return "N/A";
+        try {
+          return format(new Date(params.value), "dd-MM-yyyy HH:mm:ss");
+        } catch {
+          return params.value;
+        }
+      }
+    },
+    { 
+      field: "message", 
+      headerName: "Message", 
+      sortable: true, 
+      filter: true, 
+      flex: 2,
+      valueFormatter: (params) => {
+        if (!params.value) return "N/A";
+        let messageStr = typeof params.value === "object" ? JSON.stringify(params.value) : String(params.value);
+        const newlineIndex = messageStr.indexOf("\\n");
+        if (newlineIndex !== -1) {
+          messageStr = messageStr.substring(0, newlineIndex);
+        }
+        return messageStr;
+      }
+    },
+    { 
+      field: "station_slot_id", 
+      headerName: "Action", 
+      sortable: true, 
+      filter: true, 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "station_name", 
+      headerName: "Status", 
+      sortable: true, 
+      filter: true, 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "tray_id", 
+      headerName: "Tray ID", 
+      sortable: true, 
+      filter: true, 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "slot_id", 
+      headerName: "Slot ID", 
+      sortable: true, 
+      filter: true, 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "state", 
+      headerName: "State", 
+      sortable: true, 
+      filter: true, 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    }
+  ];
+
+  const fetchLogsData = async () => {
+    try {
+      setLogsLoading(true);
+      const response = await fetch("https://amsstores1.leapmile.com/pubsub/subscribe?topic=amsstores1_AMSSTORES1-Nano", {
+        method: "GET",
+        headers: {
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2wiOiJhZG1pbiIsImV4cCI6MTkwMDY1MzE0M30.asYhgMAOvrau4G6LI4V4IbgYZ022g_GX0qZxaS57GQc",
+          "Content-Type": "application/json"
+        }
+      });
+
+      const data = await response.json();
+
+      if (response.status === 404 && data.message === "no records found") {
+        setLogsData([]);
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch logs data");
+      }
+
+      setLogsData(data.records || []);
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to load logs data",
+        variant: "destructive"
+      });
+      console.error("Error fetching logs:", error);
+    } finally {
+      setLogsLoading(false);
+    }
+  };
+
+  const handleLogsClick = () => {
+    setShowLogsDialog(true);
+    fetchLogsData();
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("user_id");
@@ -105,13 +248,6 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             >
               Reports
             </span>
-            <span 
-              className={`text-base cursor-pointer hover:opacity-80 ${isLogsPage ? 'font-semibold' : ''}`} 
-              style={{ color: isLogsPage ? 'white' : '#80ffffff' }}
-              onClick={() => navigate("/logs")}
-            >
-              Logs
-            </span>
           </nav>
         </div>
         
@@ -122,6 +258,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
                 <div 
                   className="rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/30"
                   style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)', width: '40px', height: '40px' }}
+                  onClick={handleLogsClick}
                 >
                   <ScrollText className="text-white" size={18} />
                 </div>
@@ -169,7 +306,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
         </TooltipProvider>
       </header>
 
-      {selectedTab && !isTasksPage && !isCameraPage && !isReportsPage && !isLogsPage && (
+      {selectedTab && !isTasksPage && !isCameraPage && !isReportsPage && (
         <nav 
           className="flex items-center px-6 gap-[8px] border-b border-gray-200"
           style={{ backgroundColor: '#eeeeee', height: '55px' }}
@@ -275,6 +412,48 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={showLogsDialog} onOpenChange={setShowLogsDialog}>
+        <DialogContent className="max-w-[90vw] max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogHeader>
+            <DialogTitle>Logs</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 overflow-hidden">
+            {logsLoading ? (
+              <div className="flex items-center justify-center h-full">
+                <p>Loading logs...</p>
+              </div>
+            ) : logsData.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full">
+                <img 
+                  src={noRecordsImage} 
+                  alt="No Record found" 
+                  style={{ width: '340px' }}
+                />
+              </div>
+            ) : (
+              <div className="ag-theme-quartz w-full h-[70vh]">
+                <AgGridReact
+                  rowData={logsData}
+                  columnDefs={columnDefs}
+                  defaultColDef={{
+                    resizable: true,
+                    minWidth: 100,
+                    sortable: true,
+                    filter: true
+                  }}
+                  pagination={true}
+                  paginationPageSize={50}
+                  onGridReady={(params) => {
+                    gridApiRef.current = params.api;
+                    params.api.sizeColumnsToFit();
+                  }}
+                />
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
