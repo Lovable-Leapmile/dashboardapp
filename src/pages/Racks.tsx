@@ -18,6 +18,13 @@ const Racks = () => {
     }
 
     setUserName(storedUserName);
+    
+    // Load selected rack from localStorage
+    const storedSelectedRack = localStorage.getItem("selected_rack");
+    if (storedSelectedRack !== null) {
+      setSelectedRack(parseInt(storedSelectedRack));
+    }
+    
     fetchRobotConfig();
   }, [navigate]);
 
@@ -61,6 +68,12 @@ const Racks = () => {
     }
   };
 
+  const handleRackSelect = (index: number) => {
+    setSelectedRack(index);
+    localStorage.setItem("selected_rack", index.toString());
+    console.log("Selected rack:", index);
+  };
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fafafa' }}>
       <AppHeader selectedTab="Racks" />
@@ -72,7 +85,7 @@ const Racks = () => {
           {Array.from({ length: numRacks + 1 }, (_, index) => (
             <div
               key={index}
-              onClick={() => setSelectedRack(index)}
+              onClick={() => handleRackSelect(index)}
               className="flex items-center justify-center font-medium text-sm transition-all hover:scale-105 cursor-pointer"
               style={{
                 width: '40px',
