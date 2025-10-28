@@ -127,8 +127,15 @@ All colors MUST be HSL.
 
 .ag-theme-quartz .ag-row {
   border-bottom: 1px solid hsl(var(--border));
+  min-height: fit-content !important;
+}
+
+.ag-theme-quartz .ag-row-border {
+  border-bottom-color: hsl(var(--border)) !important;
+  border-bottom-width: 1px !important;
 }
 
 .ag-theme-quartz .ag-header {
   border-bottom: 2px solid hsl(var(--border));
+  min-height: fit-content !important;
 }
