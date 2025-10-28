@@ -24,6 +24,7 @@ interface TrayData {
 const Trays = () => {
   const [userName, setUserName] = useState("");
   const [rowData, setRowData] = useState<TrayData[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [quickFilter, setQuickFilter] = useState("");
   const gridApiRef = useRef<any>(null);
@@ -106,6 +107,7 @@ const Trays = () => {
 
       const data = await response.json();
       console.log("Fetched trays:", data?.records?.length);
+      setTotalCount(data.count || 0);
       const mapped = (data.records || []).map((r: any) => ({
         ...r,
         tags: Array.isArray(r.tags)
@@ -133,7 +135,7 @@ const Trays = () => {
       
       <main className="p-6 space-y-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-muted-foreground">Records: {rowData.length}</p>
+          <p className="text-sm text-muted-foreground">Total Trays: {totalCount}</p>
           <input
             type="text"
             placeholder="Quick filter..."
