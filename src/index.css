@@ -133,4 +133,8 @@ All colors MUST be HSL.
 
 .ag-theme-quartz .ag-header {
   border-bottom: 2px solid hsl(var(--border));
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 10 !important;
+  background-color: white !important;
 }

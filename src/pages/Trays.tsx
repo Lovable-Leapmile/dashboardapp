@@ -145,7 +145,7 @@ const Trays = () => {
                 filter: true
               }}
               pagination={true}
-              paginationPageSize={20}
+              paginationPageSize={50}
               onGridReady={(params) => {
                 gridApiRef.current = params.api;
                 params.api.setGridOption('quickFilterText', quickFilter);
