@@ -129,31 +129,31 @@ const Racks = () => {
   };
 
   const SlotBox = ({ slot }: { slot: Slot }) => {
-    if (slot.slot_status === "inactive") {
-      return (
-        <div className="relative" style={{ width: '150px', height: '50px' }}>
-          <img src={blockImg} alt="Inactive" className="w-full h-full object-cover rounded" />
-          <div className="absolute inset-0 flex items-center justify-center text-xs font-medium text-white">
-            {slot.slot_name}
-          </div>
-        </div>
-      );
-    }
-
+    const isInactive = slot.slot_status === "inactive";
+    
     return (
       <div 
         className="relative flex flex-col items-center justify-center border border-gray-300 rounded bg-white"
         style={{ width: '150px', height: '50px' }}
       >
-        <div className="text-xs font-medium text-gray-700">{slot.slot_name}</div>
-        <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center gap-0.5 pb-1">
-          {slot.tags?.includes("station") && (
-            <img src={stationImg} alt="Station" style={{ width: '146px', height: '10px' }} />
-          )}
-          {slot.tray_id && (
-            <img src={trayImg} alt="Tray" style={{ width: '146px', height: '10px' }} />
-          )}
+        {isInactive && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <img src={blockImg} alt="Inactive" className="w-full h-full object-cover rounded" />
+          </div>
+        )}
+        <div className="text-xs font-medium relative z-10" style={{ color: isInactive ? 'white' : '#351c75' }}>
+          {slot.slot_name}
         </div>
+        {!isInactive && (
+          <div className="absolute bottom-0 left-0 right-0 flex flex-col items-center gap-0.5 pb-1">
+            {slot.tags?.includes("station") && (
+              <img src={stationImg} alt="Station" style={{ width: '146px', height: '10px' }} />
+            )}
+            {slot.tray_id && (
+              <img src={trayImg} alt="Tray" style={{ width: '146px', height: '10px' }} />
+            )}
+          </div>
+        )}
       </div>
     );
   };
@@ -189,24 +189,21 @@ const Racks = () => {
         </div>
 
         {selectedRack !== null && (
-          <div className="flex justify-center gap-6 mt-8">
+          <div className="flex justify-center gap-12 mt-8">
             {/* Row 1 Column */}
             <div className="flex flex-col items-center">
-              <div 
-                className="font-medium text-lg px-6 py-3 rounded-lg mb-4"
-                style={{ backgroundColor: '#351C75', color: 'white' }}
-              >
+              <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
                 Row 1
               </div>
               <div className="flex flex-col gap-2.5">
-                {/* Depth 1 */}
-                <div className="flex gap-2 flex-wrap justify-center">
+                {/* Depth 1 - Single Column */}
+                <div className="flex flex-col gap-2.5">
                   {row1Depth1Slots.map((slot, idx) => (
                     <SlotBox key={`r1d1-${idx}`} slot={slot} />
                   ))}
                 </div>
-                {/* Depth 0 */}
-                <div className="flex gap-2 flex-wrap justify-center">
+                {/* Depth 0 - Single Column */}
+                <div className="flex flex-col gap-2.5">
                   {row1Depth0Slots.map((slot, idx) => (
                     <SlotBox key={`r1d0-${idx}`} slot={slot} />
                   ))}
@@ -216,21 +213,18 @@ const Racks = () => {
 
             {/* Row 0 Column */}
             <div className="flex flex-col items-center">
-              <div 
-                className="font-medium text-lg px-6 py-3 rounded-lg mb-4"
-                style={{ backgroundColor: '#351C75', color: 'white' }}
-              >
+              <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
                 Row 0
               </div>
               <div className="flex flex-col gap-2.5">
-                {/* Depth 1 */}
-                <div className="flex gap-2 flex-wrap justify-center">
+                {/* Depth 1 - Single Column */}
+                <div className="flex flex-col gap-2.5">
                   {row0Depth1Slots.map((slot, idx) => (
                     <SlotBox key={`r0d1-${idx}`} slot={slot} />
                   ))}
                 </div>
-                {/* Depth 0 */}
-                <div className="flex gap-2 flex-wrap justify-center">
+                {/* Depth 0 - Single Column */}
+                <div className="flex flex-col gap-2.5">
                   {row0Depth0Slots.map((slot, idx) => (
                     <SlotBox key={`r0d0-${idx}`} slot={slot} />
                   ))}
