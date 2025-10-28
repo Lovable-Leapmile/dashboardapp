@@ -105,6 +105,7 @@ const AppHeader = ({ selectedTab }: AppHeaderProps) => {
                 <div 
                   className="rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/30"
                   style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)', width: '40px', height: '40px' }}
+                  onClick={() => navigate("/monitor")}
                 >
                   <Activity className="text-white" size={18} />
                 </div>
