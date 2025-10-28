@@ -109,3 +109,18 @@ All colors MUST be HSL.
     @apply bg-background text-foreground;
   }
 }
+
+/* AG Grid custom styles */
+.ag-theme-quartz .ag-header-cell-label {
+  font-weight: 700;
+}
+
+.ag-theme-quartz .ag-header-cell {
+  padding-top: 16px !important;
+  padding-bottom: 16px !important;
+}
+
+.ag-theme-quartz .ag-cell {
+  padding-top: 12px !important;
+  padding-bottom: 12px !important;
+}
