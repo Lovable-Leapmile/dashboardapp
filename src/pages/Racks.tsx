@@ -103,6 +103,31 @@ const Racks = () => {
             </div>
           ))}
         </div>
+
+        <div className="flex justify-center gap-6 mt-8">
+          <div className="flex flex-col items-center">
+            <div 
+              className="font-medium text-lg px-6 py-3 rounded-lg"
+              style={{
+                backgroundColor: '#351C75',
+                color: 'white'
+              }}
+            >
+              Row 0
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <div 
+              className="font-medium text-lg px-6 py-3 rounded-lg"
+              style={{
+                backgroundColor: '#351C75',
+                color: 'white'
+              }}
+            >
+              Row 1
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   );
