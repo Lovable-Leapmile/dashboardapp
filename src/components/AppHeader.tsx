@@ -21,9 +21,12 @@ import {
 
 interface AppHeaderProps {
   selectedTab: string;
+  isTasksPage?: boolean;
+  activeTaskTab?: string;
+  onTaskTabChange?: (tab: string) => void;
 }
 
-const AppHeader = ({ selectedTab }: AppHeaderProps) => {
+const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, onTaskTabChange }: AppHeaderProps) => {
   const navigate = useNavigate();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
@@ -72,15 +75,15 @@ const AppHeader = ({ selectedTab }: AppHeaderProps) => {
           </div>
           <nav className="flex items-center gap-[15px]">
             <span 
-              className={`text-base cursor-pointer hover:opacity-80 ${selectedTab ? 'font-semibold' : ''}`} 
-              style={{ color: selectedTab ? 'white' : '#80ffffff' }}
+              className={`text-base cursor-pointer hover:opacity-80 ${selectedTab && !isTasksPage ? 'font-semibold' : ''}`} 
+              style={{ color: selectedTab && !isTasksPage ? 'white' : '#80ffffff' }}
               onClick={() => navigate("/home")}
             >
               Configuration
             </span>
             <span 
-              className="text-base cursor-pointer hover:opacity-80" 
-              style={{ color: '#80ffffff' }}
+              className={`text-base cursor-pointer hover:opacity-80 ${isTasksPage ? 'font-semibold' : ''}`} 
+              style={{ color: isTasksPage ? 'white' : '#80ffffff' }}
               onClick={() => navigate("/tasks")}
             >
               Tasks
@@ -139,10 +142,11 @@ const AppHeader = ({ selectedTab }: AppHeaderProps) => {
         </TooltipProvider>
       </header>
 
-      <nav 
-        className="flex items-center px-6 gap-[8px] border-b border-gray-200"
-        style={{ backgroundColor: '#eeeeee', height: '55px' }}
-      >
+      {selectedTab && !isTasksPage && (
+        <nav 
+          className="flex items-center px-6 gap-[8px] border-b border-gray-200"
+          style={{ backgroundColor: '#eeeeee', height: '55px' }}
+        >
         <span 
           className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium relative group" 
           style={{ color: '#555' }}
@@ -200,6 +204,30 @@ const AppHeader = ({ selectedTab }: AppHeaderProps) => {
           <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "APK Link" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
       </nav>
+      )}
+
+      {isTasksPage && onTaskTabChange && (
+        <nav 
+          className="flex items-center px-6 gap-[8px] border-b border-gray-200"
+          style={{ backgroundColor: '#eeeeee', height: '55px' }}
+        >
+          {["Pending", "Tray Ready", "Inprogress", "Completed"].map((tab) => (
+            <span
+              key={tab}
+              className="text-sm cursor-pointer px-5 py-2 rounded-md transition-all font-medium relative group"
+              style={{ color: '#555' }}
+              onClick={() => onTaskTabChange(tab)}
+            >
+              {tab}
+              <span
+                className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${
+                  activeTaskTab === tab ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}
+              ></span>
+            </span>
+          ))}
+        </nav>
+      )}
 
       <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
         <AlertDialogContent>
