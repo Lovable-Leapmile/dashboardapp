@@ -1,12 +1,23 @@
 import { useNavigate } from "react-router-dom";
 import { ScrollText, Activity, LogOut } from "lucide-react";
 import whiteLogo from "@/assets/white_logo.png";
+import { useState } from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface AppHeaderProps {
   selectedTab: string;
@@ -14,11 +25,21 @@ interface AppHeaderProps {
 
 const AppHeader = ({ selectedTab }: AppHeaderProps) => {
   const navigate = useNavigate();
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleLogout = () => {
     localStorage.removeItem("user_id");
     localStorage.removeItem("user_name");
     navigate("/");
+  };
+
+  const handleLogoutClick = () => {
+    setShowLogoutDialog(true);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutDialog(false);
+    handleLogout();
   };
 
   const handleTabClick = (tab: string) => {
@@ -98,7 +119,7 @@ const AppHeader = ({ selectedTab }: AppHeaderProps) => {
                 <div 
                   className="rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/30"
                   style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)', width: '40px', height: '40px' }}
-                  onClick={handleLogout}
+                  onClick={handleLogoutClick}
                 >
                   <LogOut className="text-white" size={18} />
                 </div>
@@ -172,6 +193,21 @@ const AppHeader = ({ selectedTab }: AppHeaderProps) => {
           <span className={`absolute bottom-0 left-0 h-0.5 bg-purple-600 transition-all duration-300 ${selectedTab === "APK Link" ? 'w-full' : 'w-0 group-hover:w-full'}`}></span>
         </span>
       </nav>
+
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
+            <AlertDialogDescription>
+              Do you want to logout?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmLogout}>Confirm</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
   );
 };
