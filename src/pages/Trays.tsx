@@ -7,6 +7,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import noRecordsImage from "@/assets/no_records.png";
 
 // Register AG Grid Community modules (required in v34+)
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -104,6 +105,13 @@ const Trays = () => {
         }
       });
 
+      if (response.status === 404) {
+        setRowData([]);
+        setTotalCount(0);
+        setLoading(false);
+        return;
+      }
+
       if (!response.ok) {
         throw new Error("Failed to fetch trays data");
       }
@@ -137,7 +145,16 @@ const Trays = () => {
       <AppHeader selectedTab="Trays" />
       
       <main className="p-6">
-        <div className="ag-theme-quartz w-full" style={{ height: 'calc(100vh - 180px)' }}>
+        {!loading && rowData.length === 0 ? (
+          <div className="flex justify-center items-center" style={{ height: 'calc(100vh - 180px)' }}>
+            <img 
+              src={noRecordsImage} 
+              alt="No records found" 
+              style={{ width: '340px' }}
+            />
+          </div>
+        ) : (
+          <div className="ag-theme-quartz w-full" style={{ height: 'calc(100vh - 180px)' }}>
             <AgGridReact
               rowData={rowData}
               columnDefs={columnDefs}
@@ -156,7 +173,7 @@ const Trays = () => {
               }}
             />
           </div>
-        
+        )}
       </main>
     </div>
   );
