@@ -150,7 +150,7 @@ const Racks = () => {
             <img src={blockImg} alt="Inactive" className="w-full h-full object-cover rounded" />
           </div>
         )}
-        <div className="text-xs font-medium relative z-10" style={{ color: isInactive ? 'white' : '#351c75' }}>
+        <div className="text-xs font-medium relative z-10" style={{ color: '#351c75' }}>
           {slot.slot_name}
         </div>
         {!isInactive && (
