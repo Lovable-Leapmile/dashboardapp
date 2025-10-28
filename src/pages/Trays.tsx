@@ -4,10 +4,12 @@ import AppHeader from "@/components/AppHeader";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import { ColDef } from "ag-grid-community";
+import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 
+// Register AG Grid Community modules (required in v34+)
+ModuleRegistry.registerModules([AllCommunityModule]);
 interface TrayData {
   tray_id: string;
   tray_status: string;
