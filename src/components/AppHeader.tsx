@@ -28,7 +28,7 @@ const AppHeader = ({ selectedTab }: AppHeaderProps) => {
       "Trays": "/trays",
       "Slots": "/slots",
       "Station": "/station",
-      "Extremes": "/home",
+      "Extremes": "/extremes",
       "APK Link": "/home"
     };
     if (routes[tab]) {
