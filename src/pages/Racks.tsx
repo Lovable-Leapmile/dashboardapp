@@ -5,6 +5,7 @@ import AppHeader from "@/components/AppHeader";
 const Racks = () => {
   const [userName, setUserName] = useState("");
   const [numRacks, setNumRacks] = useState(0);
+  const [selectedRack, setSelectedRack] = useState<number | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,14 +72,18 @@ const Racks = () => {
           {Array.from({ length: numRacks + 1 }, (_, index) => (
             <div
               key={index}
+              onClick={() => setSelectedRack(index)}
               className="flex items-center justify-center font-medium text-sm transition-all hover:scale-105 cursor-pointer"
               style={{
                 width: '40px',
                 height: '40px',
-                backgroundColor: '#351C75',
-                color: 'white',
+                backgroundColor: selectedRack === index ? '#ffffff' : '#351C75',
+                color: selectedRack === index ? '#351C75' : 'white',
                 borderRadius: '4px',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+                border: selectedRack === index ? '2px solid #351C75' : 'none',
+                boxShadow: selectedRack === index 
+                  ? '0 4px 12px rgba(53, 28, 117, 0.3)' 
+                  : '0 1px 3px rgba(0, 0, 0, 0.1)'
               }}
             >
               {index}
