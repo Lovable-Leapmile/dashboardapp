@@ -6,6 +6,7 @@ import stationImg from "@/assets/station.png";
 import trayImg from "@/assets/tray.png";
 
 interface Slot {
+  slot_id: string;
   slot_name: string;
   slot_status: string;
   tags: string[];
@@ -88,6 +89,14 @@ const Racks = () => {
     }
   };
 
+  const sortSlotsByIdDescending = (slots: Slot[]) => {
+    return [...slots].sort((a, b) => {
+      const aNum = parseInt(a.slot_id.split('-')[1] || '0');
+      const bNum = parseInt(b.slot_id.split('-')[1] || '0');
+      return bNum - aNum; // Descending order
+    });
+  };
+
   const fetchAllSlots = async (rackValue: number) => {
     const authToken = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2wiOiJhZG1pbiIsImV4cCI6MTkwMDY1MzE0M30.asYhgMAOvrau4G6LI4V4IbgYZ022g_GX0qZxaS57GQc";
     
@@ -114,10 +123,10 @@ const Racks = () => {
         res4.json()
       ]);
 
-      setRow1Depth1Slots(data1.records || []);
-      setRow1Depth0Slots(data2.records || []);
-      setRow0Depth1Slots(data3.records || []);
-      setRow0Depth0Slots(data4.records || []);
+      setRow1Depth1Slots(sortSlotsByIdDescending(data1.records || []));
+      setRow1Depth0Slots(sortSlotsByIdDescending(data2.records || []));
+      setRow0Depth1Slots(sortSlotsByIdDescending(data3.records || []));
+      setRow0Depth0Slots(sortSlotsByIdDescending(data4.records || []));
     } catch (error) {
       console.error("Error fetching slots:", error);
     }
