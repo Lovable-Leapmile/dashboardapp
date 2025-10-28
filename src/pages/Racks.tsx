@@ -82,7 +82,7 @@ const Racks = () => {
       
       <main className="p-6">
         <div className="grid grid-cols-[repeat(auto-fill,minmax(40px,40px))] gap-3 justify-center">
-          {Array.from({ length: numRacks + 1 }, (_, index) => (
+          {Array.from({ length: numRacks }, (_, index) => (
             <div
               key={index}
               onClick={() => handleRackSelect(index)}
