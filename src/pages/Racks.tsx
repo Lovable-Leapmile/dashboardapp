@@ -23,7 +23,6 @@ const Racks = () => {
   const [userName, setUserName] = useState("");
   const [numRacks, setNumRacks] = useState(0);
   const [selectedRack, setSelectedRack] = useState<number | null>(null);
-  const [selectedRow, setSelectedRow] = useState<0 | 1>(0); // Default to Row 0
   const [row1Depth1Slots, setRow1Depth1Slots] = useState<Slot[]>([]);
   const [row1Depth0Slots, setRow1Depth0Slots] = useState<Slot[]>([]);
   const [row0Depth1Slots, setRow0Depth1Slots] = useState<Slot[]>([]);
@@ -248,88 +247,59 @@ const Racks = () => {
         </div>
 
         {selectedRack !== null && (
-          <>
-            {/* Row Selector and Slot Details in one row */}
-            <div className="flex justify-center mt-8 gap-8 items-start">
-              <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    setSelectedRow(1);
-                    setSelectedSlotId(null);
-                    setSlotDetails(null);
-                  }}
-                  className="px-6 py-2 rounded-md font-semibold transition-all"
-                  style={{
-                    backgroundColor: selectedRow === 1 ? '#351c75' : '#ffffff',
-                    color: selectedRow === 1 ? '#ffffff' : '#351c75',
-                    border: '2px solid #351c75',
-                    boxShadow: selectedRow === 1 ? '0 4px 12px rgba(53, 28, 117, 0.3)' : 'none'
-                  }}
-                >
-                  Row 1
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedRow(0);
-                    setSelectedSlotId(null);
-                    setSlotDetails(null);
-                  }}
-                  className="px-6 py-2 rounded-md font-semibold transition-all"
-                  style={{
-                    backgroundColor: selectedRow === 0 ? '#351c75' : '#ffffff',
-                    color: selectedRow === 0 ? '#ffffff' : '#351c75',
-                    border: '2px solid #351c75',
-                    boxShadow: selectedRow === 0 ? '0 4px 12px rgba(53, 28, 117, 0.3)' : 'none'
-                  }}
-                >
-                  Row 0
-                </button>
-              </div>
-
-              {/* Slot Details Panel */}
-              <SlotDetailsPanel 
-                slotDetails={slotDetails} 
-                isVisible={selectedSlotId !== null} 
-                onClose={() => {
-                  setSelectedSlotId(null);
-                  setSlotDetails(null);
-                }}
-              />
-            </div>
-
-            {/* Slots Grid */}
-            <div className="flex justify-center mt-8">
+          <div className="flex justify-center mt-8">
+            <div className="flex gap-24">
+              {/* Row 1 Section */}
               <div className="flex flex-col items-center">
-                <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
-                  Row {selectedRow}
+              <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
+                Row 1
+              </div>
+              <div className="flex" style={{ gap: '10px' }}>
+                {/* Depth 1 - Vertical Column */}
+                <div className="flex flex-col gap-2.5">
+                  {row1Depth1Slots.map((slot, idx) => (
+                    <SlotBox key={`r1d1-${idx}`} slot={slot} />
+                  ))}
                 </div>
-                <div className="flex" style={{ gap: '10px' }}>
-                  {/* Depth 1 - Vertical Column */}
-                  <div className="flex flex-col gap-2.5">
-                    {selectedRow === 0 
-                      ? row0Depth1Slots.map((slot, idx) => (
-                          <SlotBox key={`r0d1-${idx}`} slot={slot} />
-                        ))
-                      : row1Depth1Slots.map((slot, idx) => (
-                          <SlotBox key={`r1d1-${idx}`} slot={slot} />
-                        ))
-                    }
-                  </div>
-                  {/* Depth 0 - Vertical Column */}
-                  <div className="flex flex-col gap-2.5">
-                    {selectedRow === 0
-                      ? row0Depth0Slots.map((slot, idx) => (
-                          <SlotBox key={`r0d0-${idx}`} slot={slot} />
-                        ))
-                      : row1Depth0Slots.map((slot, idx) => (
-                          <SlotBox key={`r1d0-${idx}`} slot={slot} />
-                        ))
-                    }
-                  </div>
+                {/* Depth 0 - Vertical Column */}
+                <div className="flex flex-col gap-2.5">
+                  {row1Depth0Slots.map((slot, idx) => (
+                    <SlotBox key={`r1d0-${idx}`} slot={slot} />
+                  ))}
                 </div>
               </div>
             </div>
-          </>
+
+              {/* Row 0 Section */}
+              <div className="flex">
+                <div className="flex flex-col items-center">
+                  <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
+                    Row 0
+                  </div>
+                  <div className="flex" style={{ gap: '10px' }}>
+                    {/* Depth 1 - Vertical Column */}
+                    <div className="flex flex-col gap-2.5">
+                      {row0Depth1Slots.map((slot, idx) => (
+                        <SlotBox key={`r0d1-${idx}`} slot={slot} />
+                      ))}
+                    </div>
+                    {/* Depth 0 - Vertical Column */}
+                    <div className="flex flex-col gap-2.5">
+                      {row0Depth0Slots.map((slot, idx) => (
+                        <SlotBox key={`r0d0-${idx}`} slot={slot} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Slot Details Panel */}
+                <SlotDetailsPanel 
+                  slotDetails={slotDetails} 
+                  isVisible={selectedSlotId !== null} 
+                />
+              </div>
+            </div>
+          </div>
         )}
       </main>
     </div>
