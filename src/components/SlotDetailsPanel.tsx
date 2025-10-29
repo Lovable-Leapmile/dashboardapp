@@ -153,14 +153,14 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
           }}
         >
           {/* Row 1: Title with close button */}
-          <div className="flex items-center justify-center relative px-6 pt-6 pb-4">
+          <div className="flex items-center justify-center relative px-6 pt-6 pb-2.5">
             <DialogTitle className="text-lg font-semibold text-center" style={{ color: '#351c75' }}>
               {qrTitle}
             </DialogTitle>
           </div>
 
           {/* Row 2: QR Code */}
-          <div className="flex items-center justify-center py-4">
+          <div className="flex items-center justify-center pt-2.5 pb-4">
             <div className="bg-white p-3 rounded-lg shadow-lg">
               <QRCodeSVG 
                 value={qrValue} 
