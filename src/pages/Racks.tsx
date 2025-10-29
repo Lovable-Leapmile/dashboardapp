@@ -267,7 +267,7 @@ const Racks = () => {
 
         {selectedRack !== null && (
           <div className="flex justify-center mt-8">
-            <div className="flex gap-24">
+            <div className="flex" style={{ gap: '20px' }}>
               {/* Row 1 Section */}
               <div className="flex flex-col items-center">
               <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
