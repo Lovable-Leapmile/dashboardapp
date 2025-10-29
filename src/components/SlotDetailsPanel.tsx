@@ -46,9 +46,13 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
         className="animate-slide-in-right"
         style={{ 
           width: '280px',
-          marginLeft: '30px'
+          marginLeft: '30px',
+          marginTop: '15px'
         }}
       >
+        <div className="text-xl font-semibold mb-4" style={{ color: '#351c75' }}>
+          Slot Details
+        </div>
         <div className="space-y-4">
           {/* Slot ID Section */}
           <Card>
