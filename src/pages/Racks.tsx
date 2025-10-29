@@ -54,6 +54,14 @@ const Racks = () => {
   useEffect(() => {
     if (selectedRack !== null) {
       fetchAllSlots(selectedRack);
+      
+      // Set up polling interval for 3 seconds
+      const intervalId = setInterval(() => {
+        fetchAllSlots(selectedRack);
+      }, 3000);
+      
+      // Cleanup interval on unmount or when selectedRack changes
+      return () => clearInterval(intervalId);
     }
   }, [selectedRack]);
 
@@ -175,6 +183,17 @@ const Racks = () => {
     setSelectedSlotId(slotId);
     fetchSlotDetails(slotId);
   };
+
+  // Auto-refresh slot details every 3 seconds when a slot is selected
+  useEffect(() => {
+    if (selectedSlotId) {
+      const intervalId = setInterval(() => {
+        fetchSlotDetails(selectedSlotId);
+      }, 3000);
+      
+      return () => clearInterval(intervalId);
+    }
+  }, [selectedSlotId]);
 
   const SlotBox = ({ slot }: { slot: Slot }) => {
     const isInactive = slot.slot_status === "inactive";
