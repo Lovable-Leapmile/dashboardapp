@@ -249,84 +249,84 @@ const Racks = () => {
 
         {selectedRack !== null && (
           <>
-            {/* Row Selector */}
-            <div className="flex justify-center mt-8 gap-4">
-              <button
-                onClick={() => {
-                  setSelectedRow(0);
-                  setSelectedSlotId(null);
-                  setSlotDetails(null);
-                }}
-                className="px-6 py-2 rounded-md font-semibold transition-all"
-                style={{
-                  backgroundColor: selectedRow === 0 ? '#351c75' : '#ffffff',
-                  color: selectedRow === 0 ? '#ffffff' : '#351c75',
-                  border: '2px solid #351c75',
-                  boxShadow: selectedRow === 0 ? '0 4px 12px rgba(53, 28, 117, 0.3)' : 'none'
-                }}
-              >
-                Row 0
-              </button>
-              <button
-                onClick={() => {
-                  setSelectedRow(1);
-                  setSelectedSlotId(null);
-                  setSlotDetails(null);
-                }}
-                className="px-6 py-2 rounded-md font-semibold transition-all"
-                style={{
-                  backgroundColor: selectedRow === 1 ? '#351c75' : '#ffffff',
-                  color: selectedRow === 1 ? '#ffffff' : '#351c75',
-                  border: '2px solid #351c75',
-                  boxShadow: selectedRow === 1 ? '0 4px 12px rgba(53, 28, 117, 0.3)' : 'none'
-                }}
-              >
-                Row 1
-              </button>
-            </div>
-
-            <div className="flex justify-center mt-8">
-              <div className="flex">
-                {/* Selected Row Section */}
-                <div className="flex flex-col items-center">
-                  <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
-                    Row {selectedRow}
-                  </div>
-                  <div className="flex" style={{ gap: '10px' }}>
-                    {/* Depth 1 - Vertical Column */}
-                    <div className="flex flex-col gap-2.5">
-                      {selectedRow === 0 
-                        ? row0Depth1Slots.map((slot, idx) => (
-                            <SlotBox key={`r0d1-${idx}`} slot={slot} />
-                          ))
-                        : row1Depth1Slots.map((slot, idx) => (
-                            <SlotBox key={`r1d1-${idx}`} slot={slot} />
-                          ))
-                      }
-                    </div>
-                    {/* Depth 0 - Vertical Column */}
-                    <div className="flex flex-col gap-2.5">
-                      {selectedRow === 0
-                        ? row0Depth0Slots.map((slot, idx) => (
-                            <SlotBox key={`r0d0-${idx}`} slot={slot} />
-                          ))
-                        : row1Depth0Slots.map((slot, idx) => (
-                            <SlotBox key={`r1d0-${idx}`} slot={slot} />
-                          ))
-                      }
-                    </div>
-                  </div>
-                </div>
-
-                {/* Slot Details Panel */}
-                <SlotDetailsPanel 
-                  slotDetails={slotDetails} 
-                  isVisible={selectedSlotId !== null} 
-                  onClose={() => {
+            {/* Row Selector and Slot Details in one row */}
+            <div className="flex justify-center mt-8 gap-8 items-start">
+              <div className="flex gap-4">
+                <button
+                  onClick={() => {
+                    setSelectedRow(1);
                     setSelectedSlotId(null);
                     setSlotDetails(null);
                   }}
-                />
+                  className="px-6 py-2 rounded-md font-semibold transition-all"
+                  style={{
+                    backgroundColor: selectedRow === 1 ? '#351c75' : '#ffffff',
+                    color: selectedRow === 1 ? '#ffffff' : '#351c75',
+                    border: '2px solid #351c75',
+                    boxShadow: selectedRow === 1 ? '0 4px 12px rgba(53, 28, 117, 0.3)' : 'none'
+                  }}
+                >
+                  Row 1
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedRow(0);
+                    setSelectedSlotId(null);
+                    setSlotDetails(null);
+                  }}
+                  className="px-6 py-2 rounded-md font-semibold transition-all"
+                  style={{
+                    backgroundColor: selectedRow === 0 ? '#351c75' : '#ffffff',
+                    color: selectedRow === 0 ? '#ffffff' : '#351c75',
+                    border: '2px solid #351c75',
+                    boxShadow: selectedRow === 0 ? '0 4px 12px rgba(53, 28, 117, 0.3)' : 'none'
+                  }}
+                >
+                  Row 0
+                </button>
+              </div>
+
+              {/* Slot Details Panel */}
+              <SlotDetailsPanel 
+                slotDetails={slotDetails} 
+                isVisible={selectedSlotId !== null} 
+                onClose={() => {
+                  setSelectedSlotId(null);
+                  setSlotDetails(null);
+                }}
+              />
+            </div>
+
+            {/* Slots Grid */}
+            <div className="flex justify-center mt-8">
+              <div className="flex flex-col items-center">
+                <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
+                  Row {selectedRow}
+                </div>
+                <div className="flex" style={{ gap: '10px' }}>
+                  {/* Depth 1 - Vertical Column */}
+                  <div className="flex flex-col gap-2.5">
+                    {selectedRow === 0 
+                      ? row0Depth1Slots.map((slot, idx) => (
+                          <SlotBox key={`r0d1-${idx}`} slot={slot} />
+                        ))
+                      : row1Depth1Slots.map((slot, idx) => (
+                          <SlotBox key={`r1d1-${idx}`} slot={slot} />
+                        ))
+                    }
+                  </div>
+                  {/* Depth 0 - Vertical Column */}
+                  <div className="flex flex-col gap-2.5">
+                    {selectedRow === 0
+                      ? row0Depth0Slots.map((slot, idx) => (
+                          <SlotBox key={`r0d0-${idx}`} slot={slot} />
+                        ))
+                      : row1Depth0Slots.map((slot, idx) => (
+                          <SlotBox key={`r1d0-${idx}`} slot={slot} />
+                        ))
+                    }
+                  </div>
+                </div>
               </div>
             </div>
           </>
