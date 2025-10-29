@@ -142,7 +142,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
 
       {/* QR Code Dialog */}
       <Dialog open={qrDialogOpen} onOpenChange={setQrDialogOpen}>
-        <DialogContent className="sm:max-w-sm">
+        <DialogContent className="p-0" style={{ width: '275px', maxWidth: '275px' }}>
           <DialogHeader>
             <DialogTitle className="text-center text-lg font-semibold" style={{ color: '#351c75' }}>
               {qrTitle}
@@ -151,11 +151,8 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
           <div 
             className="flex flex-col items-center justify-center rounded-lg p-6" 
             style={{ 
-              width: '275px',
-              height: '320px',
               background: 'linear-gradient(135deg, #f3f0ff 0%, #ffffff 100%)',
-              border: '2px solid #351c75',
-              margin: '0 auto'
+              border: '2px solid #351c75'
             }}
           >
             <div className="bg-white p-4 rounded-lg shadow-lg">
