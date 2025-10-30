@@ -166,24 +166,24 @@ export const DashboardCards = () => {
             <div className="space-y-2">
               <div className="bg-background/50 rounded-lg p-2 space-y-1.5">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-muted-foreground">Name</span>
+                  <span className="text-[13px] font-medium text-muted-foreground">Name</span>
                   <span className="text-xs font-bold text-primary truncate ml-2">{robotInfo.robot_name}</span>
                 </div>
                 <div className="grid grid-cols-2 gap-1.5 pt-1.5 border-t border-border/50">
                   <div className="text-center p-1.5 bg-background/80 rounded">
-                    <div className="text-[10px] text-muted-foreground">Rows</div>
+                    <div className="text-xs text-muted-foreground">Rows</div>
                     <div className="text-base font-bold text-foreground">{robotInfo.robot_num_rows}</div>
                   </div>
                   <div className="text-center p-1.5 bg-background/80 rounded">
-                    <div className="text-[10px] text-muted-foreground">Racks</div>
+                    <div className="text-xs text-muted-foreground">Racks</div>
                     <div className="text-base font-bold text-foreground">{robotInfo.robot_num_racks}</div>
                   </div>
                   <div className="text-center p-1.5 bg-background/80 rounded">
-                    <div className="text-[10px] text-muted-foreground">Slots</div>
+                    <div className="text-xs text-muted-foreground">Slots</div>
                     <div className="text-base font-bold text-foreground">{robotInfo.robot_num_slots}</div>
                   </div>
                   <div className="text-center p-1.5 bg-background/80 rounded">
-                    <div className="text-[10px] text-muted-foreground">Depth</div>
+                    <div className="text-xs text-muted-foreground">Depth</div>
                     <div className="text-base font-bold text-foreground">{robotInfo.robot_num_depths}</div>
                   </div>
                 </div>
@@ -214,17 +214,17 @@ export const DashboardCards = () => {
               <div className="flex items-center justify-center">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-foreground">{slotInfo.totalSlots}</div>
-                  <div className="text-[10px] text-muted-foreground mt-0.5">Total Slots</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">Total Slots</div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div className="bg-blue-500/10 rounded-lg p-2 text-center border border-blue-500/20">
                   <div className="text-xl font-bold text-blue-600">{slotInfo.occupiedSlots}</div>
-                  <div className="text-[10px] text-muted-foreground mt-0.5">Occupied</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">Occupied</div>
                 </div>
                 <div className="bg-green-500/10 rounded-lg p-2 text-center border border-green-500/20">
                   <div className="text-xl font-bold text-green-600">{slotInfo.freeSlots}</div>
-                  <div className="text-[10px] text-muted-foreground mt-0.5">Free</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">Free</div>
                 </div>
               </div>
               <div className="bg-background/50 rounded-lg p-2 space-y-1.5">
@@ -257,17 +257,17 @@ export const DashboardCards = () => {
               <div className="flex items-center justify-center">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-foreground">{trayInfo.totalTrays}</div>
-                  <div className="text-[10px] text-muted-foreground mt-0.5">Total Trays</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">Total Trays</div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div className="bg-purple-500/10 rounded-lg p-2 text-center border border-purple-500/20">
                   <div className="text-xl font-bold text-purple-600">{trayInfo.occupiedTrays}</div>
-                  <div className="text-[10px] text-muted-foreground mt-0.5">Occupied</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">Occupied</div>
                 </div>
                 <div className="bg-green-500/10 rounded-lg p-2 text-center border border-green-500/20">
                   <div className="text-xl font-bold text-green-600">{trayInfo.freeTrays}</div>
-                  <div className="text-[10px] text-muted-foreground mt-0.5">Free</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">Free</div>
                 </div>
               </div>
               <div className="bg-background/50 rounded-lg p-2 space-y-1.5">
