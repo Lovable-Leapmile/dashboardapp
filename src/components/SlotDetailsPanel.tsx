@@ -80,10 +80,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                 <div className="space-y-3">
                   {/* Tray Row */}
                   <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <img src="/src/assets/tray.png" alt="Tray" className="w-6 h-6 object-contain" />
-                      <span className="text-sm font-medium text-muted-foreground">Tray ID:</span>
-                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">Tray ID:</span>
                     <span className="text-base font-semibold flex-1 text-right" style={{ color: '#351c75' }}>
                       {slotDetails.tray_id}
                     </span>
@@ -98,10 +95,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                   
                   {/* Station Row */}
                   <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2">
-                      <img src="/src/assets/station.png" alt="Station" className="w-6 h-6 object-contain" />
-                      <span className="text-sm font-medium text-muted-foreground">Station:</span>
-                    </div>
+                    <span className="text-sm font-medium text-muted-foreground">Station:</span>
                     <span className="text-base font-semibold flex-1 text-right" style={{ color: '#351c75' }}>
                       {slotDetails.slot_name}
                     </span>
