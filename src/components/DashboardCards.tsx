@@ -150,40 +150,42 @@ export const DashboardCards = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 gap-4 mt-6">
+    <div className="grid grid-cols-4 gap-3 mt-4">
       {/* Robot Information Card */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Bot className="w-5 h-5 text-primary" />
-            Robot Information
+      <Card className="bg-gradient-to-br from-background to-muted/20">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Bot className="w-4 h-4 text-primary" />
+            Robot Info
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm">
+        <CardContent className="space-y-1.5 text-xs">
           {robotInfo ? (
             <>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Name:</span>
-                <span className="font-medium text-foreground">{robotInfo.robot_name}</span>
+                <span className="font-semibold text-foreground truncate ml-2">{robotInfo.robot_name}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Max Rows:</span>
-                <span className="font-medium text-foreground">{robotInfo.robot_num_rows}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Rows:</span>
+                <span className="font-semibold text-foreground">{robotInfo.robot_num_rows}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Max Racks:</span>
-                <span className="font-medium text-foreground">{robotInfo.robot_num_racks}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Racks:</span>
+                <span className="font-semibold text-foreground">{robotInfo.robot_num_racks}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Max Slots:</span>
-                <span className="font-medium text-foreground">{robotInfo.robot_num_slots}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Slots:</span>
+                <span className="font-semibold text-foreground">{robotInfo.robot_num_slots}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Max Depth:</span>
-                <span className="font-medium text-foreground">{robotInfo.robot_num_depths}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Depth:</span>
+                <span className="font-semibold text-foreground">{robotInfo.robot_num_depths}</span>
               </div>
-              <div className="pt-2 border-t border-border">
-                <span className="text-xs text-muted-foreground">Updated: {formatToIST(robotInfo.updated_at)}</span>
+              <div className="pt-1.5 mt-1.5 border-t border-border">
+                <span className="text-[10px] text-muted-foreground block truncate">
+                  Updated: {formatToIST(robotInfo.updated_at)}
+                </span>
               </div>
             </>
           ) : (
@@ -193,34 +195,34 @@ export const DashboardCards = () => {
       </Card>
 
       {/* Slot Information Card */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Package className="w-5 h-5 text-primary" />
-            Slot Information
+      <Card className="bg-gradient-to-br from-background to-blue-500/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Package className="w-4 h-4 text-blue-600" />
+            Slot Info
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm">
+        <CardContent className="space-y-1.5 text-xs">
           {slotInfo ? (
             <>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Total Slots:</span>
-                <span className="font-medium text-foreground">{slotInfo.totalSlots}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Total:</span>
+                <span className="font-semibold text-foreground">{slotInfo.totalSlots}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Occupied:</span>
-                <span className="font-medium text-foreground">{slotInfo.occupiedSlots}</span>
+                <span className="font-semibold text-blue-600">{slotInfo.occupiedSlots}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Free:</span>
-                <span className="font-medium text-foreground">{slotInfo.freeSlots}</span>
+                <span className="font-semibold text-green-600">{slotInfo.freeSlots}</span>
               </div>
-              <div className="pt-2 space-y-1">
-                <div className="flex justify-between text-xs">
+              <div className="pt-1.5 mt-1.5 space-y-1 border-t border-border">
+                <div className="flex justify-between items-center text-[10px]">
                   <span className="text-muted-foreground">Occupied</span>
-                  <span className="font-medium text-foreground">{slotInfo.occupiedPercent.toFixed(1)}%</span>
+                  <span className="font-semibold text-foreground">{slotInfo.occupiedPercent.toFixed(1)}%</span>
                 </div>
-                <Progress value={slotInfo.occupiedPercent} className="h-2" />
+                <Progress value={slotInfo.occupiedPercent} className="h-1.5" />
               </div>
             </>
           ) : (
@@ -230,34 +232,34 @@ export const DashboardCards = () => {
       </Card>
 
       {/* Tray Information Card */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Layers className="w-5 h-5 text-primary" />
-            Tray Information
+      <Card className="bg-gradient-to-br from-background to-purple-500/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Layers className="w-4 h-4 text-purple-600" />
+            Tray Info
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm">
+        <CardContent className="space-y-1.5 text-xs">
           {trayInfo ? (
             <>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Total Trays:</span>
-                <span className="font-medium text-foreground">{trayInfo.totalTrays}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Total:</span>
+                <span className="font-semibold text-foreground">{trayInfo.totalTrays}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Occupied:</span>
-                <span className="font-medium text-foreground">{trayInfo.occupiedTrays}</span>
+                <span className="font-semibold text-purple-600">{trayInfo.occupiedTrays}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Free:</span>
-                <span className="font-medium text-foreground">{trayInfo.freeTrays}</span>
+                <span className="font-semibold text-green-600">{trayInfo.freeTrays}</span>
               </div>
-              <div className="pt-2 space-y-1">
-                <div className="flex justify-between text-xs">
+              <div className="pt-1.5 mt-1.5 space-y-1 border-t border-border">
+                <div className="flex justify-between items-center text-[10px]">
                   <span className="text-muted-foreground">Occupied</span>
-                  <span className="font-medium text-foreground">{trayInfo.occupiedPercent.toFixed(1)}%</span>
+                  <span className="font-semibold text-foreground">{trayInfo.occupiedPercent.toFixed(1)}%</span>
                 </div>
-                <Progress value={trayInfo.occupiedPercent} className="h-2" />
+                <Progress value={trayInfo.occupiedPercent} className="h-1.5" />
               </div>
             </>
           ) : (
@@ -267,31 +269,31 @@ export const DashboardCards = () => {
       </Card>
 
       {/* Robot Power Card */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Zap className="w-5 h-5 text-primary" />
-            Robot Power
+      <Card className="bg-gradient-to-br from-background to-amber-500/5">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm flex items-center gap-2">
+            <Zap className="w-4 h-4 text-amber-600" />
+            Power Info
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-2 text-sm">
+        <CardContent className="space-y-1.5 text-xs">
           {powerInfo ? (
             <>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">⚡ Voltage:</span>
-                <span className="font-medium text-foreground">{powerInfo.voltage}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Voltage:</span>
+                <span className="font-semibold text-foreground">{powerInfo.voltage}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">🔌 Current:</span>
-                <span className="font-medium text-foreground">{powerInfo.current}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Current:</span>
+                <span className="font-semibold text-foreground">{powerInfo.current}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">🔆 Power:</span>
-                <span className="font-medium text-foreground">{powerInfo.power}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Power:</span>
+                <span className="font-semibold text-amber-600">{powerInfo.power}</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">🔋 Energy:</span>
-                <span className="font-medium text-foreground">{powerInfo.energy}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Energy:</span>
+                <span className="font-semibold text-green-600">{powerInfo.energy}</span>
               </div>
             </>
           ) : (
