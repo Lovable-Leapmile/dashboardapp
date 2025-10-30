@@ -71,8 +71,7 @@ const Home = () => {
                         height: '25px',
                         backgroundColor: '#ffffff',
                         borderRadius: '4px',
-                        border: '2px solid #351C75',
-                        boxShadow: '0 4px 12px rgba(53, 28, 117, 0.3)'
+                        border: '1px solid #d1d5db'
                       }}
                     />
                   ))}
@@ -97,8 +96,7 @@ const Home = () => {
                         height: '25px',
                         backgroundColor: '#ffffff',
                         borderRadius: '4px',
-                        border: '2px solid #351C75',
-                        boxShadow: '0 4px 12px rgba(53, 28, 117, 0.3)'
+                        border: '1px solid #d1d5db'
                       }}
                     />
                   ))}
