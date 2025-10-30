@@ -56,17 +56,17 @@ const Home = () => {
       
       <main style={{ marginLeft: '15px', paddingTop: '20px', paddingBottom: '20px' }}>
         <div className="flex" style={{ gap: '100px' }}>
-          {/* Row 0 */}
+          {/* Row 1 */}
           <div className="flex flex-col items-center">
             <div className="text-xl font-semibold mb-4" style={{ color: '#351c75' }}>
-              Row 0
+              Row 1
             </div>
             <div className="flex" style={{ gap: '10px' }}>
               {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
-                <div key={`row0-depth${depthIdx}`} className="flex flex-col" style={{ gap: '10px' }}>
+                <div key={`row1-depth${depthIdx}`} className="flex flex-col" style={{ gap: '10px' }}>
                   {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                     <div
-                      key={`row0-depth${depthIdx}-rack${rackIdx}`}
+                      key={`row1-depth${depthIdx}-rack${rackIdx}`}
                       className="flex items-center justify-center"
                       style={{
                         width: '75px',
@@ -87,17 +87,17 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Row 1 */}
+          {/* Row 0 */}
           <div className="flex flex-col items-center">
             <div className="text-xl font-semibold mb-4" style={{ color: '#351c75' }}>
-              Row 1
+              Row 0
             </div>
             <div className="flex" style={{ gap: '10px' }}>
               {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
-                <div key={`row1-depth${depthIdx}`} className="flex flex-col" style={{ gap: '10px' }}>
+                <div key={`row0-depth${depthIdx}`} className="flex flex-col" style={{ gap: '10px' }}>
                   {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                     <div
-                      key={`row1-depth${depthIdx}-rack${rackIdx}`}
+                      key={`row0-depth${depthIdx}-rack${rackIdx}`}
                       className="flex items-center justify-center"
                       style={{
                         width: '75px',
