@@ -22,8 +22,6 @@ interface SlotDetails extends Slot {
 const Racks = () => {
   const [userName, setUserName] = useState("");
   const [numRacks, setNumRacks] = useState(0);
-  const [numSlots, setNumSlots] = useState(0);
-  const [numDepths, setNumDepths] = useState(0);
   const [selectedRack, setSelectedRack] = useState<number | null>(null);
   const [row1Depth1Slots, setRow1Depth1Slots] = useState<Slot[]>([]);
   const [row1Depth0Slots, setRow1Depth0Slots] = useState<Slot[]>([]);
@@ -87,23 +85,19 @@ const Racks = () => {
       if (data.records && data.records.length > 0) {
         const robotConfig = data.records[0];
         const numRacksValue = robotConfig.robot_num_racks || 0;
-        const numSlotsValue = robotConfig.robot_num_slots || 0;
-        const numDepthsValue = robotConfig.robot_num_depths || 0;
         
         localStorage.setItem("robot_num_rows", robotConfig.robot_num_rows?.toString() || "0");
         localStorage.setItem("robot_num_racks", numRacksValue.toString());
-        localStorage.setItem("robot_num_slots", numSlotsValue.toString());
-        localStorage.setItem("robot_num_depths", numDepthsValue.toString());
+        localStorage.setItem("robot_num_slots", robotConfig.robot_num_slots?.toString() || "0");
+        localStorage.setItem("robot_num_depths", robotConfig.robot_num_depths?.toString() || "0");
         
         setNumRacks(numRacksValue);
-        setNumSlots(numSlotsValue);
-        setNumDepths(numDepthsValue);
         
         console.log("Robot configuration stored globally:", {
           robot_num_rows: robotConfig.robot_num_rows,
           robot_num_racks: numRacksValue,
-          robot_num_slots: numSlotsValue,
-          robot_num_depths: numDepthsValue
+          robot_num_slots: robotConfig.robot_num_slots,
+          robot_num_depths: robotConfig.robot_num_depths
         });
       }
     } catch (error) {
@@ -247,64 +241,85 @@ const Racks = () => {
       
       <div style={{ height: '10px' }} />
       
-      <main className="p-6" style={{ marginLeft: '15px', marginRight: '15px' }}>
-        {/* Row 1 Section */}
-        <div className="mb-8">
-          <div className="text-xl font-semibold mb-4" style={{ color: '#351c75' }}>
-            Row 1
-          </div>
-          <div className="flex" style={{ gap: '10px' }}>
-            {Array.from({ length: numDepths }, (_, depthIndex) => (
-              <div key={`row1-depth${depthIndex}`} className="flex flex-col" style={{ gap: '5px' }}>
-                {Array.from({ length: numRacks }, (_, rackIndex) => (
-                  <div
-                    key={`row1-depth${depthIndex}-rack${rackIndex}`}
-                    className="flex items-center justify-center font-medium text-xs border rounded"
-                    style={{
-                      width: '75px',
-                      height: '25px',
-                      backgroundColor: '#ffffff',
-                      color: '#351C75',
-                      borderColor: '#d1d5db',
-                      borderWidth: '1px'
-                    }}
-                  >
-                    R{rackIndex}-D{depthIndex}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
+      <main className="p-6">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(40px,40px))] gap-3 justify-center">
+          {Array.from({ length: numRacks }, (_, index) => (
+            <div
+              key={index}
+              onClick={() => handleRackSelect(index)}
+              className="flex items-center justify-center font-medium text-sm transition-all hover:scale-105 cursor-pointer"
+              style={{
+                width: '40px',
+                height: '40px',
+                backgroundColor: selectedRack === index ? '#ffffff' : '#351C75',
+                color: selectedRack === index ? '#351C75' : 'white',
+                borderRadius: '4px',
+                border: selectedRack === index ? '2px solid #351C75' : 'none',
+                boxShadow: selectedRack === index 
+                  ? '0 4px 12px rgba(53, 28, 117, 0.3)' 
+                  : '0 1px 3px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              {index}
+            </div>
+          ))}
         </div>
 
-        {/* Row 0 Section */}
-        <div>
-          <div className="text-xl font-semibold mb-4" style={{ color: '#351c75' }}>
-            Row 0
-          </div>
-          <div className="flex" style={{ gap: '10px' }}>
-            {Array.from({ length: numDepths }, (_, depthIndex) => (
-              <div key={`row0-depth${depthIndex}`} className="flex flex-col" style={{ gap: '5px' }}>
-                {Array.from({ length: numRacks }, (_, rackIndex) => (
-                  <div
-                    key={`row0-depth${depthIndex}-rack${rackIndex}`}
-                    className="flex items-center justify-center font-medium text-xs border rounded"
-                    style={{
-                      width: '75px',
-                      height: '25px',
-                      backgroundColor: '#ffffff',
-                      color: '#351C75',
-                      borderColor: '#d1d5db',
-                      borderWidth: '1px'
-                    }}
-                  >
-                    R{rackIndex}-D{depthIndex}
-                  </div>
-                ))}
+        {selectedRack !== null && (
+          <div className="flex justify-center mt-8">
+            <div className="flex" style={{ gap: '20px' }}>
+              {/* Row 1 Section */}
+              <div className="flex flex-col items-center">
+              <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
+                Row 1
               </div>
-            ))}
+              <div className="flex" style={{ gap: '10px' }}>
+                {/* Depth 1 - Vertical Column */}
+                <div className="flex flex-col gap-2.5">
+                  {row1Depth1Slots.map((slot, idx) => (
+                    <SlotBox key={`r1d1-${idx}`} slot={slot} />
+                  ))}
+                </div>
+                {/* Depth 0 - Vertical Column */}
+                <div className="flex flex-col gap-2.5">
+                  {row1Depth0Slots.map((slot, idx) => (
+                    <SlotBox key={`r1d0-${idx}`} slot={slot} />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+              {/* Row 0 Section */}
+              <div className="flex">
+                <div className="flex flex-col items-center">
+                  <div className="text-xl font-semibold mb-6" style={{ color: '#351c75' }}>
+                    Row 0
+                  </div>
+                  <div className="flex" style={{ gap: '10px' }}>
+                    {/* Depth 1 - Vertical Column */}
+                    <div className="flex flex-col gap-2.5">
+                      {row0Depth1Slots.map((slot, idx) => (
+                        <SlotBox key={`r0d1-${idx}`} slot={slot} />
+                      ))}
+                    </div>
+                    {/* Depth 0 - Vertical Column */}
+                    <div className="flex flex-col gap-2.5">
+                      {row0Depth0Slots.map((slot, idx) => (
+                        <SlotBox key={`r0d0-${idx}`} slot={slot} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Slot Details Panel */}
+                <SlotDetailsPanel 
+                  slotDetails={slotDetails} 
+                  isVisible={selectedSlotId !== null} 
+                />
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );
