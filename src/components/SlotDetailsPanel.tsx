@@ -78,9 +78,12 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
             <Card>
               <CardContent className="py-3 px-4">
                 <div className="space-y-3">
-                  {/* Tray Row */}
+                {/* Tray Row */}
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm font-medium text-muted-foreground">Tray ID:</span>
+                    <div className="flex items-center gap-2">
+                      <img src="/src/assets/tray.png" alt="Tray" className="w-6 h-6 object-contain" />
+                      <span className="text-sm font-medium text-muted-foreground">Tray ID:</span>
+                    </div>
                     <span className="text-base font-semibold flex-1 text-right" style={{ color: '#351c75' }}>
                       {slotDetails.tray_id}
                     </span>
@@ -93,9 +96,12 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                     </button>
                   </div>
                   
-                  {/* Station Row */}
+                {/* Station Row */}
                   <div className="flex items-center justify-between gap-3">
-                    <span className="text-sm font-medium text-muted-foreground">Station:</span>
+                    <div className="flex items-center gap-2">
+                      <img src="/src/assets/station.png" alt="Station" className="w-6 h-6 object-contain" />
+                      <span className="text-sm font-medium text-muted-foreground">Station:</span>
+                    </div>
                     <span className="text-base font-semibold flex-1 text-right" style={{ color: '#351c75' }}>
                       {slotDetails.slot_name}
                     </span>
