@@ -66,14 +66,20 @@ const Home = () => {
                   {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                     <div
                       key={`row0-depth${depthIdx}-rack${rackIdx}`}
+                      className="flex items-center justify-center"
                       style={{
                         width: '75px',
                         height: '25px',
                         backgroundColor: '#ffffff',
                         borderRadius: '4px',
-                        border: '1px solid #d1d5db'
+                        border: '1px solid #d1d5db',
+                        color: '#351c75',
+                        fontSize: '13px',
+                        fontWeight: '500'
                       }}
-                    />
+                    >
+                      {rackIdx}
+                    </div>
                   ))}
                 </div>
               ))}
@@ -91,14 +97,20 @@ const Home = () => {
                   {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                     <div
                       key={`row1-depth${depthIdx}-rack${rackIdx}`}
+                      className="flex items-center justify-center"
                       style={{
                         width: '75px',
                         height: '25px',
                         backgroundColor: '#ffffff',
                         borderRadius: '4px',
-                        border: '1px solid #d1d5db'
+                        border: '1px solid #d1d5db',
+                        color: '#351c75',
+                        fontSize: '13px',
+                        fontWeight: '500'
                       }}
-                    />
+                    >
+                      {rackIdx}
+                    </div>
                   ))}
                 </div>
               ))}
