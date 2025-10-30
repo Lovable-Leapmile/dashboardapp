@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { RobotStateTimeline } from "@/components/RobotStateTimeline";
+import { DashboardCards } from "@/components/DashboardCards";
 
 const Home = () => {
   const [userName, setUserName] = useState("");
@@ -139,8 +140,11 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Robot State Timeline */}
-          <RobotStateTimeline />
+          {/* Robot State Timeline with Dashboard Cards */}
+          <div className="flex flex-col" style={{ flex: 1 }}>
+            <RobotStateTimeline />
+            <DashboardCards />
+          </div>
         </div>
       </main>
     </div>
