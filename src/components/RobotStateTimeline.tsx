@@ -38,6 +38,8 @@ export const RobotStateTimeline = () => {
       const result = await response.json();
       
       if (result.records && result.records.length > 0) {
+        console.log("Robot state records:", result.records);
+        
         const chartData = result.records.map((record: RobotState) => {
           const date = new Date(record.created_at);
           const hours = date.getHours();
@@ -54,6 +56,7 @@ export const RobotStateTimeline = () => {
           };
         }).filter((item: { time: number }) => item.time >= 8 && item.time <= 18);
         
+        console.log("Filtered chart data:", chartData);
         setData(chartData);
       }
     } catch (error) {
@@ -120,7 +123,11 @@ export const RobotStateTimeline = () => {
             />
             <Scatter data={data} fill="#8884d8" shape="circle">
               {data.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.statusName as keyof typeof STATUS_COLORS]} />
+                <Cell 
+                  key={`cell-${index}`} 
+                  fill={STATUS_COLORS[entry.statusName as keyof typeof STATUS_COLORS]}
+                  r={6}
+                />
               ))}
             </Scatter>
           </ScatterChart>
