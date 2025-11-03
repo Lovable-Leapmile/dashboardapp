@@ -195,6 +195,8 @@ const Completed = () => {
               }}
               pagination={true}
               paginationPageSize={50}
+              enableRangeSelection={true}
+              headerHeight={40}
               onGridReady={(params) => {
                 gridApiRef.current = params.api;
                 params.api.setGridOption('quickFilterText', quickFilter);
