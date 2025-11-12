@@ -13,6 +13,7 @@ import Extremes from "./pages/Extremes";
 import ApkLink from "./pages/ApkLink";
 import Monitor from "./pages/Monitor";
 import Camera from "./pages/Camera";
+import CameraTaskDetails from "./pages/CameraTaskDetails";
 import Reports from "./pages/Reports";
 import Logs from "./pages/Logs";
 import Tasks from "./pages/Tasks";
@@ -41,6 +42,7 @@ const App = () => (
           <Route path="/apk-link" element={<ApkLink />} />
           <Route path="/monitor" element={<Monitor />} />
           <Route path="/camera" element={<Camera />} />
+          <Route path="/camera/:taskId" element={<CameraTaskDetails />} />
           <Route path="/reports" element={<Reports />} />
           <Route path="/logs" element={<Logs />} />
           <Route path="/tasks" element={<Tasks />} />
