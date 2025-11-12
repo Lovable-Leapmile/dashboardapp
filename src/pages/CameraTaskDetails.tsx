@@ -138,9 +138,6 @@ const CameraTaskDetails = () => {
       <main className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-foreground">
-              Task: {taskId}
-            </h1>
             <Button
               variant="outline"
               size="sm"
@@ -150,6 +147,10 @@ const CameraTaskDetails = () => {
               <ArrowLeft className="h-4 w-4" />
               Back to Tasks
             </Button>
+            <h1 className="text-2xl font-bold text-foreground absolute left-1/2 transform -translate-x-1/2">
+              Task: {taskId}
+            </h1>
+            <div></div>
           </div>
 
           {loading ? (
