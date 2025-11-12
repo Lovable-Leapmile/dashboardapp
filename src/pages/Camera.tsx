@@ -20,11 +20,14 @@ const Camera = () => {
   }, []);
 
   useEffect(() => {
+    // Filter to only show task IDs starting with TID-
+    const tidTasks = tasks.filter((task) => task.task_id.startsWith("TID-"));
+    
     if (searchQuery.trim() === "") {
-      setFilteredTasks(tasks);
+      setFilteredTasks(tidTasks);
     } else {
       setFilteredTasks(
-        tasks.filter((task) =>
+        tidTasks.filter((task) =>
           task.task_id.toLowerCase().includes(searchQuery.toLowerCase())
         )
       );

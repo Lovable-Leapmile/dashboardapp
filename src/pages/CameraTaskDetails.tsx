@@ -137,7 +137,10 @@ const CameraTaskDetails = () => {
       <AppHeader selectedTab="" isCameraPage={true} />
       <main className="flex-1 p-6">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-4 flex items-center gap-4">
+          <div className="mb-6 flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-foreground">
+              Task: {taskId}
+            </h1>
             <Button
               variant="outline"
               size="sm"
@@ -148,10 +151,6 @@ const CameraTaskDetails = () => {
               Back to Tasks
             </Button>
           </div>
-          
-          <h1 className="text-2xl font-bold text-foreground text-center mb-6">
-            Task: {taskId}
-          </h1>
 
           {loading ? (
             <div className="text-center text-muted-foreground py-12">
@@ -171,6 +170,7 @@ const CameraTaskDetails = () => {
                   filter: true,
                   resizable: true,
                 }}
+                rowHeight={60}
                 pagination={true}
                 paginationPageSize={50}
                 domLayout="normal"
@@ -181,25 +181,41 @@ const CameraTaskDetails = () => {
       </main>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-auto">
-          <DialogHeader>
-            <DialogTitle className="text-foreground">
+        <DialogContent 
+          className="p-0 gap-0 w-[90vw] max-w-4xl h-auto max-h-[90vh]"
+          style={{ 
+            background: 'linear-gradient(135deg, #f3f0ff 0%, #ffffff 100%)',
+            border: '2px solid #351c75'
+          }}
+        >
+          {/* Title Row */}
+          <div className="flex items-center justify-center relative px-6 pt-6 pb-2.5">
+            <DialogTitle className="text-lg font-semibold text-center" style={{ color: '#351c75' }}>
               {selectedVideo?.camera_device_id}
             </DialogTitle>
-          </DialogHeader>
+          </div>
+
+          {/* Video Row */}
           {selectedVideo && (
-            <div className="space-y-4">
-              <video
-                controls
-                className="w-full rounded-lg"
-                src={selectedVideo.clip_url}
-              >
-                Your browser does not support the video tag.
-              </video>
-              <p className="text-sm text-muted-foreground text-center">
-                {selectedVideo.clip_filename}
-              </p>
-            </div>
+            <>
+              <div className="flex items-center justify-center px-6 pt-2.5 pb-4">
+                <video
+                  controls
+                  className="w-full rounded-lg shadow-lg"
+                  style={{ maxHeight: '70vh' }}
+                  src={selectedVideo.clip_url}
+                >
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+              {/* Filename Row */}
+              <div className="flex items-center justify-center px-6 pb-6 pt-2">
+                <p className="text-sm font-bold text-center" style={{ color: '#351c75' }}>
+                  {selectedVideo.clip_filename}
+                </p>
+              </div>
+            </>
           )}
         </DialogContent>
       </Dialog>
