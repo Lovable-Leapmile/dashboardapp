@@ -5,7 +5,7 @@ import { AgGridReact } from "ag-grid-react";
 import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import { Play, Download, ArrowLeft, RefreshCw } from "lucide-react";
+import { Play, Download, ArrowLeft, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -40,6 +40,7 @@ const CameraTaskDetails = () => {
   const [selectedVideo, setSelectedVideo] = useState<CameraEvent | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(false);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
   useEffect(() => {
     if (taskId) {
@@ -81,8 +82,26 @@ const CameraTaskDetails = () => {
   };
 
   const handlePlayClick = (event: CameraEvent) => {
+    const index = events.findIndex(e => e.clip_filename === event.clip_filename);
+    setCurrentVideoIndex(index);
     setSelectedVideo(event);
     setIsDialogOpen(true);
+  };
+
+  const handlePrevVideo = () => {
+    if (currentVideoIndex > 0) {
+      const newIndex = currentVideoIndex - 1;
+      setCurrentVideoIndex(newIndex);
+      setSelectedVideo(events[newIndex]);
+    }
+  };
+
+  const handleNextVideo = () => {
+    if (currentVideoIndex < events.length - 1) {
+      const newIndex = currentVideoIndex + 1;
+      setCurrentVideoIndex(newIndex);
+      setSelectedVideo(events[newIndex]);
+    }
   };
 
   const handleDownloadClick = (clipUrl: string) => {
@@ -287,19 +306,42 @@ const CameraTaskDetails = () => {
             </DialogTitle>
           </div>
 
-          {/* Video Row */}
+          {/* Video Row with Navigation */}
           {selectedVideo && (
             <>
-              <div className="flex items-center justify-center px-6 pt-2.5 pb-4">
+              <div className="flex items-center justify-center gap-4 px-6 pt-2.5 pb-4">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handlePrevVideo}
+                  disabled={currentVideoIndex === 0}
+                  className="shrink-0"
+                  style={{ borderColor: '#351c75' }}
+                >
+                  <ChevronLeft className="h-6 w-6" style={{ color: '#351c75' }} />
+                </Button>
+                
                 <video
                   controls
                   autoPlay
                   className="w-full rounded-lg shadow-lg"
                   style={{ maxHeight: '70vh' }}
                   src={selectedVideo.clip_url}
+                  key={selectedVideo.clip_filename}
                 >
                   Your browser does not support the video tag.
                 </video>
+
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={handleNextVideo}
+                  disabled={currentVideoIndex === events.length - 1}
+                  className="shrink-0"
+                  style={{ borderColor: '#351c75' }}
+                >
+                  <ChevronRight className="h-6 w-6" style={{ color: '#351c75' }} />
+                </Button>
               </div>
 
               {/* Filename Row */}
