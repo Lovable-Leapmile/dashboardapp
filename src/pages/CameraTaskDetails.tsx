@@ -293,7 +293,7 @@ const CameraTaskDetails = () => {
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent 
-          className="p-0 gap-0 w-[90vw] max-w-4xl h-auto max-h-[90vh]"
+          className="p-0 gap-0 w-[95vw] max-w-6xl h-auto max-h-[95vh]"
           style={{ 
             background: 'linear-gradient(135deg, #f3f0ff 0%, #ffffff 100%)',
             border: '2px solid #351c75'
@@ -309,38 +309,40 @@ const CameraTaskDetails = () => {
           {/* Video Row with Navigation */}
           {selectedVideo && (
             <>
-              <div className="flex items-center justify-center gap-4 px-6 pt-2.5 pb-4">
+              <div className="flex items-center justify-center gap-3 px-4 pt-2.5 pb-4">
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={handlePrevVideo}
                   disabled={currentVideoIndex === 0}
-                  className="shrink-0"
-                  style={{ borderColor: '#351c75' }}
+                  className="shrink-0 hover:bg-[#351c75] hover:text-white focus-visible:ring-[#351c75] disabled:opacity-50"
+                  style={{ borderColor: '#351c75', color: '#351c75' }}
                 >
-                  <ChevronLeft className="h-6 w-6" style={{ color: '#351c75' }} />
+                  <ChevronLeft className="h-6 w-6" />
                 </Button>
                 
-                <video
-                  controls
-                  autoPlay
-                  className="w-full rounded-lg shadow-lg"
-                  style={{ maxHeight: '70vh' }}
-                  src={selectedVideo.clip_url}
-                  key={selectedVideo.clip_filename}
-                >
-                  Your browser does not support the video tag.
-                </video>
+                <div className="flex-1 flex items-center justify-center min-w-0">
+                  <video
+                    controls
+                    autoPlay
+                    className="max-w-full h-auto rounded-lg shadow-lg"
+                    style={{ maxHeight: '75vh' }}
+                    src={selectedVideo.clip_url}
+                    key={selectedVideo.clip_filename}
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
 
                 <Button
                   variant="outline"
                   size="icon"
                   onClick={handleNextVideo}
                   disabled={currentVideoIndex === events.length - 1}
-                  className="shrink-0"
-                  style={{ borderColor: '#351c75' }}
+                  className="shrink-0 hover:bg-[#351c75] hover:text-white focus-visible:ring-[#351c75] disabled:opacity-50"
+                  style={{ borderColor: '#351c75', color: '#351c75' }}
                 >
-                  <ChevronRight className="h-6 w-6" style={{ color: '#351c75' }} />
+                  <ChevronRight className="h-6 w-6" />
                 </Button>
               </div>
 
