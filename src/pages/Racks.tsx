@@ -42,10 +42,13 @@ const Racks = () => {
 
     setUserName(storedUserName);
     
-    // Load selected rack from localStorage
+    // Load selected rack from localStorage, default to 0
     const storedSelectedRack = localStorage.getItem("selected_rack");
     if (storedSelectedRack !== null) {
       setSelectedRack(parseInt(storedSelectedRack));
+    } else {
+      setSelectedRack(0);
+      localStorage.setItem("selected_rack", "0");
     }
     
     fetchRobotConfig();
@@ -201,10 +204,8 @@ const Racks = () => {
     
     return (
       <div 
-        onClick={() => !isInactive && handleSlotClick(slot.slot_id)}
-        className={`relative flex flex-col items-center justify-center border rounded transition-all ${
-          isInactive ? 'cursor-default' : 'cursor-pointer hover:shadow-md'
-        }`}
+        onClick={() => handleSlotClick(slot.slot_id)}
+        className="relative flex flex-col items-center justify-center border rounded transition-all cursor-pointer hover:shadow-md"
         style={{ 
           width: '150px', 
           height: '50px',

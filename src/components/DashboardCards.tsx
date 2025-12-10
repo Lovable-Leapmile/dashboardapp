@@ -122,17 +122,31 @@ export const DashboardCards = () => {
         headers: { "Authorization": AUTH_TOKEN, "Content-Type": "application/json" }
       });
       const data = await response.json();
-      if (data.records && data.records.length > 0) {
+      if (data.status === "success" && data.records && data.records.length > 0) {
         const record = data.records[0];
         setPowerInfo({
-          voltage: `${record.voltage} V`,
-          current: `${record.current} A`,
-          power: `${record.max_demand_active_power} kW`,
-          energy: `${record.total_active_energy_kwh} kWh`
+          voltage: `${record.voltage ?? 'N/A'} V`,
+          current: `${record.current ?? 'N/A'} A`,
+          power: `${record.max_demand_active_power ?? 'N/A'} kW`,
+          energy: `${record.total_active_energy_kwh ?? 'N/A'} kWh`
+        });
+      } else {
+        // No data available - show placeholder
+        setPowerInfo({
+          voltage: "N/A",
+          current: "N/A",
+          power: "N/A",
+          energy: "N/A"
         });
       }
     } catch (error) {
       console.error("Error fetching power info:", error);
+      setPowerInfo({
+        voltage: "N/A",
+        current: "N/A",
+        power: "N/A",
+        energy: "N/A"
+      });
     }
   };
 
