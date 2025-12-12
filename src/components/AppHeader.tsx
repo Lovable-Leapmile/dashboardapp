@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ScrollText, Activity, LogOut, Camera, Menu, X, Home, ClipboardList, Video, FileText, Settings, Box, Layers, Grid3X3, Building2, TrendingUp, Download, Shield } from "lucide-react";
-import fabIcon from "@/assets/fab-icon.png";
+import logoImage from "@/assets/logo.png";
 import { useState } from "react";
 import html2canvas from "html2canvas";
 import {
@@ -147,7 +147,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             <SheetContent side="left" className="w-[280px] p-0 bg-white">
               <SheetHeader className="p-4 border-b" style={{ backgroundColor: '#351C75' }}>
                 <div className="flex items-center gap-3">
-                  <img src={fabIcon} alt="Logo" className="w-10 h-10 object-contain" />
+                  <img src={logoImage} alt="Logo" className="w-10 h-10 object-contain" />
                   <SheetTitle className="text-white text-lg">Menu</SheetTitle>
                 </div>
               </SheetHeader>
@@ -255,11 +255,11 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)', padding: '4px' }}
             onClick={() => navigate("/home")}
           >
-            <img src={fabIcon} alt="Logo" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
+            <img src={logoImage} alt="Logo" className="w-8 h-8 sm:w-10 sm:h-10 object-contain" />
           </div>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-[15px]">
+          <nav className="hidden md:flex items-center gap-8">
             {mainNavItems.map((item) => (
               <span 
                 key={item.path}
