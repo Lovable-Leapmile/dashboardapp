@@ -254,7 +254,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity shrink-0"
             onClick={() => navigate("/home")}
           >
-            <img src={whiteLogo} alt="Logo" className="w-[100px] object-contain" />
+            <img src={whiteLogo} alt="Logo" className="h-8 sm:h-10 object-contain" />
           </div>
           
           {/* Desktop Navigation */}
