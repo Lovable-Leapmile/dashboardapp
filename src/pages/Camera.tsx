@@ -2,11 +2,23 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
+import { Search, SlidersHorizontal } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+type SortOption = "latest" | "task_asc" | "task_desc";
 
 interface Task {
   task_id: string;
+  last_updated?: string;
 }
+
+const FILTER_STORAGE_KEY = "camera_filter_preference";
 
 const Camera = () => {
   const navigate = useNavigate();
@@ -14,6 +26,10 @@ const Camera = () => {
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
+  const [sortOption, setSortOption] = useState<SortOption>(() => {
+    const saved = localStorage.getItem(FILTER_STORAGE_KEY);
+    return (saved as SortOption) || "latest";
+  });
 
   useEffect(() => {
     fetchTasks();
@@ -21,18 +37,38 @@ const Camera = () => {
 
   useEffect(() => {
     // Filter to only show task IDs starting with TID- (exclude null/undefined)
-    const tidTasks = tasks.filter((task) => task.task_id && task.task_id.startsWith("TID-"));
+    let tidTasks = tasks.filter((task) => task.task_id && task.task_id.startsWith("TID-"));
     
-    if (searchQuery.trim() === "") {
-      setFilteredTasks(tidTasks);
-    } else {
-      setFilteredTasks(
-        tidTasks.filter((task) =>
-          task.task_id.toLowerCase().includes(searchQuery.toLowerCase())
-        )
+    // Apply search filter
+    if (searchQuery.trim() !== "") {
+      tidTasks = tidTasks.filter((task) =>
+        task.task_id.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
-  }, [searchQuery, tasks]);
+
+    // Apply sorting
+    const sortedTasks = [...tidTasks].sort((a, b) => {
+      switch (sortOption) {
+        case "task_asc":
+          return a.task_id.localeCompare(b.task_id);
+        case "task_desc":
+          return b.task_id.localeCompare(a.task_id);
+        case "latest":
+        default:
+          const dateA = a.last_updated ? new Date(a.last_updated).getTime() : 0;
+          const dateB = b.last_updated ? new Date(b.last_updated).getTime() : 0;
+          return dateB - dateA;
+      }
+    });
+
+    setFilteredTasks(sortedTasks);
+  }, [searchQuery, tasks, sortOption]);
+
+  const handleSortChange = (value: string) => {
+    const newSort = value as SortOption;
+    setSortOption(newSort);
+    localStorage.setItem(FILTER_STORAGE_KEY, newSort);
+  };
 
   const fetchTasks = async () => {
     try {
@@ -78,6 +114,27 @@ const Camera = () => {
                 className="pl-10 h-12 bg-card border-border"
               />
             </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className="h-12 w-12 flex items-center justify-center rounded-lg border border-border bg-card hover:bg-accent transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                aria-label="Toggle filters"
+              >
+                <SlidersHorizontal className="h-5 w-5 text-muted-foreground" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48 bg-card border-border">
+                <DropdownMenuRadioGroup value={sortOption} onValueChange={handleSortChange}>
+                  <DropdownMenuRadioItem value="latest" className="cursor-pointer">
+                    Latest Task
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="task_asc" className="cursor-pointer">
+                    Task (ASC)
+                  </DropdownMenuRadioItem>
+                  <DropdownMenuRadioItem value="task_desc" className="cursor-pointer">
+                    Task (DESC)
+                  </DropdownMenuRadioItem>
+                </DropdownMenuRadioGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
             <div className="h-12 flex items-center justify-center px-4">
               <span className="text-muted-foreground text-sm">
                 Total Count: <span className="text-foreground font-semibold">{filteredTasks.length}</span>
