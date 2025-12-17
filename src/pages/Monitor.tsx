@@ -15,7 +15,14 @@ const Monitor = () => {
     <div className="min-h-screen flex flex-col">
       <AppHeader selectedTab="" isMonitorPage={true} />
       <main className="flex-1">
-        {monitorUrl && <iframe src={monitorUrl} className="w-full h-[calc(100vh-90px)]" title="Monitor Details" />}
+        {monitorUrl && (
+          <iframe
+            src={monitorUrl}
+            className="w-full h-full rounded-lg shadow-sm"
+            loading="lazy"
+            title="Monitor Details"
+          />
+        )}
       </main>
     </div>
   );
