@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
+import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RefreshCw, Download, Package, ShoppingCart, Archive, Layers, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
+import { format } from "date-fns";
+import noRecordsImage from "@/assets/no_records.png";
+
+// Register AG Grid Community modules
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 const AUTH_TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2wiOiJhZG1pbiIsImV4cCI6MTkwMDY1MzE0M30.asYhgMAOvrau4G6LI4V4IbgYZ022g_GX0qZxaS57GQc";
 
@@ -29,26 +34,22 @@ interface ReportConfig {
   columns: ColDef[];
 }
 
-const formatDateTime = (value: string | null) => {
-  if (!value) return "-";
-  const date = new Date(value);
-  return date.toLocaleString("en-IN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+const formatDateTime = (value: string | null | undefined): string => {
+  if (!value) return "N/A";
+  try {
+    return format(new Date(value), "dd-MM-yyyy HH:mm");
+  } catch {
+    return value;
+  }
 };
 
-const formatDate = (value: string | null) => {
-  if (!value) return "-";
-  const date = new Date(value);
-  return date.toLocaleDateString("en-IN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  });
+const formatDate = (value: string | null | undefined): string => {
+  if (!value) return "N/A";
+  try {
+    return format(new Date(value), "dd-MM-yyyy");
+  } catch {
+    return value;
+  }
 };
 
 const Reports = () => {
@@ -65,93 +66,309 @@ const Reports = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(50);
 
+  // Product Stock Report - /nanostore/items
+  const productStockColumns: ColDef[] = [
+    { 
+      field: "updated_at", 
+      headerName: "Transaction Date", 
+      flex: 1, 
+      valueFormatter: (params) => formatDateTime(params.value)
+    },
+    { 
+      field: "created_at", 
+      headerName: "Receive Date", 
+      flex: 1, 
+      valueFormatter: (params) => formatDate(params.value)
+    },
+    { 
+      field: "item_id", 
+      headerName: "Item Id", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "item_quantity", 
+      headerName: "Stock", 
+      width: 100,
+      valueFormatter: (params) => params.value ?? 0
+    },
+    { 
+      field: "item_description", 
+      headerName: "Item Description", 
+      flex: 2,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+  ];
+
+  // Order Product Transaction - /nanostore/items/usage
+  const orderProductColumns: ColDef[] = [
+    { 
+      field: "updated_at", 
+      headerName: "Transaction Date", 
+      flex: 1, 
+      valueFormatter: (params) => formatDateTime(params.value)
+    },
+    { 
+      field: "item_id", 
+      headerName: "Item ID", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "item_description", 
+      headerName: "Item Description", 
+      flex: 2,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "usage_count", 
+      headerName: "Usage Count", 
+      width: 120,
+      valueFormatter: (params) => params.value ?? 0
+    },
+    { 
+      field: "item_quantity", 
+      headerName: "Stock", 
+      width: 100,
+      valueFormatter: (params) => params.value ?? 0
+    },
+  ];
+
+  // Order Tray Transaction - /robotmanager/task
+  const orderTrayColumns: ColDef[] = [
+    { 
+      field: "created_at", 
+      headerName: "Task Date", 
+      flex: 1, 
+      valueFormatter: (params) => formatDateTime(params.value)
+    },
+    { 
+      field: "tray_id", 
+      headerName: "Tray ID", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "status", 
+      headerName: "Status", 
+      width: 120,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "station_slot_id", 
+      headerName: "Station Slot ID", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "station_name", 
+      headerName: "Station Name", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "tags", 
+      headerName: "Tags", 
+      flex: 1,
+      valueFormatter: (params) => {
+        if (!params.value || params.value.length === 0) return "N/A";
+        return Array.isArray(params.value) ? params.value.join(", ") : params.value;
+      }
+    },
+    { 
+      field: "updated_at", 
+      headerName: "Updated At", 
+      flex: 1, 
+      valueFormatter: (params) => formatDateTime(params.value)
+    },
+  ];
+
+  // Tray Transaction - /robotmanager/trays
+  const trayTransactionColumns: ColDef[] = [
+    { 
+      field: "created_at", 
+      headerName: "Created Date", 
+      flex: 1, 
+      valueFormatter: (params) => formatDateTime(params.value)
+    },
+    { 
+      field: "tray_id", 
+      headerName: "Tray ID", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "tray_status", 
+      headerName: "Status", 
+      width: 120,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "tray_height", 
+      headerName: "Height", 
+      width: 100,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "tray_weight", 
+      headerName: "Weight (kg)", 
+      width: 120, 
+      valueFormatter: (params) => params.value ? (params.value / 1000).toFixed(2) : "N/A"
+    },
+    { 
+      field: "tray_divider", 
+      headerName: "Divider", 
+      width: 100,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "tray_lockcount", 
+      headerName: "Lock Count", 
+      width: 110,
+      valueFormatter: (params) => params.value ?? 0
+    },
+    { 
+      field: "updated_at", 
+      headerName: "Updated At", 
+      flex: 1, 
+      valueFormatter: (params) => formatDateTime(params.value)
+    },
+  ];
+
+  // Rack Transaction - /robotmanager/slots
+  const rackTransactionColumns: ColDef[] = [
+    { 
+      field: "slot_id", 
+      headerName: "Slot ID", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "tray_id", 
+      headerName: "Tray ID", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "slot_name", 
+      headerName: "Slot Name", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "tags", 
+      headerName: "Tags", 
+      flex: 1.5,
+      valueFormatter: (params) => {
+        if (!params.value || params.value.length === 0) return "N/A";
+        return Array.isArray(params.value) ? params.value.join(", ") : params.value;
+      }
+    },
+    { 
+      field: "slot_height", 
+      headerName: "Height (mm)", 
+      width: 110,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "slot_status", 
+      headerName: "Status", 
+      width: 120,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "updated_at", 
+      headerName: "Updated At", 
+      flex: 1, 
+      valueFormatter: (params) => formatDateTime(params.value)
+    },
+  ];
+
+  // Order Failure Transaction - /robotmanager/task?task_status=failed
+  const orderFailureColumns: ColDef[] = [
+    { 
+      field: "created_at", 
+      headerName: "Failure Date", 
+      flex: 1, 
+      valueFormatter: (params) => formatDateTime(params.value)
+    },
+    { 
+      field: "tray_id", 
+      headerName: "Tray ID", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "status", 
+      headerName: "Status", 
+      width: 120,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "station_slot_id", 
+      headerName: "Station Slot ID", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "station_name", 
+      headerName: "Station Name", 
+      flex: 1,
+      valueFormatter: (params) => params.value ?? "N/A"
+    },
+    { 
+      field: "tags", 
+      headerName: "Tags", 
+      flex: 1,
+      valueFormatter: (params) => {
+        if (!params.value || params.value.length === 0) return "N/A";
+        return Array.isArray(params.value) ? params.value.join(", ") : params.value;
+      }
+    },
+    { 
+      field: "updated_at", 
+      headerName: "Updated At", 
+      flex: 1, 
+      valueFormatter: (params) => formatDateTime(params.value)
+    },
+  ];
+
   const reportConfigs: Record<ReportType, ReportConfig> = useMemo(() => ({
     product_stock: {
       label: "Product Stock Report",
       icon: <Package className="w-4 h-4" />,
-      endpoint: "https://amsstores1.leapmile.com/nanostore/stock",
-      columns: [
-        { field: "updated_at", headerName: "Transaction Date", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-        { field: "receive_date", headerName: "Receive Date", flex: 1, valueFormatter: (params) => formatDate(params.value || params.data?.created_at) },
-        { field: "item_id", headerName: "Item Id", flex: 1 },
-        { field: "stock", headerName: "Stock", width: 100, valueGetter: (params) => params.data?.stock || params.data?.item_quantity || 0 },
-        { field: "tray_id", headerName: "Tray ID", flex: 1 },
-        { field: "tray_weight", headerName: "Tray Weight (kg)", width: 140, valueFormatter: (params) => params.value ? (params.value / 1000).toFixed(2) : "-" },
-        { field: "item_description", headerName: "Item Description", flex: 2 },
-      ],
+      endpoint: "https://amsstores1.leapmile.com/nanostore/items",
+      columns: productStockColumns,
     },
     order_product_transaction: {
       label: "Order Product Transaction",
       icon: <ShoppingCart className="w-4 h-4" />,
-      endpoint: "https://amsstores1.leapmile.com/nanostore/order_items",
-      columns: [
-        { field: "created_at", headerName: "Order Date", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-        { field: "order_id", headerName: "Order ID", flex: 1 },
-        { field: "item_id", headerName: "Item ID", flex: 1 },
-        { field: "quantity", headerName: "Quantity", width: 100 },
-        { field: "status", headerName: "Status", width: 120 },
-        { field: "item_description", headerName: "Item Description", flex: 2 },
-        { field: "updated_at", headerName: "Updated At", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-      ],
+      endpoint: "https://amsstores1.leapmile.com/nanostore/items/usage?order_by=DESC",
+      columns: orderProductColumns,
     },
     order_tray_transaction: {
       label: "Order Tray Transaction",
       icon: <Archive className="w-4 h-4" />,
-      endpoint: "https://amsstores1.leapmile.com/robotmanager/tasks",
-      columns: [
-        { field: "created_at", headerName: "Task Date", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-        { field: "task_id", headerName: "Task ID", flex: 1 },
-        { field: "tray_id", headerName: "Tray ID", flex: 1 },
-        { field: "order_reference_id", headerName: "Order Ref", flex: 1 },
-        { field: "task_status", headerName: "Status", width: 120 },
-        { field: "tags", headerName: "Tags", flex: 1, valueFormatter: (params) => Array.isArray(params.value) ? params.value.join(", ") : "-" },
-        { field: "updated_at", headerName: "Completed At", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-      ],
+      endpoint: "https://amsstores1.leapmile.com/robotmanager/task",
+      columns: orderTrayColumns,
     },
     tray_transaction: {
       label: "Tray Transaction",
       icon: <Layers className="w-4 h-4" />,
       endpoint: "https://amsstores1.leapmile.com/robotmanager/trays",
-      columns: [
-        { field: "created_at", headerName: "Created Date", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-        { field: "tray_id", headerName: "Tray ID", flex: 1 },
-        { field: "tray_status", headerName: "Status", width: 120 },
-        { field: "tray_height", headerName: "Height", width: 100 },
-        { field: "tray_weight", headerName: "Weight (kg)", width: 120, valueFormatter: (params) => params.value ? (params.value / 1000).toFixed(2) : "-" },
-        { field: "tray_divider", headerName: "Divider", width: 100 },
-        { field: "tray_lockcount", headerName: "Lock Count", width: 110 },
-        { field: "updated_at", headerName: "Updated At", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-      ],
+      columns: trayTransactionColumns,
     },
     rack_transaction: {
       label: "Rack Transaction",
       icon: <Layers className="w-4 h-4" />,
       endpoint: "https://amsstores1.leapmile.com/robotmanager/slots",
-      columns: [
-        { field: "created_at", headerName: "Created Date", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-        { field: "slot_id", headerName: "Slot ID", flex: 1 },
-        { field: "slot_name", headerName: "Slot Name", flex: 1 },
-        { field: "rack", headerName: "Rack", width: 80 },
-        { field: "row", headerName: "Row", width: 80 },
-        { field: "slot", headerName: "Slot", width: 80 },
-        { field: "depth", headerName: "Depth", width: 80 },
-        { field: "tray_id", headerName: "Tray ID", flex: 1 },
-        { field: "slot_status", headerName: "Status", width: 120 },
-      ],
+      columns: rackTransactionColumns,
     },
     order_failure_transaction: {
       label: "Order Failure Transaction",
       icon: <AlertTriangle className="w-4 h-4" />,
-      endpoint: "https://amsstores1.leapmile.com/robotmanager/tasks?task_status=failed",
-      columns: [
-        { field: "created_at", headerName: "Failure Date", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-        { field: "task_id", headerName: "Task ID", flex: 1 },
-        { field: "tray_id", headerName: "Tray ID", flex: 1 },
-        { field: "order_reference_id", headerName: "Order Ref", flex: 1 },
-        { field: "task_status", headerName: "Status", width: 120 },
-        { field: "tags", headerName: "Tags", flex: 1, valueFormatter: (params) => Array.isArray(params.value) ? params.value.join(", ") : "-" },
-        { field: "updated_at", headerName: "Updated At", flex: 1, valueFormatter: (params) => formatDateTime(params.value) },
-      ],
+      endpoint: "https://amsstores1.leapmile.com/robotmanager/task?task_status=failed",
+      columns: orderFailureColumns,
     },
   }), []);
 
@@ -187,23 +404,12 @@ const Reports = () => {
       const separator = url.includes("?") ? "&" : "?";
       url = `${url}${separator}num_records=${pageSize}&offset=${(currentPage - 1) * pageSize}`;
       
-      let response = await fetch(url, {
+      const response = await fetch(url, {
         headers: { 
           "Authorization": AUTH_TOKEN, 
           "Content-Type": "application/json" 
         }
       });
-
-      // Fallback to /nanostore/items if /nanostore/stock fails for product_stock
-      if (!response.ok && reportType === "product_stock") {
-        const fallbackUrl = `https://amsstores1.leapmile.com/nanostore/items?num_records=${pageSize}&offset=${(currentPage - 1) * pageSize}`;
-        response = await fetch(fallbackUrl, {
-          headers: { 
-            "Authorization": AUTH_TOKEN, 
-            "Content-Type": "application/json" 
-          }
-        });
-      }
 
       if (response.status === 404) {
         setRowData([]);
@@ -216,17 +422,7 @@ const Reports = () => {
       }
 
       const data = await response.json();
-      
-      // Map item_quantity to stock for product_stock report
-      let records = data.records || [];
-      if (reportType === "product_stock") {
-        records = records.map((item: any) => ({
-          ...item,
-          stock: item.stock || item.item_quantity || 0,
-        }));
-      }
-      
-      setRowData(records);
+      setRowData(data.records || []);
       setTotalCount(data.total_count || data.count || data.rowcount || 0);
     } catch (error) {
       toast({
@@ -276,18 +472,15 @@ const Reports = () => {
         const field = col.field as string;
         let value = row[field];
         if (field === "created_at" || field === "updated_at") {
-          value = value ? formatDateTime(value) : "-";
+          value = value ? formatDateTime(value) : "N/A";
         }
         if (field === "tray_weight") {
-          value = value ? (value / 1000).toFixed(2) : "-";
-        }
-        if (field === "stock") {
-          value = row.stock || row.item_quantity || 0;
+          value = value ? (value / 1000).toFixed(2) : "N/A";
         }
         if (field === "tags" && Array.isArray(value)) {
           value = value.join(", ");
         }
-        return `"${value ?? ""}"`;
+        return `"${value ?? "N/A"}"`;
       }).join(",")
     ).join("\n");
 
@@ -342,10 +535,10 @@ const Reports = () => {
               <div className="flex items-center gap-2 flex-wrap">
                 <label className="text-sm font-medium text-muted-foreground">Reports:</label>
                 <Select value={reportType} onValueChange={(value) => setReportType(value as ReportType)}>
-                  <SelectTrigger className="w-[260px]">
+                  <SelectTrigger className="w-[260px] bg-card">
                     <SelectValue placeholder="Select Report Type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-card border border-border z-50">
                     {Object.entries(reportConfigs).map(([key, config]) => (
                       <SelectItem key={key} value={key}>
                         <div className="flex items-center gap-2">
@@ -379,10 +572,10 @@ const Reports = () => {
             <div className="flex items-center gap-2">
               <label className="text-sm">Page Size:</label>
               <Select value={pageSize.toString()} onValueChange={(value) => { setPageSize(Number(value)); setCurrentPage(1); }}>
-                <SelectTrigger className="w-[80px] h-8">
+                <SelectTrigger className="w-[80px] h-8 bg-card">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-card border border-border z-50">
                   <SelectItem value="25">25</SelectItem>
                   <SelectItem value="50">50</SelectItem>
                   <SelectItem value="100">100</SelectItem>
@@ -402,7 +595,7 @@ const Reports = () => {
               </div>
             ) : rowData.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 text-muted-foreground">
-                <Package className="w-12 h-12 mb-4 opacity-50" />
+                <img src={noRecordsImage} alt="No Records" className="w-32 h-32 mb-4 opacity-70" />
                 <p className="text-lg font-medium">No Data Available</p>
                 <p className="text-sm">Try selecting a different report type or refresh the data.</p>
               </div>
