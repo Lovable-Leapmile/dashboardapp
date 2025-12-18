@@ -63,7 +63,7 @@ const StatusCard = memo(({ label, value }: StatusCardProps) => {
 StatusCard.displayName = "StatusCard";
 
 const LoadingSkeleton = () => (
-  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
     {Array.from({ length: 16 }).map((_, i) => (
       <div key={i} className="bg-card border border-border rounded-lg p-4">
         <Skeleton className="h-3 w-20 mb-2" />
@@ -149,7 +149,7 @@ const Monitor = () => {
     );
 
     return (
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
         {entries.map(([key, value]) => (
           <StatusCard key={key} label={key} value={value} />
         ))}
