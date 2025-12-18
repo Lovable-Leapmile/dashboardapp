@@ -171,6 +171,8 @@ const Trays = () => {
               pagination={true}
               paginationPageSize={50}
               rowHeight={35}
+              enableCellTextSelection={true}
+              ensureDomOrder={true}
               onGridReady={(params) => {
                 gridApiRef.current = params.api;
                 params.api.setGridOption("quickFilterText", quickFilter);

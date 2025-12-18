@@ -379,6 +379,8 @@ const Logs = () => {
               paginationPageSize={50}
               rowHeight={35}
               popupParent={document.body}
+              enableCellTextSelection={true}
+              ensureDomOrder={true}
               onGridReady={(params) => {
                 gridApiRef.current = params.api;
                 params.api.setGridOption("quickFilterText", quickFilter);
