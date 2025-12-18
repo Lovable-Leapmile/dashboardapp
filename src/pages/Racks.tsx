@@ -6,6 +6,7 @@ import { useAuthSession } from "@/hooks/useAuthSession";
 import blockImg from "@/assets/block.png";
 import stationImg from "@/assets/station.png";
 import trayImg from "@/assets/tray.png";
+import { getCookie, setCookie } from "@/lib/cookies";
 
 interface Slot {
   slot_id: string;
@@ -34,8 +35,8 @@ const Racks = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUserName = localStorage.getItem("user_name");
-    const storedUserId = localStorage.getItem("user_id");
+    const storedUserName = getCookie("user_name");
+    const storedUserId = getCookie("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");
@@ -44,13 +45,13 @@ const Racks = () => {
 
     setUserName(storedUserName);
 
-    // Load selected rack from localStorage, default to 0
-    const storedSelectedRack = localStorage.getItem("selected_rack");
+    // Load selected rack from cookies, default to 0
+    const storedSelectedRack = getCookie("selected_rack");
     if (storedSelectedRack !== null) {
       setSelectedRack(parseInt(storedSelectedRack));
     } else {
       setSelectedRack(0);
-      localStorage.setItem("selected_rack", "0");
+      setCookie("selected_rack", "0", 7);
     }
 
     fetchRobotConfig();
@@ -92,10 +93,10 @@ const Racks = () => {
         const robotConfig = data.records[0];
         const numRacksValue = robotConfig.robot_num_racks || 0;
 
-        localStorage.setItem("robot_num_rows", robotConfig.robot_num_rows?.toString() || "0");
-        localStorage.setItem("robot_num_racks", numRacksValue.toString());
-        localStorage.setItem("robot_num_slots", robotConfig.robot_num_slots?.toString() || "0");
-        localStorage.setItem("robot_num_depths", robotConfig.robot_num_depths?.toString() || "0");
+        setCookie("robot_num_rows", robotConfig.robot_num_rows?.toString() || "0", 7);
+        setCookie("robot_num_racks", numRacksValue.toString(), 7);
+        setCookie("robot_num_slots", robotConfig.robot_num_slots?.toString() || "0", 7);
+        setCookie("robot_num_depths", robotConfig.robot_num_depths?.toString() || "0", 7);
 
         setNumRacks(numRacksValue);
 
@@ -152,7 +153,7 @@ const Racks = () => {
 
   const handleRackSelect = (index: number) => {
     setSelectedRack(index);
-    localStorage.setItem("selected_rack", index.toString());
+    setCookie("selected_rack", index.toString(), 7);
     setSelectedSlotId(null);
     setSlotDetails(null);
   };

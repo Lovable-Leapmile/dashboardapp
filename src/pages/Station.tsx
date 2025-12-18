@@ -8,6 +8,7 @@ import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthSession } from "@/hooks/useAuthSession";
+import { getCookie } from "@/lib/cookies";
 import noRecordsImage from "@/assets/no_records.png";
 
 // Register AG Grid Community modules (required in v34+)
@@ -104,8 +105,8 @@ const Station = () => {
   ];
 
   useEffect(() => {
-    const storedUserName = localStorage.getItem("user_name");
-    const storedUserId = localStorage.getItem("user_id");
+    const storedUserName = getCookie("user_name");
+    const storedUserId = getCookie("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");

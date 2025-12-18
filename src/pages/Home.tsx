@@ -4,6 +4,7 @@ import AppHeader from "@/components/AppHeader";
 import { RobotStateTimeline } from "@/components/RobotStateTimeline";
 import { DashboardCards } from "@/components/DashboardCards";
 import { useAuthSession } from "@/hooks/useAuthSession";
+import { getCookie } from "@/lib/cookies";
 import esLeft from "@/assets/es-left.png";
 import esRight from "@/assets/es-right.png";
 import tsLeft from "@/assets/ts-left.png";
@@ -42,8 +43,8 @@ const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUserName = localStorage.getItem("user_name");
-    const storedUserId = localStorage.getItem("user_id");
+    const storedUserName = getCookie("user_name");
+    const storedUserId = getCookie("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");

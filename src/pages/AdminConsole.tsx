@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { useAuthSession } from "@/hooks/useAuthSession";
-
+import { getCookie } from "@/lib/cookies";
 const AdminConsole = () => {
   useAuthSession();
   const [userName, setUserName] = useState("");
@@ -10,8 +10,8 @@ const AdminConsole = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUserName = localStorage.getItem("user_name");
-    const storedUserId = localStorage.getItem("user_id");
+    const storedUserName = getCookie("user_name");
+    const storedUserId = getCookie("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");

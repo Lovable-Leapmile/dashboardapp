@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff } from "lucide-react";
 import loginIllustration from "@/assets/login.gif";
 import logo from "@/assets/logo.png";
-
+import { setUserSession } from "@/lib/cookies";
 const LoginForm = () => {
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -39,13 +39,8 @@ const LoginForm = () => {
       const data = await response.json();
 
       if (response.ok && data.user_id && data.user_name) {
-        // Store user data
-        localStorage.setItem("user_id", data.user_id);
-        localStorage.setItem("user_name", data.user_name);
-        
-        // Store login timestamp for 7-day session expiration
-        const loginTimestamp = Date.now();
-        localStorage.setItem("login_timestamp", loginTimestamp.toString());
+        // Store user data in cookies
+        setUserSession(data.user_id, data.user_name);
         
         navigate("/home");
       } else {
