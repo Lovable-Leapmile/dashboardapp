@@ -4,6 +4,7 @@ import AppHeader from "@/components/AppHeader";
 import { Input } from "@/components/ui/input";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { useAuthSession } from "@/hooks/useAuthSession";
+import { getCookie, setCookie } from "@/lib/cookies";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,7 +20,7 @@ interface Task {
   last_updated?: string;
 }
 
-const FILTER_STORAGE_KEY = "camera_filter_preference";
+const FILTER_COOKIE_KEY = "camera_filter_preference";
 
 const Camera = () => {
   useAuthSession(); // Session validation
@@ -29,7 +30,7 @@ const Camera = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [sortOption, setSortOption] = useState<SortOption>(() => {
-    const saved = localStorage.getItem(FILTER_STORAGE_KEY);
+    const saved = getCookie(FILTER_COOKIE_KEY);
     return (saved as SortOption) || "latest";
   });
 
@@ -67,7 +68,7 @@ const Camera = () => {
   const handleSortChange = (value: string) => {
     const newSort = value as SortOption;
     setSortOption(newSort);
-    localStorage.setItem(FILTER_STORAGE_KEY, newSort);
+    setCookie(FILTER_COOKIE_KEY, newSort, 7);
   };
 
   const fetchTasks = async () => {
