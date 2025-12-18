@@ -162,22 +162,9 @@ const Monitor = () => {
       <AppHeader selectedTab="" isMonitorPage={true} />
       <main className="flex-1 overflow-auto">
         <div className="max-w-7xl mx-auto">
-          {/* Header with status indicator */}
-          <div className="flex items-center justify-between p-4 border-b border-border">
-            <h1 className="text-xl font-semibold text-foreground">System Status Monitor</h1>
-            <div className="flex items-center gap-2">
-              {statusData?.msg === "ok" ? (
-                <span className="flex items-center gap-2 text-sm text-green-600">
-                  <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  Connected
-                </span>
-              ) : (
-                <span className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span className="w-2 h-2 bg-muted rounded-full" />
-                  Waiting...
-                </span>
-              )}
-            </div>
+          {/* Header */}
+          <div className="p-4">
+            <h1 className="text-xl font-semibold text-foreground text-center">System Status Monitor</h1>
           </div>
 
           {/* Error state */}
