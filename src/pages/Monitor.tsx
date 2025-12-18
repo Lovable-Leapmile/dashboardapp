@@ -145,7 +145,7 @@ const Monitor = () => {
     if (!statusData) return null;
 
     const entries = Object.entries(statusData).filter(
-      ([key]) => key !== "msg" && key !== "device_id"
+      ([key]) => key !== "msg"
     );
 
     return (
