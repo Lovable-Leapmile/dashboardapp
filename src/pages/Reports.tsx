@@ -669,8 +669,7 @@ const Reports = () => {
             loading={loading}
             overlayNoRowsTemplate={`
               <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-                <img src="${noRecordsImage}" alt="No records" style="width: 120px; height: 120px; margin-bottom: 16px;" />
-                <span style="color: #6b7280; font-size: 14px;">No records found</span>
+                <img src="${noRecordsImage}" alt="No records" style="width: 120px; height: 120px;" />
               </div>
             `}
           />
