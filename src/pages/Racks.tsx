@@ -239,24 +239,26 @@ const Racks = () => {
       <div style={{ height: "10px" }} />
 
       <main className="p-3 sm:p-6">
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(32px,32px))] sm:grid-cols-[repeat(auto-fill,minmax(40px,40px))] gap-2 sm:gap-3 justify-center">
-          {Array.from({ length: numRacks }, (_, index) => (
-            <div
-              key={index}
-              onClick={() => handleRackSelect(index)}
-              className="flex items-center justify-center font-medium text-xs sm:text-sm transition-all hover:scale-105 cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
-              style={{
-                backgroundColor: selectedRack === index ? "#ffffff" : "#351C75",
-                color: selectedRack === index ? "#351C75" : "white",
-                borderRadius: "4px",
-                border: selectedRack === index ? "2px solid #351C75" : "none",
-                boxShadow:
-                  selectedRack === index ? "0 4px 12px rgba(53, 28, 117, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              {index}
-            </div>
-          ))}
+        <div className="flex justify-center">
+          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
+            {Array.from({ length: numRacks }, (_, index) => (
+              <div
+                key={index}
+                onClick={() => handleRackSelect(index)}
+                className="flex items-center justify-center font-medium text-xs sm:text-sm transition-all hover:scale-105 cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
+                style={{
+                  backgroundColor: selectedRack === index ? "#ffffff" : "#351C75",
+                  color: selectedRack === index ? "#351C75" : "white",
+                  borderRadius: "4px",
+                  border: selectedRack === index ? "2px solid #351C75" : "none",
+                  boxShadow:
+                    selectedRack === index ? "0 4px 12px rgba(53, 28, 117, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                {index}
+              </div>
+            ))}
+          </div>
         </div>
 
         {selectedRack !== null && (
