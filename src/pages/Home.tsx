@@ -6,6 +6,12 @@ import { DashboardCards } from "@/components/DashboardCards";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { useShuttlePubSub } from "@/hooks/useShuttlePubSub";
 import { getStoredAuthToken } from "@/lib/auth";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import esLeft from "@/assets/es-left.png";
 import esRight from "@/assets/es-right.png";
 
@@ -246,15 +252,44 @@ const Home = () => {
                       transition: "opacity 0.4s ease-in-out, transform 0.4s ease-in-out",
                     }}
                   >
-                    <img
-                      src={getShuttleImageForRack(rackIdx) || esRight}
-                      alt="shuttle"
-                      style={{
-                        width: "55px",
-                        height: "25px",
-                        objectFit: "contain",
-                      }}
-                    />
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <img
+                            src={getShuttleImageForRack(rackIdx) || esRight}
+                            alt="shuttle"
+                            className="cursor-pointer"
+                            style={{
+                              width: "55px",
+                              height: "25px",
+                              objectFit: "contain",
+                            }}
+                          />
+                        </TooltipTrigger>
+                        <TooltipContent 
+                          side="top" 
+                          className="bg-background border border-border shadow-lg p-2"
+                        >
+                          <div className="text-xs space-y-1">
+                            <div className="font-semibold text-primary">
+                              {shuttleState.shuttle_action || "Idle"}
+                            </div>
+                            <div className="text-muted-foreground">
+                              <span className="font-medium">Tray ID:</span>{" "}
+                              {shuttleState.shuttle_move_tray || "N/A"}
+                            </div>
+                            <div className="text-muted-foreground">
+                              <span className="font-medium">Destination:</span>{" "}
+                              Slot {shuttleState.destination_name ?? "N/A"}
+                            </div>
+                            <div className="text-muted-foreground">
+                              <span className="font-medium">Rack:</span> {shuttleState.store_rack ?? "N/A"} |{" "}
+                              <span className="font-medium">Row:</span> {shuttleState.store_row === -1 ? "N/A" : shuttleState.store_row}
+                            </div>
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
                     {/* Status label */}
                     {shuttleState.shuttle_action && (
                       <span
