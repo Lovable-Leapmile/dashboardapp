@@ -36,10 +36,10 @@ export const dateFilterParams = {
   inRangeFloatingFilterDateFormat: "dd-MM-yyyy",
 };
 
-export const formatDateTime24 = (value: unknown): string => {
+export const formatDateTime12 = (value: unknown): string => {
   if (value == null || value === "") return "N/A";
   try {
-    return format(new Date(String(value)), "dd-MM-yyyy HH:mm:ss");
+    return format(new Date(String(value)), "dd-MM-yyyy hh:mm:ss a");
   } catch {
     return String(value);
   }
@@ -56,7 +56,7 @@ export const createDateColumnDef = (field: string, headerName: string, options: 
   filterParams: dateFilterParams,
   flex: 1.2,
   minWidth: 150,
-  valueFormatter: (params) => formatDateTime24(params.value),
+  valueFormatter: (params) => formatDateTime12(params.value),
   ...options,
 });
 
