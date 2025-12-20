@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { AgGridReact } from "ag-grid-react";
@@ -28,34 +28,16 @@ interface TaskData {
   tags: string[] | null;
   created_at: string;
   updated_at: string;
-  is_picking_station?: boolean;
-}
-
-interface RackInfo {
-  rack_id: string;
-  rack_name: string;
-  index: number;
 }
 
 const Completed = () => {
   useAuthSession();
-  const [userName, setUserName] = useState("");
   const [rowData, setRowData] = useState<TaskData[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [allRacks, setAllRacks] = useState<RackInfo[]>([]);
-  const [pickingStationRackIds, setPickingStationRackIds] = useState<Set<string>>(new Set());
   const gridApiRef = useRef<any>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  // Determine bottom 2 racks (picking stations)
-  const pickingStationRacks = useMemo(() => {
-    if (allRacks.length < 2) return allRacks;
-    const sorted = [...allRacks].sort((a, b) => b.index - a.index);
-    return sorted.slice(0, 2);
-  }, [allRacks]);
 
   const columnDefs: ColDef<TaskData>[] = [
     {
@@ -96,17 +78,7 @@ const Completed = () => {
       filter: true,
       flex: 0.8,
       minWidth: 80,
-      cellRenderer: (params: any) => {
-        const isPickingStation = pickingStationRackIds.has(params.value);
-        return (
-          <div className="flex items-center gap-1">
-            <span>{params.value ?? "N/A"}</span>
-            {isPickingStation && (
-              <Badge className="bg-amber-500 text-white text-[10px] px-1 py-0">PS</Badge>
-            )}
-          </div>
-        );
-      },
+      valueFormatter: (params) => params.value ?? "N/A",
     },
     {
       field: "row_id",
@@ -199,39 +171,14 @@ const Completed = () => {
       return;
     }
 
-    setUserName(storedUserName);
-    fetchData();
+    fetchTasksData();
   }, [navigate]);
 
-  // Update picking station rack IDs when racks change
-  useEffect(() => {
-    const ids = new Set(pickingStationRacks.map((r) => r.rack_id));
-    setPickingStationRackIds(ids);
-  }, [pickingStationRacks]);
-
-  const fetchData = async () => {
+  const fetchTasksData = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      // Fetch tasks and racks in parallel
-      const [tasksResult, racksResult] = await Promise.all([
-        fetchTasksData(),
-        fetchRacksData(),
-      ]);
-
-      if (racksResult) {
-        setAllRacks(racksResult);
-      }
-    } catch (err) {
-      console.error("Error fetching data:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchTasksData = async () => {
-    try {
       const url = withQuery(`${ROBOTMANAGER_BASE}/task`, {
         task_status: "completed",
         order_by_field: "updated_at",
@@ -243,7 +190,6 @@ const Completed = () => {
       // Handle "no records found" as a normal case
       if (res.status === 404 && data.message === "no records found") {
         console.log("No completed tasks found");
-        setTotalCount(0);
         setRowData([]);
         return;
       }
@@ -253,7 +199,6 @@ const Completed = () => {
       }
 
       console.log("Fetched completed tasks:", data?.records?.length);
-      setTotalCount(data.count || 0);
       
       const mapped = (data.records || []).map((r: any) => ({
         task_id: r.task_id || r.id || "N/A",
@@ -292,42 +237,9 @@ const Completed = () => {
         variant: "destructive",
       });
       console.error("Error fetching tasks:", error);
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const fetchRacksData = async (): Promise<RackInfo[] | null> => {
-    try {
-      const { res, data } = await apiGet(`${ROBOTMANAGER_BASE}/robots`);
-
-      if (!res.ok) return null;
-
-      const robot = data.records?.[0];
-      if (!robot) return null;
-
-      const numRacks = robot.robot_num_racks || 0;
-      const racks: RackInfo[] = [];
-      
-      for (let i = 0; i < numRacks; i++) {
-        racks.push({
-          rack_id: String(i + 1),
-          rack_name: `Rack ${i + 1}`,
-          index: i,
-        });
-      }
-      
-      return racks;
-    } catch (error) {
-      console.error("Error fetching racks:", error);
-      return null;
-    }
-  };
-
-  // Get row class for picking station tasks
-  const getRowClass = (params: any) => {
-    if (pickingStationRackIds.has(params.data?.rack_id)) {
-      return "picking-station-row";
-    }
-    return "";
   };
 
   return (
@@ -335,88 +247,50 @@ const Completed = () => {
       <AppHeader selectedTab="" isTasksPage={true} activeTaskTab="Completed" />
 
       <main className="p-2 sm:p-4">
-        {/* Picking Station Visual Indicator */}
-        {pickingStationRacks.length > 0 && (
-          <div className="mb-4 flex flex-wrap gap-3">
-            <div className="flex items-center gap-2 px-3 py-2 bg-amber-50 border-2 border-amber-400 rounded-lg">
-              <div className="flex items-center gap-1">
-                <span className="text-sm font-semibold text-amber-800">Picking Stations:</span>
-                {pickingStationRacks.map((rack) => (
-                  <Badge 
-                    key={rack.rack_id} 
-                    className="bg-amber-500 text-white font-bold"
-                  >
-                    Rack {rack.rack_id}
-                  </Badge>
-                ))}
-              </div>
-              <span className="text-xs text-amber-600">(Bottom 2 racks)</span>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Badge className="bg-amber-500 text-white text-[10px] px-1">PS</Badge>
-              <span>= Picking Station task</span>
-            </div>
-          </div>
-        )}
-
         {loading ? (
-          <div className="flex flex-col items-center justify-center" style={{ minHeight: "calc(100vh - 220px)" }}>
+          <div className="flex flex-col items-center justify-center" style={{ minHeight: "calc(100vh - 180px)" }}>
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="mt-2 text-muted-foreground">Loading completed tasks...</p>
           </div>
         ) : error ? (
-          <div className="flex flex-col items-center justify-center" style={{ minHeight: "calc(100vh - 220px)" }}>
+          <div className="flex flex-col items-center justify-center" style={{ minHeight: "calc(100vh - 180px)" }}>
             <p className="text-destructive">{error}</p>
             <button 
-              onClick={fetchData}
+              onClick={fetchTasksData}
               className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
             >
               Retry
             </button>
           </div>
         ) : rowData.length === 0 ? (
-          <div className="flex flex-col items-center justify-center" style={{ minHeight: "calc(100vh - 220px)" }}>
+          <div className="flex flex-col items-center justify-center" style={{ minHeight: "calc(100vh - 180px)" }}>
             <img src={noRecordsImage} alt="No Record found" className="w-48 sm:w-[340px]" />
           </div>
         ) : (
-          <>
-            <div className="mb-2 text-sm text-muted-foreground">
-              Total: <span className="font-semibold">{totalCount}</span> completed tasks
-            </div>
-            <div className="ag-theme-quartz w-full" style={{ height: "calc(100vh - 200px)" }}>
-              <style>{`
-                .picking-station-row {
-                  background-color: rgba(251, 191, 36, 0.1) !important;
-                }
-                .picking-station-row:hover {
-                  background-color: rgba(251, 191, 36, 0.2) !important;
-                }
-              `}</style>
-              <AgGridReact
-                rowData={rowData}
-                columnDefs={columnDefs}
-                defaultColDef={{
-                  resizable: true,
-                  minWidth: 60,
-                  sortable: true,
-                  filter: true,
-                }}
-                pagination={true}
-                paginationPageSize={50}
-                paginationPageSizeSelector={[25, 50, 100, 200]}
-                rowHeight={35}
-                headerHeight={35}
-                getRowClass={getRowClass}
-                onGridReady={(params) => {
-                  gridApiRef.current = params.api;
-                  params.api.sizeColumnsToFit();
-                }}
-                onGridSizeChanged={(params) => {
-                  params.api.sizeColumnsToFit();
-                }}
-              />
-            </div>
-          </>
+          <div className="ag-theme-quartz w-full" style={{ height: "calc(100vh - 143px)" }}>
+            <AgGridReact
+              rowData={rowData}
+              columnDefs={columnDefs}
+              defaultColDef={{
+                resizable: true,
+                minWidth: 60,
+                sortable: true,
+                filter: true,
+              }}
+              pagination={true}
+              paginationPageSize={50}
+              paginationPageSizeSelector={[25, 50, 100, 200]}
+              rowHeight={35}
+              headerHeight={35}
+              onGridReady={(params) => {
+                gridApiRef.current = params.api;
+                params.api.sizeColumnsToFit();
+              }}
+              onGridSizeChanged={(params) => {
+                params.api.sizeColumnsToFit();
+              }}
+            />
+          </div>
         )}
       </main>
     </div>
