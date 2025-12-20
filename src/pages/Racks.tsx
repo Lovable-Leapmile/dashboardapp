@@ -266,21 +266,21 @@ const Racks = () => {
           <div className="flex justify-center mt-6 sm:mt-8 overflow-x-auto">
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-5">
               {/* Row 1 Section */}
-              <div className="flex items-start gap-3">
-                {/* Picking Station Label - Left aligned with Row 1 */}
-                <div className="hidden lg:flex flex-col justify-end h-full" style={{ minHeight: `${row1Depth1Slots.length * 55}px` }}>
+              <div className="flex items-start gap-4">
+                {/* Picking Station Label - Positioned in front of rack containers */}
+                <div 
+                  className="hidden lg:flex items-end justify-center self-stretch"
+                  style={{ paddingTop: "40px" }}
+                >
                   <div 
-                    className="flex items-center justify-center px-3 py-2 rounded-l-lg border-r-0 font-semibold text-xs sm:text-sm whitespace-nowrap"
+                    className="flex items-center justify-center font-semibold text-sm whitespace-nowrap z-10"
                     style={{ 
-                      backgroundColor: "#fef3c7",
-                      borderColor: "#f59e0b",
-                      borderWidth: "2px",
-                      borderRightWidth: "0",
-                      color: "#92400e",
+                      color: "#351C75",
                       writingMode: "vertical-rl",
                       textOrientation: "mixed",
                       transform: "rotate(180deg)",
-                      height: "110px"
+                      height: "110px",
+                      letterSpacing: "0.5px"
                     }}
                   >
                     Picking Station
@@ -350,12 +350,8 @@ const Racks = () => {
                   
                   {/* Mobile Picking Station Label */}
                   <div 
-                    className="lg:hidden mt-3 px-3 py-1.5 rounded-lg font-semibold text-xs"
-                    style={{ 
-                      backgroundColor: "#fef3c7",
-                      border: "2px solid #f59e0b",
-                      color: "#92400e"
-                    }}
+                    className="lg:hidden mt-3 px-3 py-1.5 font-semibold text-xs"
+                    style={{ color: "#351C75" }}
                   >
                     Picking Station
                   </div>
