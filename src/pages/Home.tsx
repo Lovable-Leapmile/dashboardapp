@@ -175,7 +175,7 @@ const Home = () => {
               <div 
                 className="flex flex-col justify-start ml-2 sm:ml-4 mr-2 sm:mr-4"
                 style={{ 
-                  minWidth: "55px",
+                  minWidth: "75px",
                   position: "relative",
                 }}
               >
@@ -197,25 +197,36 @@ const Home = () => {
                 {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                   <div
                     key={`shuttle-slot-${rackIdx}`}
-                    className="flex items-center justify-center"
+                    className="flex flex-col items-center justify-center"
                     style={{
-                      height: "25px",
+                      height: "40px",
                       marginTop: rackIdx === 0 ? "0" : "10px",
                       position: "relative",
                       zIndex: 1,
+                      opacity: isShuttleVisibleForRack(rackIdx) ? 1 : 0,
+                      transform: isShuttleVisibleForRack(rackIdx) ? "translateX(0)" : "translateX(-20px)",
+                      transition: "opacity 0.4s ease-in-out, transform 0.4s ease-in-out",
                     }}
                   >
-                    {isShuttleVisibleForRack(rackIdx) && (
-                      <img
-                        src={getShuttleImageForRack(rackIdx)!}
-                        alt="shuttle"
+                    <img
+                      src={getShuttleImageForRack(rackIdx) || esRight}
+                      alt="shuttle"
+                      style={{
+                        width: "55px",
+                        height: "25px",
+                        objectFit: "contain",
+                      }}
+                    />
+                    {/* Status label */}
+                    {shuttleState.shuttle_action && (
+                      <span
+                        className="text-[8px] font-medium text-primary mt-0.5 whitespace-nowrap"
                         style={{
-                          width: "55px",
-                          height: "25px",
-                          objectFit: "contain",
-                          transition: "all 0.3s ease-in-out",
+                          textShadow: "0 0 2px rgba(0,0,0,0.3)",
                         }}
-                      />
+                      >
+                        {shuttleState.shuttle_action}
+                      </span>
                     )}
                   </div>
                 ))}
