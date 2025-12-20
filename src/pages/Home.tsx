@@ -15,16 +15,58 @@ import {
 import esLeft from "@/assets/es-left.png";
 import esRight from "@/assets/es-right.png";
 
+// Action history item type
+interface ActionHistoryItem {
+  action: string;
+  timestamp: Date;
+  trayId: string | null;
+  slot: number | null;
+}
+
 const Home = () => {
   useAuthSession();
   const [userName, setUserName] = useState("");
   const [robotNumRacks, setRobotNumRacks] = useState(0);
   const [robotNumDepths, setRobotNumDepths] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [actionHistory, setActionHistory] = useState<ActionHistoryItem[]>([]);
   const navigate = useNavigate();
 
   // Use the PubSub hook for real-time shuttle tracking
-  const { shuttleState, isLoading } = useShuttlePubSub();
+  const { shuttleState } = useShuttlePubSub();
+
+  // Track action history
+  useEffect(() => {
+    if (shuttleState.shuttle_action && shuttleState.shuttle_action !== "Ongoing") {
+      setActionHistory((prev) => {
+        const newItem: ActionHistoryItem = {
+          action: shuttleState.shuttle_action!,
+          timestamp: new Date(),
+          trayId: shuttleState.shuttle_move_tray,
+          slot: shuttleState.destination_name,
+        };
+        // Avoid duplicates for same action
+        if (prev.length > 0 && prev[0].action === newItem.action && prev[0].trayId === newItem.trayId) {
+          return prev;
+        }
+        return [newItem, ...prev].slice(0, 5);
+      });
+    }
+  }, [shuttleState.shuttle_action, shuttleState.shuttle_move_tray, shuttleState.destination_name]);
+
+  // Get status color based on action
+  const getStatusColor = (action: string | null) => {
+    if (!action || action === "Ongoing") {
+      return { bg: "transparent", border: "#166534" }; // dark green border for idle
+    }
+    if (action === "Stored" || action === "Retrieved") {
+      return { bg: "#22c55e", border: "#22c55e" }; // green for completed
+    }
+    if (action === "Storing" || action === "Retrieve") {
+      return { bg: "transparent", border: "#86efac" }; // light green border for in-progress
+    }
+    return { bg: "transparent", border: "#166534" };
+  };
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("user_name");
@@ -223,20 +265,6 @@ const Home = () => {
                   }}
                 />
 
-                {/* Loading indicator */}
-                {isLoading && (
-                  <div 
-                    className="absolute inset-0 flex items-center justify-center"
-                    style={{ zIndex: 2 }}
-                  >
-                    <div className="flex flex-col items-center gap-1">
-                      <div 
-                        className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin"
-                      />
-                      <span className="text-[8px] text-muted-foreground">Loading...</span>
-                    </div>
-                  </div>
-                )}
                 
                 {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                   <div
@@ -290,17 +318,28 @@ const Home = () => {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                    {/* Status label */}
-                    {shuttleState.shuttle_action && (
+                    {/* Status label with color indicator */}
+                    <div 
+                      className="absolute -bottom-4 flex items-center gap-1"
+                    >
                       <span
-                        className="absolute -bottom-3 text-[8px] font-medium text-primary whitespace-nowrap"
+                        className="w-2 h-2 rounded-full"
                         style={{
-                          textShadow: "0 0 2px rgba(255,255,255,0.8)",
+                          backgroundColor: getStatusColor(shuttleState.shuttle_action).bg,
+                          border: `2px solid ${getStatusColor(shuttleState.shuttle_action).border}`,
                         }}
-                      >
-                        {shuttleState.shuttle_action}
-                      </span>
-                    )}
+                      />
+                      {shuttleState.shuttle_action && (
+                        <span
+                          className="text-[8px] font-medium text-primary whitespace-nowrap"
+                          style={{
+                            textShadow: "0 0 2px rgba(255,255,255,0.8)",
+                          }}
+                        >
+                          {shuttleState.shuttle_action}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -337,6 +376,44 @@ const Home = () => {
           <div className="flex flex-col flex-1 lg:ml-[30px]">
             <RobotStateTimeline />
             <DashboardCards />
+            
+            {/* Action History Log */}
+            <div className="mt-4 p-3 bg-background rounded-lg border border-border">
+              <h4 className="text-sm font-semibold text-primary mb-2">Recent Actions</h4>
+              {actionHistory.length === 0 ? (
+                <p className="text-xs text-muted-foreground">No actions recorded yet</p>
+              ) : (
+                <div className="space-y-1.5">
+                  {actionHistory.map((item, idx) => (
+                    <div 
+                      key={idx} 
+                      className="flex items-center gap-2 text-xs"
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full shrink-0"
+                        style={{
+                          backgroundColor: getStatusColor(item.action).bg,
+                          border: `2px solid ${getStatusColor(item.action).border}`,
+                        }}
+                      />
+                      <span className="font-medium text-foreground">{item.action}</span>
+                      <span className="text-muted-foreground">
+                        {item.trayId ? `Tray: ${item.trayId}` : ""}
+                        {item.slot !== null ? ` → Slot ${item.slot}` : ""}
+                      </span>
+                      <span className="text-muted-foreground ml-auto text-[10px]">
+                        {item.timestamp.toLocaleTimeString("en-IN", { 
+                          timeZone: "Asia/Kolkata",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          second: "2-digit"
+                        })}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </main>
