@@ -378,7 +378,7 @@ const Home = () => {
           </div>
 
           {/* Robot State Timeline with Dashboard Cards */}
-          <div className="flex flex-col flex-1 lg:ml-[50px]">
+          <div className="flex flex-col flex-1 lg:ml-[30px]">
             <RobotStateTimeline />
             <DashboardCards />
           </div>
