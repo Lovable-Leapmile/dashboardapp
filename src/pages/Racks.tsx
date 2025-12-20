@@ -253,7 +253,7 @@ const Racks = () => {
                   borderRadius: "4px",
                   border: selectedRack === index ? "2px solid #351C75" : "none",
                   boxShadow:
-                    selectedRack === index ? "0 4px 12px rgba(53, 28, 117, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.1)",
+                    selectedRack === index ? "0 3px 6px rgba(53, 28, 117, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.1)",
                 }}
               >
                 {index}
@@ -268,9 +268,9 @@ const Racks = () => {
               {/* Row 1 Section */}
               <div className="flex items-end gap-2">
                 {/* Picking Station Label - Directly in front of station containers */}
-                <div 
+                <div
                   className="hidden lg:flex items-center justify-center px-2 py-3 rounded-l-lg font-semibold text-xs whitespace-nowrap"
-                  style={{ 
+                  style={{
                     backgroundColor: "#fef3c7",
                     border: "2px solid #351C75",
                     borderRight: "none",
@@ -279,7 +279,7 @@ const Racks = () => {
                     textOrientation: "mixed",
                     transform: "rotate(180deg)",
                     height: "118px",
-                    marginBottom: "36px"
+                    marginBottom: "36px",
                   }}
                 >
                   Picking Station
@@ -297,25 +297,31 @@ const Racks = () => {
                           const isPickingStation = slot.tags?.includes("station");
                           const isLastTwo = idx >= row1Depth1Slots.length - 2;
                           const shouldHighlight = isPickingStation || isLastTwo;
-                          
+
                           return (
                             <div
                               key={`r1d1-${idx}`}
                               className={shouldHighlight ? "relative" : ""}
-                              style={shouldHighlight ? {
-                                backgroundColor: "#fef3c7",
-                                border: "2px solid #351C75",
-                                borderRadius: "8px",
-                                padding: "4px",
-                                margin: "-4px"
-                              } : {}}
+                              style={
+                                shouldHighlight
+                                  ? {
+                                      backgroundColor: "#fef3c7",
+                                      border: "2px solid #351C75",
+                                      borderRadius: "8px",
+                                      padding: "4px",
+                                      margin: "-4px",
+                                    }
+                                  : {}
+                              }
                             >
                               <SlotBox slot={slot} />
                             </div>
                           );
                         })}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 2</div>
+                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                        Depth 2
+                      </div>
                     </div>
                     {/* Depth 1 - Vertical Column (Right) */}
                     <div className="flex flex-col items-center gap-2 sm:gap-2.5">
@@ -324,35 +330,41 @@ const Racks = () => {
                           const isPickingStation = slot.tags?.includes("station");
                           const isLastTwo = idx >= row1Depth0Slots.length - 2;
                           const shouldHighlight = isPickingStation || isLastTwo;
-                          
+
                           return (
                             <div
                               key={`r1d0-${idx}`}
                               className={shouldHighlight ? "relative" : ""}
-                              style={shouldHighlight ? {
-                                backgroundColor: "#fef3c7",
-                                border: "2px solid #351C75",
-                                borderRadius: "8px",
-                                padding: "4px",
-                                margin: "-4px"
-                              } : {}}
+                              style={
+                                shouldHighlight
+                                  ? {
+                                      backgroundColor: "#fef3c7",
+                                      border: "2px solid #351C75",
+                                      borderRadius: "8px",
+                                      padding: "4px",
+                                      margin: "-4px",
+                                    }
+                                  : {}
+                              }
                             >
                               <SlotBox slot={slot} />
                             </div>
                           );
                         })}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 1</div>
+                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                        Depth 1
+                      </div>
                     </div>
                   </div>
-                  
+
                   {/* Mobile Picking Station Label */}
-                  <div 
+                  <div
                     className="lg:hidden mt-3 px-3 py-1.5 rounded-lg font-semibold text-xs"
-                    style={{ 
+                    style={{
                       backgroundColor: "#fef3c7",
                       border: "2px solid #351C75",
-                      color: "#351C75"
+                      color: "#351C75",
                     }}
                   >
                     Picking Station
@@ -362,13 +374,13 @@ const Racks = () => {
 
               {/* Shuttle Image between Row 1 and Row 0 */}
               <div className="flex items-center justify-center">
-                <img 
-                  src={shuttleImg} 
-                  alt="Shuttle" 
+                <img
+                  src={shuttleImg}
+                  alt="Shuttle"
                   className="h-full object-contain"
-                  style={{ 
+                  style={{
                     opacity: 0.6,
-                    height: `${Math.max(row1Depth1Slots.length, row0Depth1Slots.length) * 55}px`
+                    height: `${Math.max(row1Depth1Slots.length, row0Depth1Slots.length) * 55}px`,
                   }}
                 />
               </div>
@@ -387,25 +399,31 @@ const Racks = () => {
                           const isPickingStation = slot.tags?.includes("station");
                           const isLastTwo = idx >= row0Depth1Slots.length - 2;
                           const shouldHighlight = isPickingStation || isLastTwo;
-                          
+
                           return (
                             <div
                               key={`r0d1-${idx}`}
                               className={shouldHighlight ? "relative" : ""}
-                              style={shouldHighlight ? {
-                                backgroundColor: "#fef3c7",
-                                border: "2px solid #351C75",
-                                borderRadius: "8px",
-                                padding: "4px",
-                                margin: "-4px"
-                              } : {}}
+                              style={
+                                shouldHighlight
+                                  ? {
+                                      backgroundColor: "#fef3c7",
+                                      border: "2px solid #351C75",
+                                      borderRadius: "8px",
+                                      padding: "4px",
+                                      margin: "-4px",
+                                    }
+                                  : {}
+                              }
                             >
                               <SlotBox slot={slot} />
                             </div>
                           );
                         })}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 1</div>
+                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                        Depth 1
+                      </div>
                     </div>
                     {/* Depth 2 - Vertical Column (Right) */}
                     <div className="flex flex-col items-center gap-2 sm:gap-2.5">
@@ -414,25 +432,31 @@ const Racks = () => {
                           const isPickingStation = slot.tags?.includes("station");
                           const isLastTwo = idx >= row0Depth0Slots.length - 2;
                           const shouldHighlight = isPickingStation || isLastTwo;
-                          
+
                           return (
                             <div
                               key={`r0d0-${idx}`}
                               className={shouldHighlight ? "relative" : ""}
-                              style={shouldHighlight ? {
-                                backgroundColor: "#fef3c7",
-                                border: "2px solid #351C75",
-                                borderRadius: "8px",
-                                padding: "4px",
-                                margin: "-4px"
-                              } : {}}
+                              style={
+                                shouldHighlight
+                                  ? {
+                                      backgroundColor: "#fef3c7",
+                                      border: "2px solid #351C75",
+                                      borderRadius: "8px",
+                                      padding: "4px",
+                                      margin: "-4px",
+                                    }
+                                  : {}
+                              }
                             >
                               <SlotBox slot={slot} />
                             </div>
                           );
                         })}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 2</div>
+                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                        Depth 2
+                      </div>
                     </div>
                   </div>
                 </div>
