@@ -12,6 +12,7 @@ import noRecordsImage from "@/assets/no_records.png";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RefreshCw, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { dateFilterParams, defaultGridProps } from "@/lib/agGridUtils";
 
 // Register AG Grid Community modules
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -68,12 +69,16 @@ const Reports = () => {
       headerName: "Transaction Date",
       flex: 1,
       minWidth: 150,
+      filter: "agDateColumnFilter",
+      filterParams: dateFilterParams,
     },
     {
       field: "receive_date",
       headerName: "Receive Date",
       flex: 1,
       minWidth: 120,
+      filter: "agDateColumnFilter",
+      filterParams: dateFilterParams,
     },
     { field: "item_id", headerName: "Item Id", flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" },
     { field: "stock", headerName: "Stock", flex: 0.7, minWidth: 80, valueFormatter: (p) => p.value ?? 0 },
@@ -101,6 +106,8 @@ const Reports = () => {
       headerName: "Transaction Date",
       flex: 1,
       minWidth: 150,
+      filter: "agDateColumnFilter",
+      filterParams: dateFilterParams,
     },
     {
       field: "activity_type",
@@ -138,6 +145,8 @@ const Reports = () => {
       headerName: "Transaction Date",
       flex: 1,
       minWidth: 150,
+      filter: "agDateColumnFilter",
+      filterParams: dateFilterParams,
     },
     { field: "order_id", headerName: "Order Id", flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" },
     { field: "status", headerName: "Status", flex: 0.8, minWidth: 100, valueFormatter: (p) => p.value ?? "N/A" },
@@ -167,6 +176,8 @@ const Reports = () => {
       headerName: "Transaction Date",
       flex: 1,
       minWidth: 150,
+      filter: "agDateColumnFilter",
+      filterParams: dateFilterParams,
     },
     { field: "tray_id", headerName: "Tray ID", flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" },
     {
@@ -221,6 +232,8 @@ const Reports = () => {
       headerName: "Transaction Date",
       flex: 1,
       minWidth: 150,
+      filter: "agDateColumnFilter",
+      filterParams: dateFilterParams,
     },
     { field: "rack", headerName: "Rack", flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" },
     {
@@ -247,6 +260,8 @@ const Reports = () => {
       headerName: "Transaction Date",
       flex: 1,
       minWidth: 150,
+      filter: "agDateColumnFilter",
+      filterParams: dateFilterParams,
     },
     {
       field: "order_ref_id",
@@ -663,8 +678,7 @@ const Reports = () => {
               paginationPageSize={50}
               paginationPageSizeSelector={[25, 50, 100, 200]}
               rowHeight={35}
-              enableCellTextSelection={true}
-              ensureDomOrder={true}
+              {...defaultGridProps}
               onGridReady={(params) => {
                 gridApiRef.current = params.api;
                 params.api.sizeColumnsToFit();

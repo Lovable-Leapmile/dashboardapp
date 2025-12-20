@@ -17,6 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { createDateColumnDef, defaultGridProps } from "@/lib/agGridUtils";
 
 // Register AG Grid Community modules (required in v34+)
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -159,21 +160,7 @@ const Logs = () => {
   };
 
   const columnDefs: ColDef<LogData>[] = [
-    {
-      field: "created_at",
-      headerName: "Created At",
-      sortable: true,
-      filter: true,
-      flex: 1.5,
-      valueFormatter: (params) => {
-        if (!params.value) return "N/A";
-        try {
-          return format(new Date(params.value), "dd-MM-yyyy HH:mm:ss");
-        } catch {
-          return params.value;
-        }
-      },
-    },
+    createDateColumnDef("created_at", "Created At", { flex: 1.5 }),
     {
       field: "message",
       headerName: "Message",

@@ -5,10 +5,10 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
-import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import noRecordsImage from "@/assets/no_records.png";
+import { createDateColumnDef, defaultGridProps } from "@/lib/agGridUtils";
 
 // Register AG Grid Community modules (required in v34+)
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -53,36 +53,8 @@ const Trays = () => {
         return params.value.join(", ");
       },
     },
-    {
-      field: "created_at",
-      headerName: "Created At",
-      sortable: true,
-      filter: true,
-      flex: 1.5,
-      valueFormatter: (params) => {
-        if (!params.value) return "";
-        try {
-          return format(new Date(params.value), "dd-MM-yyyy HH:mm:ss");
-        } catch {
-          return params.value;
-        }
-      },
-    },
-    {
-      field: "updated_at",
-      headerName: "Updated At",
-      sortable: true,
-      filter: true,
-      flex: 1.5,
-      valueFormatter: (params) => {
-        if (!params.value) return "";
-        try {
-          return format(new Date(params.value), "dd-MM-yyyy HH:mm:ss");
-        } catch {
-          return params.value;
-        }
-      },
-    },
+    createDateColumnDef("created_at", "Created At", { flex: 1.5 }),
+    createDateColumnDef("updated_at", "Updated At", { flex: 1.5 }),
   ];
 
   useEffect(() => {
@@ -171,8 +143,7 @@ const Trays = () => {
               pagination={true}
               paginationPageSize={50}
               rowHeight={35}
-              enableCellTextSelection={true}
-              ensureDomOrder={true}
+              {...defaultGridProps}
               onGridReady={(params) => {
                 gridApiRef.current = params.api;
                 params.api.setGridOption("quickFilterText", quickFilter);

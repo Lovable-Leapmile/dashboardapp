@@ -5,13 +5,13 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
-import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { apiGet, ROBOTMANAGER_BASE, withQuery } from "@/lib/api";
 import noRecordsImage from "@/assets/no_records.png";
 import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
+import { createDateColumnDef, defaultGridProps } from "@/lib/agGridUtils";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -128,38 +128,8 @@ const Completed = () => {
         return params.value.join(", ");
       },
     },
-    {
-      field: "updated_at",
-      headerName: "Updated At",
-      sortable: true,
-      filter: true,
-      flex: 1.2,
-      minWidth: 150,
-      valueFormatter: (params) => {
-        if (!params.value) return "N/A";
-        try {
-          return format(new Date(params.value), "dd-MM-yyyy HH:mm:ss");
-        } catch {
-          return params.value;
-        }
-      },
-    },
-    {
-      field: "created_at",
-      headerName: "Created At",
-      sortable: true,
-      filter: true,
-      flex: 1.2,
-      minWidth: 150,
-      valueFormatter: (params) => {
-        if (!params.value) return "N/A";
-        try {
-          return format(new Date(params.value), "dd-MM-yyyy HH:mm:ss");
-        } catch {
-          return params.value;
-        }
-      },
-    },
+    createDateColumnDef("updated_at", "Updated At"),
+    createDateColumnDef("created_at", "Created At"),
   ];
 
   useEffect(() => {
@@ -282,6 +252,7 @@ const Completed = () => {
               paginationPageSizeSelector={[25, 50, 100, 200]}
               rowHeight={35}
               headerHeight={35}
+              {...defaultGridProps}
               onGridReady={(params) => {
                 gridApiRef.current = params.api;
                 params.api.sizeColumnsToFit();
