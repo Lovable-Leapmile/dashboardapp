@@ -47,7 +47,7 @@ const Logs = () => {
     return data.map((row) => {
       const message = row.message;
       return {
-        "Created At": row.created_at ? format(new Date(row.created_at), "dd-MM-yyyy HH:mm:ss") : "N/A",
+        "Created At": row.created_at ? format(new Date(row.created_at), "dd-MM-yyyy hh:mm:ss a") : "N/A",
         Message:
           typeof message === "object" && message?.msg
             ? message.msg.split("\\n")[0]
