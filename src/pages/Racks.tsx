@@ -266,28 +266,98 @@ const Racks = () => {
           <div className="flex justify-center mt-6 sm:mt-8 overflow-x-auto">
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-5">
               {/* Row 1 Section */}
-              <div className="flex flex-col items-center">
-                <div className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6" style={{ color: "#351c75" }}>
-                  Row 1
-                </div>
-                <div className="flex gap-2 sm:gap-[10px]">
-                  {/* Depth 2 - Vertical Column (Left) */}
-                  <div className="flex flex-col items-center gap-2 sm:gap-2.5">
-                    <div className="flex flex-col gap-2 sm:gap-2.5">
-                      {row1Depth1Slots.map((slot, idx) => (
-                        <SlotBox key={`r1d1-${idx}`} slot={slot} />
-                      ))}
-                    </div>
-                    <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 2</div>
+              <div className="flex items-start gap-3">
+                {/* Picking Station Label - Left aligned with Row 1 */}
+                <div className="hidden lg:flex flex-col justify-end h-full" style={{ minHeight: `${row1Depth1Slots.length * 55}px` }}>
+                  <div 
+                    className="flex items-center justify-center px-3 py-2 rounded-l-lg border-r-0 font-semibold text-xs sm:text-sm whitespace-nowrap"
+                    style={{ 
+                      backgroundColor: "#fef3c7",
+                      borderColor: "#f59e0b",
+                      borderWidth: "2px",
+                      borderRightWidth: "0",
+                      color: "#92400e",
+                      writingMode: "vertical-rl",
+                      textOrientation: "mixed",
+                      transform: "rotate(180deg)",
+                      height: "110px"
+                    }}
+                  >
+                    Picking Station
                   </div>
-                  {/* Depth 1 - Vertical Column (Right) */}
-                  <div className="flex flex-col items-center gap-2 sm:gap-2.5">
-                    <div className="flex flex-col gap-2 sm:gap-2.5">
-                      {row1Depth0Slots.map((slot, idx) => (
-                        <SlotBox key={`r1d0-${idx}`} slot={slot} />
-                      ))}
+                </div>
+
+                <div className="flex flex-col items-center">
+                  <div className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6" style={{ color: "#351c75" }}>
+                    Row 1
+                  </div>
+                  <div className="flex gap-2 sm:gap-[10px]">
+                    {/* Depth 2 - Vertical Column (Left) */}
+                    <div className="flex flex-col items-center gap-2 sm:gap-2.5">
+                      <div className="flex flex-col gap-2 sm:gap-2.5">
+                        {row1Depth1Slots.map((slot, idx) => {
+                          const isPickingStation = slot.tags?.includes("station");
+                          const isLastTwo = idx >= row1Depth1Slots.length - 2;
+                          const shouldHighlight = isPickingStation || isLastTwo;
+                          
+                          return (
+                            <div
+                              key={`r1d1-${idx}`}
+                              className={shouldHighlight ? "relative" : ""}
+                              style={shouldHighlight ? {
+                                backgroundColor: "#fef3c7",
+                                border: "2px solid #f59e0b",
+                                borderRadius: "8px",
+                                padding: "4px",
+                                margin: "-4px"
+                              } : {}}
+                            >
+                              <SlotBox slot={slot} />
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 2</div>
                     </div>
-                    <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 1</div>
+                    {/* Depth 1 - Vertical Column (Right) */}
+                    <div className="flex flex-col items-center gap-2 sm:gap-2.5">
+                      <div className="flex flex-col gap-2 sm:gap-2.5">
+                        {row1Depth0Slots.map((slot, idx) => {
+                          const isPickingStation = slot.tags?.includes("station");
+                          const isLastTwo = idx >= row1Depth0Slots.length - 2;
+                          const shouldHighlight = isPickingStation || isLastTwo;
+                          
+                          return (
+                            <div
+                              key={`r1d0-${idx}`}
+                              className={shouldHighlight ? "relative" : ""}
+                              style={shouldHighlight ? {
+                                backgroundColor: "#fef3c7",
+                                border: "2px solid #f59e0b",
+                                borderRadius: "8px",
+                                padding: "4px",
+                                margin: "-4px"
+                              } : {}}
+                            >
+                              <SlotBox slot={slot} />
+                            </div>
+                          );
+                        })}
+                      </div>
+                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 1</div>
+                    </div>
+                  </div>
+                  
+                  {/* Mobile Picking Station Label */}
+                  <div 
+                    className="lg:hidden mt-3 px-3 py-1.5 rounded-lg font-semibold text-xs"
+                    style={{ 
+                      backgroundColor: "#fef3c7",
+                      border: "2px solid #f59e0b",
+                      color: "#92400e"
+                    }}
+                  >
+                    Picking Station
                   </div>
                 </div>
               </div>
@@ -315,18 +385,54 @@ const Racks = () => {
                     {/* Depth 1 - Vertical Column (Left) */}
                     <div className="flex flex-col items-center gap-2 sm:gap-2.5">
                       <div className="flex flex-col gap-2 sm:gap-2.5">
-                        {row0Depth1Slots.map((slot, idx) => (
-                          <SlotBox key={`r0d1-${idx}`} slot={slot} />
-                        ))}
+                        {row0Depth1Slots.map((slot, idx) => {
+                          const isPickingStation = slot.tags?.includes("station");
+                          const isLastTwo = idx >= row0Depth1Slots.length - 2;
+                          const shouldHighlight = isPickingStation || isLastTwo;
+                          
+                          return (
+                            <div
+                              key={`r0d1-${idx}`}
+                              className={shouldHighlight ? "relative" : ""}
+                              style={shouldHighlight ? {
+                                backgroundColor: "#fef3c7",
+                                border: "2px solid #f59e0b",
+                                borderRadius: "8px",
+                                padding: "4px",
+                                margin: "-4px"
+                              } : {}}
+                            >
+                              <SlotBox slot={slot} />
+                            </div>
+                          );
+                        })}
                       </div>
                       <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 1</div>
                     </div>
                     {/* Depth 2 - Vertical Column (Right) */}
                     <div className="flex flex-col items-center gap-2 sm:gap-2.5">
                       <div className="flex flex-col gap-2 sm:gap-2.5">
-                        {row0Depth0Slots.map((slot, idx) => (
-                          <SlotBox key={`r0d0-${idx}`} slot={slot} />
-                        ))}
+                        {row0Depth0Slots.map((slot, idx) => {
+                          const isPickingStation = slot.tags?.includes("station");
+                          const isLastTwo = idx >= row0Depth0Slots.length - 2;
+                          const shouldHighlight = isPickingStation || isLastTwo;
+                          
+                          return (
+                            <div
+                              key={`r0d0-${idx}`}
+                              className={shouldHighlight ? "relative" : ""}
+                              style={shouldHighlight ? {
+                                backgroundColor: "#fef3c7",
+                                border: "2px solid #f59e0b",
+                                borderRadius: "8px",
+                                padding: "4px",
+                                margin: "-4px"
+                              } : {}}
+                            >
+                              <SlotBox slot={slot} />
+                            </div>
+                          );
+                        })}
                       </div>
                       <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>Depth 2</div>
                     </div>
