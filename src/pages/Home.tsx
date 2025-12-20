@@ -458,46 +458,51 @@ const Home = () => {
 
           {/* Robot State Timeline with Dashboard Cards */}
           <div className="flex flex-col flex-1 lg:ml-[30px]">
-            <RobotStateTimeline />
-            <DashboardCards />
-            
-            {/* Action History Log */}
-            <div className="mt-4 p-3 bg-background rounded-lg border border-border">
-              <h4 className="text-sm font-semibold text-primary mb-2">Recent Actions</h4>
-              {actionHistory.length === 0 ? (
-                <p className="text-xs text-muted-foreground">No actions recorded yet</p>
-              ) : (
-                <div className="space-y-1.5">
-                  {actionHistory.map((item, idx) => (
-                    <div 
-                      key={idx} 
-                      className="flex items-center gap-2 text-xs"
-                    >
-                      <span
-                        className="w-2 h-2 rounded-full shrink-0"
-                        style={{
-                          backgroundColor: getStatusColor(item.action).bg,
-                          border: `2px solid ${getStatusColor(item.action).border}`,
-                        }}
-                      />
-                      <span className="font-medium text-foreground">{item.action}</span>
-                      <span className="text-muted-foreground">
-                        {item.trayId ? `Tray: ${item.trayId}` : ""}
-                        {item.slot !== null ? ` → Slot ${item.slot}` : ""}
-                      </span>
-                      <span className="text-muted-foreground ml-auto text-[10px]">
-                        {item.timestamp.toLocaleTimeString("en-IN", { 
-                          timeZone: "Asia/Kolkata",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit"
-                        })}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              )}
+            {/* Timeline and Recent Actions in same row */}
+            <div className="flex flex-col lg:flex-row gap-4">
+              <div className="flex-1">
+                <RobotStateTimeline />
+              </div>
+              {/* Action History Log - narrower width */}
+              <div className="w-full lg:w-[200px] p-3 bg-background rounded-lg border border-border h-fit">
+                <h4 className="text-sm font-semibold text-primary mb-2">Recent Actions</h4>
+                {actionHistory.length === 0 ? (
+                  <p className="text-xs text-muted-foreground">No actions recorded yet</p>
+                ) : (
+                  <div className="space-y-1.5">
+                    {actionHistory.map((item, idx) => (
+                      <div 
+                        key={idx} 
+                        className="flex flex-col gap-0.5 text-xs"
+                      >
+                        <div className="flex items-center gap-1.5">
+                          <span
+                            className="w-2 h-2 rounded-full shrink-0"
+                            style={{
+                              backgroundColor: getStatusColor(item.action).bg,
+                              border: `2px solid ${getStatusColor(item.action).border}`,
+                            }}
+                          />
+                          <span className="font-medium text-foreground">{item.action}</span>
+                          <span className="text-muted-foreground ml-auto text-[10px]">
+                            {item.timestamp.toLocaleTimeString("en-IN", { 
+                              timeZone: "Asia/Kolkata",
+                              hour: "2-digit",
+                              minute: "2-digit"
+                            })}
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-muted-foreground pl-3.5 truncate">
+                          {item.trayId ? `Tray: ${item.trayId}` : ""}
+                          {item.slot !== null ? ` → Slot ${item.slot}` : ""}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
+            <DashboardCards />
           </div>
         </div>
       </main>
