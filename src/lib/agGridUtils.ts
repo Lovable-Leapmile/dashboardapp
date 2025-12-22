@@ -1,28 +1,85 @@
 import { ColDef, PostProcessPopupParams } from "ag-grid-community";
-import { format } from "date-fns";
+import { format, isValid, parse, parseISO } from "date-fns";
+
+/**
+ * Best-effort parsing for API date strings so AG Grid date filtering works reliably.
+ * Supports:
+ * - ISO strings (with/without timezone)
+ * - "yyyy-MM-dd HH:mm:ss" (common API format)
+ * - "dd-MM-yyyy hh:mm:ss a" (our display format)
+ * - epoch millis (string/number)
+ */
+const parseToDate = (value: unknown): Date | null => {
+  if (value == null || value === "") return null;
+  if (value instanceof Date) return isValid(value) ? value : null;
+
+  if (typeof value === "number") {
+    const d = new Date(value);
+    return isValid(d) ? d : null;
+  }
+
+  const raw = String(value).trim();
+  if (!raw) return null;
+
+  // Epoch millis as a string
+  if (/^\d{10,}$/.test(raw)) {
+    const d = new Date(Number(raw));
+    return isValid(d) ? d : null;
+  }
+
+  // ISO (most common)
+  try {
+    const d = parseISO(raw);
+    if (isValid(d)) return d;
+  } catch {
+    // ignore
+  }
+
+  // Native Date parsing (covers many cases like RFC2822)
+  const native = new Date(raw);
+  if (isValid(native)) return native;
+
+  // Common API string formats
+  const candidates: Array<[string, boolean]> = [
+    ["yyyy-MM-dd HH:mm:ss.SSS", false],
+    ["yyyy-MM-dd HH:mm:ss", false],
+    ["yyyy-MM-dd'T'HH:mm:ss.SSS", false],
+    ["yyyy-MM-dd'T'HH:mm:ss", false],
+    ["dd-MM-yyyy hh:mm:ss a", true],
+    ["dd-MM-yyyy HH:mm:ss", false],
+    ["dd-MM-yyyy", false],
+  ];
+
+  for (const [fmt, hasMeridiem] of candidates) {
+    try {
+      const d = parse(raw, fmt, new Date());
+      if (isValid(d) && (!hasMeridiem || /\b(AM|PM)\b/i.test(raw))) return d;
+    } catch {
+      // ignore
+    }
+  }
+
+  return null;
+};
 
 /**
  * Date filter comparator for AG Grid
  * Compares dates properly for filtering operations
  */
-export const dateFilterComparator = (filterLocalDateAtMidnight: Date, cellValue: string): number => {
-  if (cellValue == null || cellValue === "") return -1;
+export const dateFilterComparator = (filterLocalDateAtMidnight: Date, cellValue: unknown): number => {
+  const cellDate = parseToDate(cellValue);
+  if (!cellDate) return -1;
 
-  try {
-    const cellDate = new Date(cellValue);
-    // Reset time to midnight for accurate date comparison
-    const cellDateMidnight = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
+  // Reset time to midnight for accurate date-only comparison (local time)
+  const cellDateMidnight = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
 
-    if (cellDateMidnight.getTime() === filterLocalDateAtMidnight.getTime()) {
-      return 0;
-    }
-    if (cellDateMidnight < filterLocalDateAtMidnight) {
-      return -1;
-    }
-    return 1;
-  } catch {
-    return -1;
-  }
+  const a = cellDateMidnight.getTime();
+  const b = filterLocalDateAtMidnight.getTime();
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return -1;
+
+  if (a === b) return 0;
+  if (a < b) return -1;
+  return 1;
 };
 
 /**
@@ -37,9 +94,10 @@ export const dateFilterParams = {
 };
 
 export const formatDateTime12 = (value: unknown): string => {
-  if (value == null || value === "") return "N/A";
+  const d = parseToDate(value);
+  if (!d) return value == null || value === "" ? "N/A" : String(value);
   try {
-    return format(new Date(String(value)), "dd-MM-yyyy hh:mm:ss a");
+    return format(d, "dd-MM-yyyy hh:mm:ss a");
   } catch {
     return String(value);
   }
