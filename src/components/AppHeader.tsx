@@ -127,7 +127,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
   ];
 
   return (
-    <>
+    <div className="sticky top-0 z-50">
       <header 
         className="flex items-center justify-between px-2 sm:px-4"
         style={{ backgroundColor: '#351C75', height: '55px' }}
@@ -403,7 +403,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </>
+    </div>
   );
 };
 
