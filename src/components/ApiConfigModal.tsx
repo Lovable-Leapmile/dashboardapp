@@ -35,15 +35,23 @@ const ApiConfigModal = ({ onConfigured, open, onOpenChange, prefillApiName }: Ap
     if (!trimmed) {
       return "API name is required";
     }
-    // Only allow alphanumeric, hyphens, and underscores
-    if (!/^[a-zA-Z0-9_-]+$/.test(trimmed)) {
-      return "API name can only contain letters, numbers, hyphens, and underscores";
+    // Allow alphanumeric, hyphens, underscores, and dots for domain-style values
+    if (!/^[a-zA-Z0-9._-]+$/.test(trimmed)) {
+      return "API name can only contain letters, numbers, dots, hyphens, and underscores";
+    }
+    // Must not start or end with a dot
+    if (trimmed.startsWith('.') || trimmed.endsWith('.')) {
+      return "API name cannot start or end with a dot";
+    }
+    // No consecutive dots
+    if (trimmed.includes('..')) {
+      return "API name cannot contain consecutive dots";
     }
     if (trimmed.length < 2) {
       return "API name must be at least 2 characters";
     }
-    if (trimmed.length > 50) {
-      return "API name must be less than 50 characters";
+    if (trimmed.length > 100) {
+      return "API name must be less than 100 characters";
     }
     return null;
   };
