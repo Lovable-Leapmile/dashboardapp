@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { getStoredAuthToken } from "@/lib/auth";
+import { getPubSubBase } from "@/lib/api";
 
 export interface ShuttleState {
   // Initial data from first record
@@ -104,7 +105,7 @@ export const useShuttlePubSub = () => {
     try {
       setIsLoading(true);
       const response = await fetch(
-        "https://amsstores1.leapmile.com/pubsub/subscribe?topic=amsstores1_AMSSTORES1-Nano&num_records=4",
+        `${getPubSubBase()}/subscribe?topic=amsstores1_AMSSTORES1-Nano&num_records=4`,
         {
           method: "GET",
           headers: {

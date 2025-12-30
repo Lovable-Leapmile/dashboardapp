@@ -12,6 +12,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { getDefaultGridProps } from "@/lib/agGridUtils";
+import { getCameraManagerBase } from "@/lib/api";
+import { getStoredAuthToken } from "@/lib/auth";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -53,12 +55,13 @@ const CameraTaskDetails = () => {
 
   const fetchCameraEvents = async (task_id: string) => {
     try {
+      const token = getStoredAuthToken();
+      if (!token) return;
       const response = await fetch(
-        `https://amsstores1.leapmile.com/cameramanager/camera_events?clip_status=ready&task_id=${task_id}`,
+        `${getCameraManagerBase()}/camera_events?clip_status=ready&task_id=${task_id}`,
         {
           headers: {
-            Authorization:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2wiOiJhZG1pbiIsImV4cCI6MTkwMDY1MzE0M30.asYhgMAOvrau4G6LI4V4IbgYZ022g_GX0qZxaS57GQc",
+            Authorization: token,
             "Content-Type": "application/json",
           },
         },

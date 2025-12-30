@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, Dot } from "recharts";
+import { getRobotManagerBase } from "@/lib/api";
+import { getStoredAuthToken } from "@/lib/auth";
 
 interface RobotState {
   status: string;
@@ -41,13 +43,14 @@ export const RobotStateTimeline = () => {
 
   const fetchRobotState = async () => {
     try {
+      const token = getStoredAuthToken();
+      if (!token) return;
       const response = await fetch(
-        "https://amsstores1.leapmile.com/robotmanager/robot_state?today=true&num_records=100&offset=0",
+        `${getRobotManagerBase()}/robot_state?today=true&num_records=100&offset=0`,
         {
           method: "GET",
           headers: {
-            Authorization:
-              "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY2wiOiJhZG1pbiIsImV4cCI6MTkwMDY1MzE0M30.asYhgMAOvrau4G6LI4V4IbgYZ022g_GX0qZxaS57GQc",
+            Authorization: token,
             "Content-Type": "application/json",
           },
         },
