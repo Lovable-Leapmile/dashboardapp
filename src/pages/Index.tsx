@@ -1,12 +1,16 @@
 import { useState, useEffect, useRef } from "react";
 import LoginForm from "@/components/LoginForm";
 import ApiConfigModal from "@/components/ApiConfigModal";
+import ApiTesterModal from "@/components/ApiTesterModal";
 import backgroundImage from "@/assets/dashboard_login_bg.png";
 import { isApiConfigured } from "@/lib/apiConfig";
 import { getStoredAuthToken } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
 
 const Index = () => {
   const [showApiModal, setShowApiModal] = useState(false);
+  const [showApiTesterModal, setShowApiTesterModal] = useState(false);
   const hasCheckedRef = useRef(false);
 
   useEffect(() => {
@@ -39,10 +43,34 @@ const Index = () => {
     setShowApiModal(false);
   };
 
+  const handleChangeApiName = () => {
+    // Clear all cookies
+    document.cookie.split(";").forEach((cookie) => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+    });
+
+    // Clear localStorage
+    localStorage.clear();
+
+    // Clear sessionStorage
+    sessionStorage.clear();
+
+    // Open the API Tester modal
+    setShowApiTesterModal(true);
+  };
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden">
       {/* API Config Modal - shown after logout when all auth data is cleared */}
       {showApiModal && <ApiConfigModal onConfigured={handleApiConfigured} />}
+
+      {/* API Tester Modal */}
+      <ApiTesterModal 
+        open={showApiTesterModal} 
+        onOpenChange={setShowApiTesterModal} 
+      />
 
       {/* Background Image */}
       <div 
@@ -63,6 +91,18 @@ const Index = () => {
           height: '100%'
         }}
       />
+
+      {/* Change API Name Button - positioned at top-right */}
+      <div className="absolute top-4 right-4 z-20">
+        <Button
+          variant="outline"
+          onClick={handleChangeApiName}
+          className="bg-white/90 hover:bg-white text-gray-700 border-gray-200 shadow-md backdrop-blur-sm"
+        >
+          <Settings className="w-4 h-4 mr-2" />
+          Change API Name
+        </Button>
+      </div>
 
       {/* Login Form Container */}
       <div className="relative z-10 flex items-center justify-center min-h-screen py-8">
