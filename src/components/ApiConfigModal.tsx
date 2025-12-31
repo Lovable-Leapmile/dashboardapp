@@ -16,7 +16,6 @@ const ApiConfigModal = ({ onConfigured, open, onOpenChange, prefillApiName }: Ap
   const [apiName, setApiName] = useState(prefillApiName || "");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [hasBlurred, setHasBlurred] = useState(false);
 
   // Update apiName when prefillApiName changes
   useEffect(() => {
@@ -33,69 +32,29 @@ const ApiConfigModal = ({ onConfigured, open, onOpenChange, prefillApiName }: Ap
 
   const validateApiName = (value: string): string | null => {
     const trimmed = value.trim();
-    
     if (!trimmed) {
-      return "API endpoint is required";
+      return "API name is required";
     }
-    
-    // Check for spaces
-    if (/\s/.test(trimmed)) {
-      return "Spaces are not allowed";
+    // Allow alphanumeric, hyphens, underscores, and dots for domain-style values
+    if (!/^[a-zA-Z0-9._-]+$/.test(trimmed)) {
+      return "API name can only contain letters, numbers, dots, hyphens, and underscores";
     }
-    
-    // Check for special characters (only allow letters, numbers, and single dot)
-    if (!/^[a-zA-Z0-9.]+$/.test(trimmed)) {
-      return "Only letters, numbers, and dot are allowed";
+    // Must not start or end with a dot
+    if (trimmed.startsWith('.') || trimmed.endsWith('.')) {
+      return "API name cannot start or end with a dot";
     }
-    
-    // Must be in format: apiname.domainname (exactly one dot)
-    const parts = trimmed.split('.');
-    if (parts.length !== 2) {
-      return "Format must be: apiname.domainname (e.g. compasalary.api)";
+    // No consecutive dots
+    if (trimmed.includes('..')) {
+      return "API name cannot contain consecutive dots";
     }
-    
-    // Both parts must have at least 1 character
-    if (parts[0].length < 1 || parts[1].length < 1) {
-      return "Both apiname and domainname are required";
+    if (trimmed.length < 2) {
+      return "API name must be at least 2 characters";
     }
-    
-    // Both parts must start with a letter
-    if (!/^[a-zA-Z]/.test(parts[0]) || !/^[a-zA-Z]/.test(parts[1])) {
-      return "Both parts must start with a letter";
-    }
-    
     if (trimmed.length > 100) {
-      return "API endpoint must be less than 100 characters";
+      return "API name must be less than 100 characters";
     }
-    
     return null;
   };
-
-  // Real-time validation message - only show after blur or if user has typed a dot
-  const getValidationMessage = (): string | null => {
-    if (!apiName.trim()) return null;
-    
-    const trimmed = apiName.trim();
-    
-    // Only show format error if user has blurred OR has typed a dot (indicating they're trying the format)
-    // But always show errors for spaces or invalid characters immediately
-    if (/\s/.test(trimmed)) {
-      return "Spaces are not allowed";
-    }
-    
-    if (!/^[a-zA-Z0-9.]+$/.test(trimmed)) {
-      return "Only letters, numbers, and dot are allowed";
-    }
-    
-    // For format-related errors, only show after blur or if they've typed a dot
-    if (hasBlurred || trimmed.includes('.')) {
-      return validateApiName(apiName);
-    }
-    
-    return null;
-  };
-
-  const validationMessage = getValidationMessage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,22 +91,18 @@ const ApiConfigModal = ({ onConfigured, open, onOpenChange, prefillApiName }: Ap
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setApiName(value);
-    // Clear manual error when user starts typing (validation message handles real-time feedback)
+    // Clear error when user starts typing
     if (error) {
       setError("");
     }
   };
 
-  const handleBlur = () => {
-    setHasBlurred(true);
-  };
-
-  const isValid = apiName.trim().length > 0 && !validateApiName(apiName);
-
   const handleClose = () => {
     onOpenChange?.(false);
     setError("");
   };
+
+  const isValid = apiName.trim().length > 0 && !validateApiName(apiName);
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
@@ -193,7 +148,7 @@ const ApiConfigModal = ({ onConfigured, open, onOpenChange, prefillApiName }: Ap
             Configure API Endpoint
           </h2>
           <p className="text-sm text-gray-500 mt-2">
-            Enter the API endpoint in the format: apiname.domainname
+            Enter the API name to connect to your environment
           </p>
         </div>
 
@@ -201,52 +156,30 @@ const ApiConfigModal = ({ onConfigured, open, onOpenChange, prefillApiName }: Ap
         <form onSubmit={handleSubmit} className="px-6 pb-8 space-y-5">
           <div className="space-y-2">
             <Label htmlFor="api-name" className="text-sm font-semibold text-gray-700">
-              API Endpoint
+              API Name
             </Label>
             <Input
               id="api-name"
               type="text"
               value={apiName}
               onChange={handleInputChange}
-              onBlur={handleBlur}
               className={`w-full rounded-xl border-2 ${
-                validationMessage || error ? "border-red-400 focus:border-red-500" : isValid ? "border-green-400 focus:border-green-500" : "border-gray-200 focus:border-primary"
+                error ? "border-red-400 focus:border-red-500" : "border-gray-200 focus:border-primary"
               } focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-5 text-base`}
-              placeholder="e.g. compasalary.api"
+              placeholder="Enter API name (e.g. prod, staging, test)"
               autoFocus
               autoComplete="off"
             />
-            {/* Real-time validation message */}
-            {validationMessage && (
-              <p className="text-sm text-red-500 mt-1 animate-fade-in">
-                {validationMessage}
-              </p>
-            )}
-            {/* Submit error message */}
-            {error && !validationMessage && (
+            {error && (
               <p className="text-sm text-red-500 mt-1 animate-fade-in">
                 {error}
               </p>
             )}
-            {/* Success indicator */}
-            {isValid && !error && (
-              <p className="text-xs text-green-600 mt-1">
-                ✓ Valid format
+            {apiName.trim() && !error && (
+              <p className="text-xs text-gray-400 mt-1">
+                Will connect to: <span className="font-mono text-primary">https://{apiName.trim()}.leapmile.com</span>
               </p>
             )}
-            {/* Live URL preview hint */}
-            <p className="text-xs text-muted-foreground mt-2">
-              Will connect to: <span className="font-medium">{(() => {
-                const trimmed = apiName.trim();
-                if (!trimmed) return "https://[apiname.domainname].leapmile.com";
-                const parts = trimmed.split('.');
-                const domainPart = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : '';
-                const knownDomains = ['leapmile'];
-                return knownDomains.includes(domainPart) 
-                  ? `https://${trimmed}.com` 
-                  : `https://${trimmed}.leapmile.com`;
-              })()}</span>
-            </p>
           </div>
 
           <div className={`flex ${isControlled ? 'gap-3' : ''}`}>

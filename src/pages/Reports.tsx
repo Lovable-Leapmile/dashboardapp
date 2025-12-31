@@ -8,7 +8,6 @@ import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { apiGet, getNanostoreBase, getRobotManagerBase, withQuery } from "@/lib/api";
-import { useRobot } from "@/hooks/useRobot";
 import noRecordsImage from "@/assets/no_records.png";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RefreshCw, Download } from "lucide-react";
@@ -47,8 +46,7 @@ const Reports = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
-  const { robotName, isLoading: robotLoading, error: robotError } = useRobot();
-  const robotId = searchParams.get("robot_id") || robotName;
+  const robotId = searchParams.get("robot_id") || "AMSSTORES1-Nano";
 
   const [reportType, setReportType] = useState<ReportType>("product_stock");
   const [rowData, setRowData] = useState<any[]>([]);
