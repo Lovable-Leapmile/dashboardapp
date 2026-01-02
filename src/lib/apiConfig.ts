@@ -66,9 +66,10 @@ export const storeRobotName = (robotName: string): void => {
 };
 
 // Get the pubsub topic constructed from apiname and robotname
+// Format: apiname-robotname (e.g., amsstores1-AMSSTORES1-Nano)
 export const getPubSubTopic = (): string | null => {
   const apiName = getStoredApiName(); // Already stored as prefix only
   const robotName = getStoredRobotName();
   if (!apiName || !robotName) return null;
-  return `${apiName}_${robotName}`;
+  return `${apiName}-${robotName}`;
 };
