@@ -26,8 +26,9 @@ export const storeApiConfig = (apiName: string): ApiConfig => {
   const baseUrl = `https://${trimmed}.com`;
   const config: ApiConfig = { apiName: trimmed, baseUrl };
   localStorage.setItem(API_CONFIG_KEY, JSON.stringify(config));
-  // Also store apiname separately for easy access
-  localStorage.setItem(API_NAME_KEY, trimmed);
+  // Store apiname prefix (first part before dot) separately for pubsub topic
+  const apiNamePrefix = trimmed.split('.')[0];
+  localStorage.setItem(API_NAME_KEY, apiNamePrefix);
   return config;
 };
 
@@ -65,13 +66,9 @@ export const storeRobotName = (robotName: string): void => {
 };
 
 // Get the pubsub topic constructed from apiname and robotname
-// Extract just the first part of the apiname (before the first dot) for the topic
 export const getPubSubTopic = (): string | null => {
-  const apiName = getStoredApiName();
+  const apiName = getStoredApiName(); // Already stored as prefix only
   const robotName = getStoredRobotName();
   if (!apiName || !robotName) return null;
-  
-  // Extract apiname prefix (e.g., "amsstores1" from "amsstores1.leapmile")
-  const apiNamePrefix = apiName.split('.')[0];
-  return `${apiNamePrefix}_${robotName}`;
+  return `${apiName}_${robotName}`;
 };
