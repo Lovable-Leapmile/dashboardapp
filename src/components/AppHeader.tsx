@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ScrollText, Activity, LogOut, Camera, Menu, X, Home, ClipboardList, Video, FileText, Settings, Box, Layers, Grid3X3, Building2, TrendingUp, Download, Shield } from "lucide-react";
-import whiteLogo from "@/assets/white_logo-2.png";
+import headerLogo from "@/assets/header-logo.png";
 import { useState } from "react";
 import html2canvas from "html2canvas";
 import {
@@ -154,7 +154,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             <SheetContent side="left" className="w-[280px] p-0 bg-white">
               <SheetHeader className="p-4 border-b" style={{ backgroundColor: '#351C75' }}>
                 <div className="flex items-center gap-3">
-                  <img src={whiteLogo} alt="Logo" className="w-10 h-10 object-contain" />
+                  <img src={headerLogo} alt="Logo" className="w-[100px] object-contain" />
                   <SheetTitle className="text-white text-lg">Menu</SheetTitle>
                 </div>
               </SheetHeader>
@@ -261,7 +261,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity shrink-0"
             onClick={() => navigate("/home")}
           >
-            <img src={whiteLogo} alt="Logo" className="w-[85px] object-contain" />
+            <img src={headerLogo} alt="Logo" className="w-[135px] object-contain" />
           </div>
           
           {/* Desktop Navigation */}

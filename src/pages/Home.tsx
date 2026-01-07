@@ -44,10 +44,32 @@ const Home = () => {
   const prevRackRef = useRef<number | null>(null);
   const [animatedRackPosition, setAnimatedRackPosition] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const shuttleRef = useRef<HTMLDivElement>(null);
 
   // Calculate Y position for a given rack index
   const calculateYPosition = (rackIndex: number): number => {
     return rackIndex * (SLOT_HEIGHT + SLOT_GAP);
+  };
+
+  // Auto-scroll to keep shuttle in view
+  const scrollShuttleIntoView = () => {
+    if (!shuttleRef.current) return;
+    
+    const rect = shuttleRef.current.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const headerHeight = 110; // Approximate header height
+    const padding = 50; // Extra padding from edges
+    
+    // Check if shuttle is outside visible viewport
+    const isAboveViewport = rect.top < headerHeight + padding;
+    const isBelowViewport = rect.bottom > viewportHeight - padding;
+    
+    if (isAboveViewport || isBelowViewport) {
+      shuttleRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
   };
 
   // Animate shuttle when rack position changes
@@ -72,12 +94,20 @@ const Home = () => {
       setAnimatedRackPosition(calculateYPosition(currentRack));
       prevRackRef.current = currentRack;
 
+      // Auto-scroll after animation starts (with slight delay to let animation begin)
+      const scrollTimer = setTimeout(() => {
+        scrollShuttleIntoView();
+      }, 200);
+
       // Clear animating flag after animation completes
       const timer = setTimeout(() => {
         setIsAnimating(false);
       }, 1500); // Match animation duration
 
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(scrollTimer);
+      };
     }
   }, [shuttleState.store_rack, shuttleState.shuttle_action]);
 
@@ -314,6 +344,7 @@ const Home = () => {
                 {/* Single animated shuttle */}
                 {isShuttleVisible() && (
                   <div
+                    ref={shuttleRef}
                     className="flex flex-col items-center justify-center"
                     style={{
                       position: "absolute",
