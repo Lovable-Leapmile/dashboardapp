@@ -303,10 +303,9 @@ const Racks = () => {
     <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
       <AppHeader selectedTab="Racks" />
 
-      <div style={{ height: "10px" }} />
-
-      <main className="p-3 sm:p-6">
-        <div className="flex justify-center">
+      <main className="p-4 sm:p-8">
+        {/* Rack selector */}
+        <div className="flex justify-center mb-6">
           <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
             {Array.from({ length: numRacks }, (_, index) => (
               <div
@@ -329,15 +328,16 @@ const Racks = () => {
         </div>
 
         {selectedRack !== null && (
-          <div className="flex justify-center mt-6 sm:mt-8 overflow-x-auto">
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-5">
-              {/* Row 1 Section */}
-              <div className="flex items-end gap-2">
-                <div className="flex flex-col items-center">
-                  <div className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6" style={{ color: "#351c75" }}>
+          <div className="flex flex-col xl:flex-row gap-6 xl:gap-8">
+            {/* Main rack visualization container */}
+            <div className="flex-1 flex justify-center">
+              <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
+                {/* Row 1 Section */}
+                <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 shadow-sm">
+                  <div className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-center" style={{ color: "#351c75" }}>
                     Row 1
                   </div>
-                  <div className="flex gap-2 sm:gap-[10px]">
+                  <div className="flex gap-3 sm:gap-4">
                     {/* Depth 2 - Vertical Column (Left) */}
                     <div className="flex flex-col items-center gap-2 sm:gap-2.5">
                       <div className="flex flex-col gap-2 sm:gap-2.5">
@@ -347,7 +347,7 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                      <div className="text-[10px] sm:text-xs font-medium mt-3 text-gray-500">
                         Depth 2
                       </div>
                     </div>
@@ -360,34 +360,34 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                      <div className="text-[10px] sm:text-xs font-medium mt-3 text-gray-500">
                         Depth 1
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Shuttle Image between Row 1 and Row 0 */}
-              <div className="flex items-center justify-center">
-                <img
-                  src={shuttleImg}
-                  alt="Shuttle"
-                  className="h-full object-contain"
-                  style={{
-                    opacity: 0.6,
-                    height: `${Math.max(row1Depth1Slots.length, row0Depth1Slots.length) * 55}px`,
-                  }}
-                />
-              </div>
+                {/* Shuttle Image between Row 1 and Row 0 */}
+                <div className="flex items-center justify-center px-2">
+                  <div className="border-l border-r border-gray-200 px-4">
+                    <img
+                      src={shuttleImg}
+                      alt="Shuttle"
+                      className="h-full object-contain"
+                      style={{
+                        opacity: 0.6,
+                        height: `${Math.max(row1Depth1Slots.length, row0Depth1Slots.length) * 55}px`,
+                      }}
+                    />
+                  </div>
+                </div>
 
-              {/* Row 0 Section */}
-              <div className="flex flex-col lg:flex-row">
-                <div className="flex flex-col items-center">
-                  <div className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6" style={{ color: "#351c75" }}>
+                {/* Row 0 Section */}
+                <div className="bg-white rounded-lg border border-gray-200 p-4 sm:p-6 shadow-sm">
+                  <div className="text-base sm:text-lg font-semibold mb-4 sm:mb-6 text-center" style={{ color: "#351c75" }}>
                     Row 0
                   </div>
-                  <div className="flex gap-2 sm:gap-[10px]">
+                  <div className="flex gap-3 sm:gap-4">
                     {/* Depth 1 - Vertical Column (Left) */}
                     <div className="flex flex-col items-center gap-2 sm:gap-2.5">
                       <div className="flex flex-col gap-2 sm:gap-2.5">
@@ -397,7 +397,7 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                      <div className="text-[10px] sm:text-xs font-medium mt-3 text-gray-500">
                         Depth 1
                       </div>
                     </div>
@@ -410,17 +410,21 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                      <div className="text-[10px] sm:text-xs font-medium mt-3 text-gray-500">
                         Depth 2
                       </div>
                     </div>
                   </div>
                 </div>
-
-                {/* Slot Details Panel */}
-                <SlotDetailsPanel slotDetails={slotDetails} isVisible={selectedSlotId !== null} />
               </div>
             </div>
+
+            {/* Slot Details Panel - Separate container */}
+            {selectedSlotId && (
+              <div className="xl:w-[300px] shrink-0">
+                <SlotDetailsPanel slotDetails={slotDetails} isVisible={selectedSlotId !== null} />
+              </div>
+            )}
           </div>
         )}
       </main>

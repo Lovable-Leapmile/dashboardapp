@@ -260,41 +260,20 @@ const Home = () => {
       <AppHeader selectedTab="Robot" />
 
       <main className="px-2 sm:px-4 py-4 sm:py-5 overflow-x-auto">
-        {/* Header row with all titles - compact */}
-        <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-[80px] mb-2 px-2">
-          <div className="flex items-center gap-3 sm:gap-[80px]">
-            <div
-              className="text-sm sm:text-base font-semibold text-center min-w-[70px] sm:min-w-[140px]"
-              style={{ color: "#351c75" }}
-            >
-              Row 1
-            </div>
-            <div
-              className="text-sm sm:text-base font-semibold text-center min-w-[70px] sm:min-w-[140px]"
-              style={{ color: "#351c75" }}
-            >
-              Row 0
-            </div>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="text-sm sm:text-base font-semibold" style={{ color: "#351c75" }}>
-              Robot Status Timeline
-            </div>
-            <div className="text-[10px] sm:text-xs" style={{ color: "#9ca3af" }}>
-              {currentTime.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" })}{" "}
-              {currentTime.toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata" })}
-            </div>
-          </div>
-        </div>
-
         {/* Content row */}
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-0">
           {/* Rack visualization with shuttle between rows */}
           <div className="flex gap-4 sm:gap-0 pb-4 lg:pb-0">
             {/* Combined Row 1 and Row 0 with shuttle in between */}
             <div className="flex shrink-0" style={{ position: "relative" }}>
-              {/* Row 1 */}
-              <div className="flex flex-col items-center">
+              {/* Row 1 Section */}
+              <div className="flex flex-col items-center border-r border-gray-200 pr-2 sm:pr-3">
+                <div
+                  className="text-xs sm:text-sm font-semibold text-center mb-2"
+                  style={{ color: "#351c75" }}
+                >
+                  Row 1
+                </div>
                 <div className="flex gap-2 sm:gap-[10px]">
                   {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
                     <div key={`row1-depth${depthIdx}`} className="flex flex-col gap-2 sm:gap-[10px]">
@@ -319,13 +298,20 @@ const Home = () => {
 
               {/* Shuttle track and image container - positioned BETWEEN Row 1 and Row 0 */}
               <div 
-                className="flex flex-col justify-start ml-1 sm:ml-2 mr-1 sm:mr-2"
+                className="flex flex-col justify-start mx-2 sm:mx-3 border-x border-gray-200 px-2 sm:px-3"
                 style={{ 
-                  minWidth: "70px",
+                  minWidth: "80px",
                   position: "relative",
                   height: `${getTrackHeight()}px`,
                 }}
               >
+                {/* Section header */}
+                <div
+                  className="text-xs sm:text-sm font-semibold text-center mb-2 absolute -top-6 left-0 right-0"
+                  style={{ color: "#351c75" }}
+                >
+                  Shuttle
+                </div>
                 {/* Vertical track line - spans same height as rows */}
                 <div
                   style={{
@@ -462,8 +448,14 @@ const Home = () => {
                 )}
               </div>
 
-              {/* Row 0 */}
-              <div className="flex flex-col items-center">
+              {/* Row 0 Section */}
+              <div className="flex flex-col items-center border-l border-gray-200 pl-2 sm:pl-3">
+                <div
+                  className="text-xs sm:text-sm font-semibold text-center mb-2"
+                  style={{ color: "#351c75" }}
+                >
+                  Row 0
+                </div>
                 <div className="flex gap-2 sm:gap-[10px]">
                   {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
                     <div key={`row0-depth${depthIdx}`} className="flex flex-col gap-2 sm:gap-[10px]">

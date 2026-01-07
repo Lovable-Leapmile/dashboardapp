@@ -45,15 +45,10 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
   return (
     <>
       <div 
-        className="animate-slide-in-right"
-        style={{ 
-          width: '280px',
-          marginLeft: '30px',
-          borderRadius: '5px'
-        }}
+        className="animate-slide-in-right bg-white rounded-lg border border-gray-200 shadow-sm p-4"
       >
-        <div className="flex items-center justify-between mb-6">
-          <div className="text-xl font-semibold" style={{ color: '#351c75' }}>
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+          <div className="text-base font-semibold" style={{ color: '#351c75' }}>
             Slot Details
           </div>
           {isBlocked && (
@@ -63,7 +58,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
             </Badge>
           )}
         </div>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {/* Slot ID Section */}
           <Card>
             <CardContent className="py-3 px-4">
