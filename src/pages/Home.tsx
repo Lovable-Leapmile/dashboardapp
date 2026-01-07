@@ -52,7 +52,7 @@ const Home = () => {
     return rackIndex * (SLOT_HEIGHT + SLOT_GAP);
   };
 
-  // Auto-scroll container to keep shuttle in view during movement
+  // Auto-scroll container to keep shuttle in view during movement - smooth and jitter-free
   const scrollShuttleIntoView = () => {
     if (!shuttleRef.current || !rackContainerRef.current) return;
     
@@ -61,14 +61,17 @@ const Home = () => {
     const containerRect = container.getBoundingClientRect();
     const shuttleRect = shuttle.getBoundingClientRect();
     
-    const padding = 40; // Extra padding from edges
+    const padding = 60; // Extra padding from edges
     
     // Check if shuttle is outside container's visible area
     const isAboveVisible = shuttleRect.top < containerRect.top + padding;
     const isBelowVisible = shuttleRect.bottom > containerRect.bottom - padding;
     
     if (isAboveVisible || isBelowVisible) {
-      const targetScrollTop = shuttle.offsetTop - container.clientHeight / 2 + shuttle.clientHeight / 2;
+      // Calculate target scroll position to center the shuttle
+      const shuttleOffsetTop = shuttle.offsetTop || 0;
+      const targetScrollTop = shuttleOffsetTop - container.clientHeight / 2 + shuttle.clientHeight / 2;
+      
       container.scrollTo({
         top: Math.max(0, targetScrollTop),
         behavior: 'smooth',
@@ -273,15 +276,15 @@ const Home = () => {
           {/* Rack visualization with shuttle between rows - scrollable container with hidden scrollbar */}
           <div 
             ref={rackContainerRef}
-            className="flex-shrink-0 overflow-y-auto overflow-x-hidden scroll-smooth scrollbar-hide"
+            className="flex-shrink-0 overflow-y-auto overflow-x-hidden scroll-smooth scrollbar-hide rounded-lg"
             style={{ 
-              maxHeight: 'calc(100vh - 130px)',
+              maxHeight: 'calc(100vh - 120px)',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
             }}
           >
             {/* Combined Row 1, Shuttle Movement, and Row 0 with borders */}
-            <div className="flex bg-white rounded-lg border border-gray-200 shadow-sm" style={{ position: "relative" }}>
+            <div className="inline-flex bg-white rounded-lg border border-gray-200 shadow-sm">
               {/* Row 1 Section */}
               <div className="flex flex-col items-center p-3 border-r border-gray-200">
                 <div className="text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
