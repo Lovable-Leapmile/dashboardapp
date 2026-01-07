@@ -55,9 +55,9 @@ const Home = () => {
   // Track last scroll time to prevent jitter
   const lastScrollTimeRef = useRef<number>(0);
 
-  // Auto-scroll container to keep shuttle in view during movement - smooth and jitter-free
-  const scrollShuttleIntoView = (force: boolean = false) => {
-    if (!shuttleRef.current || !rackContainerRef.current) return;
+  // Auto-scroll container to keep active rack in view during movement - smooth and jitter-free
+  const scrollToActiveRack = (rackIndex: number, force: boolean = false) => {
+    if (!rackContainerRef.current) return;
     
     // Throttle scroll calls to prevent jitter (min 50ms between calls)
     const now = Date.now();
@@ -65,20 +65,18 @@ const Home = () => {
     lastScrollTimeRef.current = now;
     
     const container = rackContainerRef.current;
-    const shuttle = shuttleRef.current;
-    const containerRect = container.getBoundingClientRect();
-    const shuttleRect = shuttle.getBoundingClientRect();
+    const rackPosition = calculateYPosition(rackIndex);
+    const containerHeight = container.clientHeight;
+    const padding = 60;
     
-    const padding = 80; // Extra padding from edges
+    // Calculate if the rack position is outside visible area
+    const currentScroll = container.scrollTop;
+    const visibleTop = currentScroll + padding;
+    const visibleBottom = currentScroll + containerHeight - padding;
     
-    // Check if shuttle is outside container's visible area
-    const isAboveVisible = shuttleRect.top < containerRect.top + padding;
-    const isBelowVisible = shuttleRect.bottom > containerRect.bottom - padding;
-    
-    if (isAboveVisible || isBelowVisible) {
-      // Calculate target scroll position to center the shuttle
-      const shuttleOffsetTop = shuttle.offsetTop || 0;
-      const targetScrollTop = shuttleOffsetTop - container.clientHeight / 2 + shuttle.clientHeight / 2;
+    if (rackPosition < visibleTop || rackPosition > visibleBottom) {
+      // Center the active rack in the viewport
+      const targetScrollTop = rackPosition - containerHeight / 2 + SLOT_HEIGHT / 2;
       
       container.scrollTo({
         top: Math.max(0, targetScrollTop),
@@ -109,8 +107,8 @@ const Home = () => {
       setAnimatedRackPosition(calculateYPosition(currentRack));
       prevRackRef.current = currentRack;
 
-      // Start scrolling immediately as animation begins
-      scrollShuttleIntoView(true);
+      // Start scrolling immediately to the active rack as animation begins
+      scrollToActiveRack(currentRack, true);
       
       // Use requestAnimationFrame for smoother real-time tracking during animation
       let animationFrameId: number;
@@ -120,7 +118,7 @@ const Home = () => {
       const trackShuttle = () => {
         const elapsed = Date.now() - startTime;
         if (elapsed < animationDuration) {
-          scrollShuttleIntoView();
+          scrollToActiveRack(currentRack);
           animationFrameId = requestAnimationFrame(trackShuttle);
         } else {
           setIsAnimating(false);
