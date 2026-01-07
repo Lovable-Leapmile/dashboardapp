@@ -303,124 +303,129 @@ const Racks = () => {
     <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
       <AppHeader selectedTab="Racks" />
 
-      <div style={{ height: "10px" }} />
-
-      <main className="p-3 sm:p-6">
-        <div className="flex justify-center">
-          <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
-            {Array.from({ length: numRacks }, (_, index) => (
-              <div
-                key={index}
-                onClick={() => handleRackSelect(index)}
-                className="flex items-center justify-center font-medium text-xs sm:text-sm transition-all hover:scale-105 cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
-                style={{
-                  backgroundColor: selectedRack === index ? "#ffffff" : "#351C75",
-                  color: selectedRack === index ? "#351C75" : "white",
-                  borderRadius: "4px",
-                  border: selectedRack === index ? "2px solid #351C75" : "none",
-                  boxShadow:
-                    selectedRack === index ? "0 3px 6px rgba(53, 28, 117, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.1)",
-                }}
-              >
-                {index}
-              </div>
-            ))}
+      <main className="p-4 sm:p-8">
+        {/* Rack selector with better spacing */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+            <div className="text-xs font-medium text-gray-500 mb-2 text-center">Select Rack</div>
+            <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
+              {Array.from({ length: numRacks }, (_, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleRackSelect(index)}
+                  className="flex items-center justify-center font-medium text-xs sm:text-sm transition-all hover:scale-105 cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
+                  style={{
+                    backgroundColor: selectedRack === index ? "#ffffff" : "#351C75",
+                    color: selectedRack === index ? "#351C75" : "white",
+                    borderRadius: "6px",
+                    border: selectedRack === index ? "2px solid #351C75" : "none",
+                    boxShadow:
+                      selectedRack === index ? "0 3px 6px rgba(53, 28, 117, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.1)",
+                  }}
+                >
+                  {index}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
         {selectedRack !== null && (
-          <div className="flex justify-center mt-6 sm:mt-8 overflow-x-auto">
-            <div className="flex flex-col lg:flex-row gap-6 lg:gap-5">
-              {/* Row 1 Section */}
-              <div className="flex items-end gap-2">
-                <div className="flex flex-col items-center">
-                  <div className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6" style={{ color: "#351c75" }}>
+          <div className="flex flex-col lg:flex-row justify-center gap-6 overflow-x-auto">
+            {/* Main Rack Visualization */}
+            <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+              <div className="flex flex-col lg:flex-row gap-0">
+                {/* Row 1 Section */}
+                <div className="flex flex-col items-center p-4 border-r border-gray-100">
+                  <div className="text-sm font-bold mb-4" style={{ color: "#351c75" }}>
                     Row 1
                   </div>
-                  <div className="flex gap-2 sm:gap-[10px]">
+                  <div className="flex gap-3">
                     {/* Depth 2 - Vertical Column (Left) */}
-                    <div className="flex flex-col items-center gap-2 sm:gap-2.5">
-                      <div className="flex flex-col gap-2 sm:gap-2.5">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="flex flex-col gap-2">
                         {row1Depth1Slots.map((slot, idx) => (
                           <div key={`r1d1-${idx}`}>
                             <SlotBox slot={slot} />
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                      <div className="text-xs font-medium mt-3 text-gray-500">
                         Depth 2
                       </div>
                     </div>
                     {/* Depth 1 - Vertical Column (Right) */}
-                    <div className="flex flex-col items-center gap-2 sm:gap-2.5">
-                      <div className="flex flex-col gap-2 sm:gap-2.5">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="flex flex-col gap-2">
                         {row1Depth0Slots.map((slot, idx) => (
                           <div key={`r1d0-${idx}`}>
                             <SlotBox slot={slot} />
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                      <div className="text-xs font-medium mt-3 text-gray-500">
                         Depth 1
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Shuttle Image between Row 1 and Row 0 */}
-              <div className="flex items-center justify-center">
-                <img
-                  src={shuttleImg}
-                  alt="Shuttle"
-                  className="h-full object-contain"
-                  style={{
-                    opacity: 0.6,
-                    height: `${Math.max(row1Depth1Slots.length, row0Depth1Slots.length) * 55}px`,
-                  }}
-                />
-              </div>
+                {/* Shuttle Image between Row 1 and Row 0 */}
+                <div className="flex items-center justify-center px-4 bg-gray-50/50 border-r border-gray-100">
+                  <img
+                    src={shuttleImg}
+                    alt="Shuttle"
+                    className="h-full object-contain"
+                    style={{
+                      opacity: 0.5,
+                      height: `${Math.max(row1Depth1Slots.length, row0Depth1Slots.length) * 55}px`,
+                    }}
+                  />
+                </div>
 
-              {/* Row 0 Section */}
-              <div className="flex flex-col lg:flex-row">
-                <div className="flex flex-col items-center">
-                  <div className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6" style={{ color: "#351c75" }}>
+                {/* Row 0 Section */}
+                <div className="flex flex-col items-center p-4">
+                  <div className="text-sm font-bold mb-4" style={{ color: "#351c75" }}>
                     Row 0
                   </div>
-                  <div className="flex gap-2 sm:gap-[10px]">
+                  <div className="flex gap-3">
                     {/* Depth 1 - Vertical Column (Left) */}
-                    <div className="flex flex-col items-center gap-2 sm:gap-2.5">
-                      <div className="flex flex-col gap-2 sm:gap-2.5">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="flex flex-col gap-2">
                         {row0Depth1Slots.map((slot, idx) => (
                           <div key={`r0d1-${idx}`}>
                             <SlotBox slot={slot} />
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                      <div className="text-xs font-medium mt-3 text-gray-500">
                         Depth 1
                       </div>
                     </div>
                     {/* Depth 2 - Vertical Column (Right) */}
-                    <div className="flex flex-col items-center gap-2 sm:gap-2.5">
-                      <div className="flex flex-col gap-2 sm:gap-2.5">
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="flex flex-col gap-2">
                         {row0Depth0Slots.map((slot, idx) => (
                           <div key={`r0d0-${idx}`}>
                             <SlotBox slot={slot} />
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs sm:text-sm font-medium mt-2" style={{ color: "#351c75" }}>
+                      <div className="text-xs font-medium mt-3 text-gray-500">
                         Depth 2
                       </div>
                     </div>
                   </div>
                 </div>
-
-                {/* Slot Details Panel */}
-                <SlotDetailsPanel slotDetails={slotDetails} isVisible={selectedSlotId !== null} />
               </div>
             </div>
+
+            {/* Slot Details Panel - Separate Container */}
+            {selectedSlotId && (
+              <div className="lg:w-[320px]">
+                <SlotDetailsPanel slotDetails={slotDetails} isVisible={selectedSlotId !== null} />
+              </div>
+            )}
           </div>
         )}
       </main>

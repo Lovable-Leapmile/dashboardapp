@@ -45,29 +45,33 @@ const Home = () => {
   const [animatedRackPosition, setAnimatedRackPosition] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const shuttleRef = useRef<HTMLDivElement>(null);
+  const rackContainerRef = useRef<HTMLDivElement>(null);
 
   // Calculate Y position for a given rack index
   const calculateYPosition = (rackIndex: number): number => {
     return rackIndex * (SLOT_HEIGHT + SLOT_GAP);
   };
 
-  // Auto-scroll to keep shuttle in view
+  // Auto-scroll container to keep shuttle in view during movement
   const scrollShuttleIntoView = () => {
-    if (!shuttleRef.current) return;
+    if (!shuttleRef.current || !rackContainerRef.current) return;
     
-    const rect = shuttleRef.current.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const headerHeight = 110; // Approximate header height
-    const padding = 50; // Extra padding from edges
+    const container = rackContainerRef.current;
+    const shuttle = shuttleRef.current;
+    const containerRect = container.getBoundingClientRect();
+    const shuttleRect = shuttle.getBoundingClientRect();
     
-    // Check if shuttle is outside visible viewport
-    const isAboveViewport = rect.top < headerHeight + padding;
-    const isBelowViewport = rect.bottom > viewportHeight - padding;
+    const padding = 40; // Extra padding from edges
     
-    if (isAboveViewport || isBelowViewport) {
-      shuttleRef.current.scrollIntoView({
+    // Check if shuttle is outside container's visible area
+    const isAboveVisible = shuttleRect.top < containerRect.top + padding;
+    const isBelowVisible = shuttleRect.bottom > containerRect.bottom - padding;
+    
+    if (isAboveVisible || isBelowVisible) {
+      const targetScrollTop = shuttle.offsetTop - container.clientHeight / 2 + shuttle.clientHeight / 2;
+      container.scrollTo({
+        top: Math.max(0, targetScrollTop),
         behavior: 'smooth',
-        block: 'center',
       });
     }
   };
@@ -94,19 +98,23 @@ const Home = () => {
       setAnimatedRackPosition(calculateYPosition(currentRack));
       prevRackRef.current = currentRack;
 
-      // Auto-scroll after animation starts (with slight delay to let animation begin)
-      const scrollTimer = setTimeout(() => {
+      // Start scrolling immediately as animation begins
+      scrollShuttleIntoView();
+      
+      // Continue scrolling during animation to track movement
+      const scrollIntervalId = setInterval(() => {
         scrollShuttleIntoView();
-      }, 200);
+      }, 100);
 
       // Clear animating flag after animation completes
       const timer = setTimeout(() => {
         setIsAnimating(false);
+        clearInterval(scrollIntervalId);
       }, 1500); // Match animation duration
 
       return () => {
         clearTimeout(timer);
-        clearTimeout(scrollTimer);
+        clearInterval(scrollIntervalId);
       };
     }
   }, [shuttleState.store_rack, shuttleState.shuttle_action]);
@@ -259,42 +267,22 @@ const Home = () => {
     <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
       <AppHeader selectedTab="Robot" />
 
-      <main className="px-2 sm:px-4 py-4 sm:py-5 overflow-x-auto">
-        {/* Header row with all titles - compact */}
-        <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-[80px] mb-2 px-2">
-          <div className="flex items-center gap-3 sm:gap-[80px]">
-            <div
-              className="text-sm sm:text-base font-semibold text-center min-w-[70px] sm:min-w-[140px]"
-              style={{ color: "#351c75" }}
-            >
-              Row 1
-            </div>
-            <div
-              className="text-sm sm:text-base font-semibold text-center min-w-[70px] sm:min-w-[140px]"
-              style={{ color: "#351c75" }}
-            >
-              Row 0
-            </div>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="text-sm sm:text-base font-semibold" style={{ color: "#351c75" }}>
-              Robot Status Timeline
-            </div>
-            <div className="text-[10px] sm:text-xs" style={{ color: "#9ca3af" }}>
-              {currentTime.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" })}{" "}
-              {currentTime.toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata" })}
-            </div>
-          </div>
-        </div>
-
+      <main className="px-2 sm:px-4 py-3 sm:py-4 overflow-x-auto">
         {/* Content row */}
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-0">
-          {/* Rack visualization with shuttle between rows */}
-          <div className="flex gap-4 sm:gap-0 pb-4 lg:pb-0">
-            {/* Combined Row 1 and Row 0 with shuttle in between */}
-            <div className="flex shrink-0" style={{ position: "relative" }}>
-              {/* Row 1 */}
-              <div className="flex flex-col items-center">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-0">
+          {/* Rack visualization with shuttle between rows - scrollable container */}
+          <div 
+            ref={rackContainerRef}
+            className="flex gap-4 sm:gap-0 pb-4 lg:pb-0 overflow-y-auto scroll-smooth"
+            style={{ maxHeight: 'calc(100vh - 140px)' }}
+          >
+            {/* Combined Row 1, Shuttle Movement, and Row 0 with borders */}
+            <div className="flex shrink-0 bg-white rounded-lg border border-gray-200 shadow-sm" style={{ position: "relative" }}>
+              {/* Row 1 Section */}
+              <div className="flex flex-col items-center p-3 border-r border-gray-200">
+                <div className="text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                  Row 1
+                </div>
                 <div className="flex gap-2 sm:gap-[10px]">
                   {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
                     <div key={`row1-depth${depthIdx}`} className="flex flex-col gap-2 sm:gap-[10px]">
@@ -317,29 +305,33 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* Shuttle track and image container - positioned BETWEEN Row 1 and Row 0 */}
-              <div 
-                className="flex flex-col justify-start ml-1 sm:ml-2 mr-1 sm:mr-2"
-                style={{ 
-                  minWidth: "70px",
-                  position: "relative",
-                  height: `${getTrackHeight()}px`,
-                }}
-              >
-                {/* Vertical track line - spans same height as rows */}
-                <div
-                  style={{
-                    position: "absolute",
-                    left: "50%",
-                    top: 0,
+              {/* Shuttle Movement Section - positioned BETWEEN Row 1 and Row 0 */}
+              <div className="flex flex-col items-center p-3 border-r border-gray-200 bg-gray-50/50">
+                <div className="text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                  Shuttle
+                </div>
+                <div 
+                  className="flex flex-col justify-start"
+                  style={{ 
+                    minWidth: "70px",
+                    position: "relative",
                     height: `${getTrackHeight()}px`,
-                    width: "2px",
-                    transform: "translateX(-50%)",
-                    backgroundColor: "#6b7280",
-                    opacity: 0.25,
-                    zIndex: 0,
                   }}
-                />
+                >
+                  {/* Vertical track line - spans same height as rows */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: "50%",
+                      top: 0,
+                      height: `${getTrackHeight()}px`,
+                      width: "2px",
+                      transform: "translateX(-50%)",
+                      backgroundColor: "#6b7280",
+                      opacity: 0.25,
+                      zIndex: 0,
+                    }}
+                  />
 
                 {/* Single animated shuttle */}
                 {isShuttleVisible() && (
@@ -460,10 +452,14 @@ const Home = () => {
                     </div>
                   </div>
                 )}
+                </div>
               </div>
 
-              {/* Row 0 */}
-              <div className="flex flex-col items-center">
+              {/* Row 0 Section */}
+              <div className="flex flex-col items-center p-3">
+                <div className="text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                  Row 0
+                </div>
                 <div className="flex gap-2 sm:gap-[10px]">
                   {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
                     <div key={`row0-depth${depthIdx}`} className="flex flex-col gap-2 sm:gap-[10px]">
