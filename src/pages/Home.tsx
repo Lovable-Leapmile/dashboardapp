@@ -52,16 +52,24 @@ const Home = () => {
     return rackIndex * (SLOT_HEIGHT + SLOT_GAP);
   };
 
+  // Track last scroll time to prevent jitter
+  const lastScrollTimeRef = useRef<number>(0);
+
   // Auto-scroll container to keep shuttle in view during movement - smooth and jitter-free
-  const scrollShuttleIntoView = () => {
+  const scrollShuttleIntoView = (force: boolean = false) => {
     if (!shuttleRef.current || !rackContainerRef.current) return;
+    
+    // Throttle scroll calls to prevent jitter (min 50ms between calls)
+    const now = Date.now();
+    if (!force && now - lastScrollTimeRef.current < 50) return;
+    lastScrollTimeRef.current = now;
     
     const container = rackContainerRef.current;
     const shuttle = shuttleRef.current;
     const containerRect = container.getBoundingClientRect();
     const shuttleRect = shuttle.getBoundingClientRect();
     
-    const padding = 60; // Extra padding from edges
+    const padding = 80; // Extra padding from edges
     
     // Check if shuttle is outside container's visible area
     const isAboveVisible = shuttleRect.top < containerRect.top + padding;
@@ -79,7 +87,7 @@ const Home = () => {
     }
   };
 
-  // Animate shuttle when rack position changes
+  // Animate shuttle when rack position changes with real-time scrolling
   useEffect(() => {
     const currentRack = shuttleState.store_rack;
     
@@ -102,22 +110,27 @@ const Home = () => {
       prevRackRef.current = currentRack;
 
       // Start scrolling immediately as animation begins
-      scrollShuttleIntoView();
+      scrollShuttleIntoView(true);
       
-      // Continue scrolling during animation to track movement
-      const scrollIntervalId = setInterval(() => {
-        scrollShuttleIntoView();
-      }, 100);
-
-      // Clear animating flag after animation completes
-      const timer = setTimeout(() => {
-        setIsAnimating(false);
-        clearInterval(scrollIntervalId);
-      }, 1500); // Match animation duration
+      // Use requestAnimationFrame for smoother real-time tracking during animation
+      let animationFrameId: number;
+      const startTime = Date.now();
+      const animationDuration = 1500; // Match CSS transition duration
+      
+      const trackShuttle = () => {
+        const elapsed = Date.now() - startTime;
+        if (elapsed < animationDuration) {
+          scrollShuttleIntoView();
+          animationFrameId = requestAnimationFrame(trackShuttle);
+        } else {
+          setIsAnimating(false);
+        }
+      };
+      
+      animationFrameId = requestAnimationFrame(trackShuttle);
 
       return () => {
-        clearTimeout(timer);
-        clearInterval(scrollIntervalId);
+        cancelAnimationFrame(animationFrameId);
       };
     }
   }, [shuttleState.store_rack, shuttleState.shuttle_action]);
