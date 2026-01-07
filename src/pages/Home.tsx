@@ -230,27 +230,27 @@ const Home = () => {
       <AppHeader selectedTab="Robot" />
 
       <main className="px-2 sm:px-4 py-4 sm:py-5 overflow-x-auto">
-        {/* Header row with all titles */}
-        <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-[100px] mb-4 px-2">
-          <div className="flex items-center gap-4 sm:gap-[100px]">
+        {/* Header row with all titles - compact */}
+        <div className="flex flex-col lg:flex-row lg:items-center gap-2 lg:gap-[80px] mb-2 px-2">
+          <div className="flex items-center gap-3 sm:gap-[80px]">
             <div
-              className="text-base sm:text-xl font-semibold text-center min-w-[80px] sm:min-w-[155px]"
+              className="text-sm sm:text-base font-semibold text-center min-w-[70px] sm:min-w-[140px]"
               style={{ color: "#351c75" }}
             >
               Row 1
             </div>
             <div
-              className="text-base sm:text-xl font-semibold text-center min-w-[80px] sm:min-w-[155px]"
+              className="text-sm sm:text-base font-semibold text-center min-w-[70px] sm:min-w-[140px]"
               style={{ color: "#351c75" }}
             >
               Row 0
             </div>
           </div>
-          <div className="flex items-center gap-3 sm:gap-6">
-            <div className="text-base sm:text-xl font-semibold" style={{ color: "#351c75" }}>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <div className="text-sm sm:text-base font-semibold" style={{ color: "#351c75" }}>
               Robot Status Timeline
             </div>
-            <div className="text-xs sm:text-sm" style={{ color: "#9ca3af" }}>
+            <div className="text-[10px] sm:text-xs" style={{ color: "#9ca3af" }}>
               {currentTime.toLocaleDateString("en-IN", { timeZone: "Asia/Kolkata" })}{" "}
               {currentTime.toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata" })}
             </div>
