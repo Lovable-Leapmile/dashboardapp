@@ -85,43 +85,55 @@ const Home = () => {
     }
   };
 
-  // Animate shuttle when rack position changes with real-time scrolling
+  // Animate shuttle when rack position changes with immediate real-time scrolling
   useEffect(() => {
     const currentRack = shuttleState.store_rack;
     
-    // Skip if no valid rack or if it's the same position
+    // Skip if no valid rack
     if (currentRack === null || currentRack === undefined || currentRack < 0) {
       return;
     }
 
+    const targetY = calculateYPosition(currentRack);
+
     // Initialize position on first valid rack
     if (prevRackRef.current === null) {
       prevRackRef.current = currentRack;
-      setAnimatedRackPosition(calculateYPosition(currentRack));
+      setAnimatedRackPosition(targetY);
+      scrollToActiveRack(currentRack, true);
       return;
     }
 
-    // Only animate if position actually changed
+    // Handle position change with immediate scroll response
     if (prevRackRef.current !== currentRack) {
       setIsAnimating(true);
-      setAnimatedRackPosition(calculateYPosition(currentRack));
+      setAnimatedRackPosition(targetY);
       prevRackRef.current = currentRack;
 
-      // Start scrolling immediately to the active rack as animation begins
+      // Immediate scroll - don't wait
       scrollToActiveRack(currentRack, true);
       
-      // Use requestAnimationFrame for smoother real-time tracking during animation
+      // Continuous tracking during CSS animation using interpolation
       let animationFrameId: number;
-      const startTime = Date.now();
-      const animationDuration = 1500; // Match CSS transition duration
+      const startTime = performance.now();
+      const animationDuration = 1500;
+      const startY = animatedRackPosition;
+      const deltaY = targetY - startY;
       
-      const trackShuttle = () => {
-        const elapsed = Date.now() - startTime;
-        if (elapsed < animationDuration) {
-          scrollToActiveRack(currentRack);
+      const trackShuttle = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / animationDuration, 1);
+        
+        // Cubic easing for smooth scroll tracking
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const interpolatedRack = Math.round((startY + deltaY * eased) / (SLOT_HEIGHT + SLOT_GAP));
+        
+        if (progress < 1) {
+          scrollToActiveRack(interpolatedRack);
           animationFrameId = requestAnimationFrame(trackShuttle);
         } else {
           setIsAnimating(false);
+          scrollToActiveRack(currentRack, true);
         }
       };
       
@@ -131,7 +143,7 @@ const Home = () => {
         cancelAnimationFrame(animationFrameId);
       };
     }
-  }, [shuttleState.store_rack, shuttleState.shuttle_action]);
+  }, [shuttleState.store_rack, shuttleState.shuttle_action, animatedRackPosition]);
 
   // Track action history
   useEffect(() => {

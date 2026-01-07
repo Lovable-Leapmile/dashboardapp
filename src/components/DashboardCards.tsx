@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Bot, Package, Layers, Zap, Activity, Flame, Battery } from "lucide-react";
+import { Bot, Package, Layers, Zap, Flame, Battery, RefreshCw } from "lucide-react";
 import { getRobotManagerBase, getNanostoreBase } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
 
@@ -41,6 +41,21 @@ export const DashboardCards = () => {
   const [slotInfo, setSlotInfo] = useState<SlotInfo | null>(null);
   const [trayInfo, setTrayInfo] = useState<TrayInfo | null>(null);
   const [powerInfo, setPowerInfo] = useState<PowerInfo | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const getTimeAgo = useCallback((date: Date | null): string => {
+    if (!date) return "Never";
+    const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
+    if (seconds < 5) return "Just now";
+    if (seconds < 60) return `${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    return `${hours}h ago`;
+  }, []);
+
+  const [timeAgoDisplay, setTimeAgoDisplay] = useState("Never");
 
   const formatToIST = (dateString: string): string => {
     const date = new Date(dateString);
@@ -172,21 +187,50 @@ export const DashboardCards = () => {
     }
   };
 
-  const fetchAllData = () => {
-    fetchRobotInfo();
-    fetchSlotInfo();
-    fetchTrayInfo();
-    fetchPowerInfo();
+  const fetchAllData = async () => {
+    setIsRefreshing(true);
+    await Promise.all([
+      fetchRobotInfo(),
+      fetchSlotInfo(),
+      fetchTrayInfo(),
+      fetchPowerInfo()
+    ]);
+    setLastUpdated(new Date());
+    setIsRefreshing(false);
   };
 
   useEffect(() => {
     fetchAllData();
-    const interval = setInterval(fetchAllData, 3600000); // 1 hour
+    const interval = setInterval(fetchAllData, 30000); // Refresh every 30 seconds
     return () => clearInterval(interval);
   }, []);
 
+  // Update time ago display every second
+  useEffect(() => {
+    const updateTimeAgo = () => setTimeAgoDisplay(getTimeAgo(lastUpdated));
+    updateTimeAgo();
+    const interval = setInterval(updateTimeAgo, 1000);
+    return () => clearInterval(interval);
+  }, [lastUpdated, getTimeAgo]);
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 h-full">
+      {/* Real-time Update Indicator */}
+      <div className="col-span-full flex items-center justify-end gap-2 px-1 -mb-1">
+        <div className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
+          <div className={`w-1.5 h-1.5 rounded-full ${isRefreshing ? 'bg-amber-500 animate-pulse' : 'bg-green-500'}`} />
+          <span>{isRefreshing ? 'Refreshing...' : `Updated ${timeAgoDisplay}`}</span>
+        </div>
+        <button 
+          onClick={fetchAllData}
+          disabled={isRefreshing}
+          className="p-1 rounded hover:bg-muted/50 transition-colors disabled:opacity-50"
+          title="Refresh now"
+        >
+          <RefreshCw className={`w-3 h-3 text-muted-foreground ${isRefreshing ? 'animate-spin' : ''}`} />
+        </button>
+      </div>
+
       {/* Robot Information Card */}
       <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20 flex flex-col overflow-hidden">
         <CardHeader className="pb-0 pt-2 px-3">
