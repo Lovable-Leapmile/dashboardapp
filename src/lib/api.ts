@@ -14,7 +14,7 @@ export const getCameraManagerBase = (): string => `${getApiOrigin()}/cameramanag
 export const getAdminConsoleUrl = (): string => {
   const config = getStoredApiConfig();
   if (!config) {
-    throw new Error("API_NOT_CONFIGURED");
+    return "";
   }
   return `https://${config.apiName}.leapmile.com/nanostoreapp/`;
 };
