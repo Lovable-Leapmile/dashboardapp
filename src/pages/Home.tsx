@@ -379,47 +379,6 @@ const Home = () => {
                       willChange: "transform",
                     }}
                   >
-                    {/* Trail effect - multiple fading copies behind the shuttle */}
-                    {isAnimating && (
-                      <>
-                        <div
-                          className="absolute"
-                          style={{
-                            width: "55px",
-                            height: "25px",
-                            background: "linear-gradient(to bottom, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.05))",
-                            borderRadius: "4px",
-                            transform: "translateY(-8px)",
-                            opacity: 0.8,
-                            filter: "blur(2px)",
-                          }}
-                        />
-                        <div
-                          className="absolute"
-                          style={{
-                            width: "50px",
-                            height: "20px",
-                            background: "linear-gradient(to bottom, rgba(34, 197, 94, 0.1), transparent)",
-                            borderRadius: "4px",
-                            transform: "translateY(-16px)",
-                            opacity: 0.5,
-                            filter: "blur(3px)",
-                          }}
-                        />
-                        <div
-                          className="absolute"
-                          style={{
-                            width: "45px",
-                            height: "15px",
-                            background: "linear-gradient(to bottom, rgba(34, 197, 94, 0.05), transparent)",
-                            borderRadius: "4px",
-                            transform: "translateY(-22px)",
-                            opacity: 0.3,
-                            filter: "blur(4px)",
-                          }}
-                        />
-                      </>
-                    )}
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -428,7 +387,7 @@ const Home = () => {
                             alt="shuttle"
                             className="cursor-pointer relative z-10"
                             style={{
-                              width: "55px",
+                              width: "60px",
                               height: "25px",
                               objectFit: "contain",
                             }}
