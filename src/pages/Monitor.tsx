@@ -188,13 +188,7 @@ const Monitor = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <AppHeader selectedTab="" isMonitorPage={true} />
       <main className="flex-1 overflow-auto">
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
-          {/* Page Header */}
-          <div className="py-4 sm:py-6">
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground">System Monitor</h1>
-            <p className="text-sm text-muted-foreground mt-1">Real-time robot status updates</p>
-          </div>
-
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-4 sm:py-6">
           {/* Error state */}
           {error && (
             <div className="mb-4 p-4 bg-destructive/10 border border-destructive/20 rounded-xl">
