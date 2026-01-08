@@ -152,8 +152,9 @@ const Racks = () => {
 
   const sortSlotsByIdDescending = (slots: Slot[]) => {
     return [...slots].sort((a, b) => {
-      const aNum = parseInt(a.slot_id.split("-")[1] || "0");
-      const bNum = parseInt(b.slot_id.split("-")[1] || "0");
+      // Extract last two characters and parse as number (e.g., A12 → 12)
+      const aNum = parseInt(a.slot_id.slice(-2)) || 0;
+      const bNum = parseInt(b.slot_id.slice(-2)) || 0;
       return bNum - aNum; // Descending order
     });
   };
