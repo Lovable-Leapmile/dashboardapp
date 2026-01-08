@@ -159,36 +159,6 @@ const Racks = () => {
     });
   };
 
-  // Sort racks based on last two numeric values (e.g., "1-0" from "S-1-0-1-0")
-  // Order: 2-0, 1-0, 0-0 (bottom to top)
-  const sortRacksByLastTwoNumbers = (rackIndices: number[]) => {
-    const rackOrder: { [key: string]: number } = {
-      "2-0": 0,
-      "1-0": 1,
-      "0-0": 2,
-    };
-
-    return [...rackIndices].sort((a, b) => {
-      // For rack indices, we need to map them to their rack IDs if available
-      // Since we're working with numeric indices, we'll create a pattern based on the index
-      // The pattern S-1-0-X-Y where X-Y are the last two numbers
-      // For now, we'll derive the last two numbers from the index pattern
-      const aLastTwo = `${Math.floor(a / 1) % 3}-0`; // This creates patterns like 0-0, 1-0, 2-0
-      const bLastTwo = `${Math.floor(b / 1) % 3}-0`;
-      
-      const aOrder = rackOrder[aLastTwo] ?? a;
-      const bOrder = rackOrder[bLastTwo] ?? b;
-      
-      return aOrder - bOrder;
-    });
-  };
-
-  // Get sorted rack indices for rendering
-  const getSortedRackIndices = () => {
-    const indices = Array.from({ length: numRacks }, (_, index) => index);
-    return sortRacksByLastTwoNumbers(indices);
-  };
-
   const fetchAllSlots = async (rackValue: number) => {
     const token = getStoredAuthToken();
     if (!token) return;
@@ -340,7 +310,7 @@ const Racks = () => {
           <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
             <div className="text-xs font-medium text-gray-500 mb-2 text-center">Select Rack</div>
             <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
-              {getSortedRackIndices().map((index) => (
+              {Array.from({ length: numRacks }, (_, index) => (
                 <div
                   key={index}
                   onClick={() => handleRackSelect(index)}
