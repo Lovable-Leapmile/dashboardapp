@@ -7,6 +7,7 @@ import { useAuthSession } from "@/hooks/useAuthSession";
 import { useShuttlePubSub } from "@/hooks/useShuttlePubSub";
 import { getStoredAuthToken } from "@/lib/auth";
 import { getRobotManagerBase } from "@/lib/api";
+import { Gauge } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -44,8 +45,10 @@ const Home = () => {
   const prevRackRef = useRef<number | null>(null);
   const [animatedRackPosition, setAnimatedRackPosition] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [shuttleSpeed, setShuttleSpeed] = useState(0); // racks per second
   const shuttleRef = useRef<HTMLDivElement>(null);
   const rackContainerRef = useRef<HTMLDivElement>(null);
+  const lastPositionRef = useRef<{ rack: number; time: number } | null>(null);
   
 
   // Calculate Y position for a given rack index
@@ -92,10 +95,23 @@ const Home = () => {
     
     // Skip if no valid rack
     if (currentRack === null || currentRack === undefined || currentRack < 0) {
+      setShuttleSpeed(0);
       return;
     }
 
     const targetY = calculateYPosition(currentRack);
+    const now = performance.now();
+
+    // Calculate speed based on rack position change
+    if (lastPositionRef.current !== null && lastPositionRef.current.rack !== currentRack) {
+      const timeDelta = (now - lastPositionRef.current.time) / 1000; // seconds
+      const racksDelta = Math.abs(currentRack - lastPositionRef.current.rack);
+      if (timeDelta > 0) {
+        const speed = racksDelta / timeDelta;
+        setShuttleSpeed(Math.min(speed, 10)); // Cap at 10 racks/sec for display
+      }
+    }
+    lastPositionRef.current = { rack: currentRack, time: now };
 
     // Initialize position on first valid rack
     if (prevRackRef.current === null) {
@@ -134,6 +150,7 @@ const Home = () => {
           animationFrameId = requestAnimationFrame(trackShuttle);
         } else {
           setIsAnimating(false);
+          setShuttleSpeed(0); // Reset speed when animation ends
           scrollToActiveRack(currentRack, true);
         }
       };
@@ -342,6 +359,16 @@ const Home = () => {
               <div className="flex flex-col items-center p-3 border-r border-gray-200 bg-gray-50/50">
                 <div className="text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
                   Shuttle
+                </div>
+                {/* Speed Indicator */}
+                <div className="flex items-center gap-1.5 mb-2 px-2 py-1 rounded-md bg-primary/10 border border-primary/20">
+                  <Gauge className="w-3.5 h-3.5 text-primary" />
+                  <span className="text-[10px] font-medium text-primary">
+                    {shuttleSpeed > 0 ? `${shuttleSpeed.toFixed(1)} racks/s` : "Idle"}
+                  </span>
+                  {isAnimating && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  )}
                 </div>
                 <div 
                   className="flex flex-col justify-start"
