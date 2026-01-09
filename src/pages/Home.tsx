@@ -45,9 +45,12 @@ const Home = () => {
   const [animatedRackPosition, setAnimatedRackPosition] = useState<number>(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [shuttleSpeed, setShuttleSpeed] = useState(0); // racks per second
+  const [totalDistance, setTotalDistance] = useState(0); // total racks traveled
+  const [speedHistory, setSpeedHistory] = useState<number[]>([]); // for calculating average
   const shuttleRef = useRef<HTMLDivElement>(null);
   const rackContainerRef = useRef<HTMLDivElement>(null);
   const lastPositionRef = useRef<{ rack: number; time: number } | null>(null);
+  const sessionStartRef = useRef<number>(Date.now());
   
 
   // Calculate Y position for a given rack index
@@ -108,6 +111,8 @@ const Home = () => {
       if (timeDelta > 0) {
         const speed = racksDelta / timeDelta;
         setShuttleSpeed(Math.min(speed, 10)); // Cap at 10 racks/sec for display
+        setTotalDistance(prev => prev + racksDelta);
+        setSpeedHistory(prev => [...prev.slice(-19), speed]); // Keep last 20 speeds
       }
     }
     lastPositionRef.current = { rack: currentRack, time: now };
@@ -356,15 +361,55 @@ const Home = () => {
 
               {/* Shuttle Movement Section - positioned BETWEEN Row 1 and Row 0 */}
               <div className="flex flex-col items-center p-3 border-r border-gray-200 bg-gray-50/50">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
-                  <span>Shuttle</span>
-                  <span className="text-[9px] font-medium text-muted-foreground">
-                    ({shuttleSpeed > 0 ? `${shuttleSpeed.toFixed(1)} r/s` : "Idle"})
-                  </span>
-                  {isAnimating && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  )}
-                </div>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-center mb-2 cursor-help" style={{ color: "#351c75" }}>
+                        <span>Shuttle</span>
+                        <span className="text-[9px] font-medium text-muted-foreground">
+                          ({shuttleSpeed > 0 ? `${shuttleSpeed.toFixed(1)} r/s` : "Idle"})
+                        </span>
+                        {isAnimating && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                        )}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent 
+                      side="right" 
+                      className="bg-background border border-border shadow-lg p-3"
+                    >
+                      <div className="text-xs space-y-1.5 min-w-[140px]">
+                        <div className="font-semibold text-primary border-b border-border pb-1 mb-1.5">
+                          Speed Stats
+                        </div>
+                        <div className="flex justify-between text-muted-foreground">
+                          <span>Current:</span>
+                          <span className="font-medium text-foreground">
+                            {shuttleSpeed > 0 ? `${shuttleSpeed.toFixed(2)} r/s` : "0 r/s"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-muted-foreground">
+                          <span>Avg Speed:</span>
+                          <span className="font-medium text-foreground">
+                            {speedHistory.length > 0 
+                              ? `${(speedHistory.reduce((a, b) => a + b, 0) / speedHistory.length).toFixed(2)} r/s`
+                              : "N/A"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between text-muted-foreground">
+                          <span>Distance:</span>
+                          <span className="font-medium text-foreground">{totalDistance} racks</span>
+                        </div>
+                        <div className="flex justify-between text-muted-foreground">
+                          <span>Session:</span>
+                          <span className="font-medium text-foreground">
+                            {Math.floor((Date.now() - sessionStartRef.current) / 60000)}m
+                          </span>
+                        </div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
                 <div 
                   className="flex flex-col justify-start"
                   style={{ 
