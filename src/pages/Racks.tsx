@@ -348,23 +348,19 @@ const Racks = () => {
 
       <main className="p-4 sm:p-8">
         {/* Rack selector with better spacing */}
-        <div className="flex justify-center mb-6">
-          <div className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
-            <div className="text-xs font-medium text-gray-500 mb-2 text-center">Select Rack</div>
-            <div className="flex flex-wrap gap-2 sm:gap-3 justify-center">
+        <div className="flex justify-center mb-10">
+          <div className="bg-card rounded-xl border border-border p-5 shadow-md">
+            <div className="text-sm font-semibold text-primary mb-4 text-center tracking-wide">Select Rack</div>
+            <div className="flex flex-wrap gap-4 sm:gap-5 justify-center">
               {Array.from({ length: numRacks }, (_, index) => (
                 <div
                   key={index}
                   onClick={() => handleRackSelect(index)}
-                  className="flex items-center justify-center font-medium text-xs sm:text-sm transition-all hover:scale-105 cursor-pointer w-8 h-8 sm:w-10 sm:h-10"
-                  style={{
-                    backgroundColor: selectedRack === index ? "#ffffff" : "#351C75",
-                    color: selectedRack === index ? "#351C75" : "white",
-                    borderRadius: "6px",
-                    border: selectedRack === index ? "2px solid #351C75" : "none",
-                    boxShadow:
-                      selectedRack === index ? "0 3px 6px rgba(53, 28, 117, 0.3)" : "0 1px 3px rgba(0, 0, 0, 0.1)",
-                  }}
+                  className={`flex items-center justify-center font-bold text-sm sm:text-base transition-all duration-200 cursor-pointer w-10 h-10 sm:w-12 sm:h-12 rounded-lg ${
+                    selectedRack === index 
+                      ? "bg-primary-foreground text-primary border-2 border-primary shadow-lg scale-110" 
+                      : "bg-primary text-primary-foreground hover:scale-105 hover:shadow-md"
+                  }`}
                 >
                   {index}
                 </div>
