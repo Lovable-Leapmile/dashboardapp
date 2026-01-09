@@ -7,7 +7,6 @@ import { useAuthSession } from "@/hooks/useAuthSession";
 import { useShuttlePubSub } from "@/hooks/useShuttlePubSub";
 import { getStoredAuthToken } from "@/lib/auth";
 import { getRobotManagerBase } from "@/lib/api";
-import { Gauge } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -357,14 +356,10 @@ const Home = () => {
 
               {/* Shuttle Movement Section - positioned BETWEEN Row 1 and Row 0 */}
               <div className="flex flex-col items-center p-3 border-r border-gray-200 bg-gray-50/50">
-                <div className="text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
-                  Shuttle
-                </div>
-                {/* Speed Indicator */}
-                <div className="flex items-center gap-1.5 mb-2 px-2 py-1 rounded-md bg-primary/10 border border-primary/20">
-                  <Gauge className="w-3.5 h-3.5 text-primary" />
-                  <span className="text-[10px] font-medium text-primary">
-                    {shuttleSpeed > 0 ? `${shuttleSpeed.toFixed(1)} racks/s` : "Idle"}
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                  <span>Shuttle</span>
+                  <span className="text-[9px] font-medium text-muted-foreground">
+                    ({shuttleSpeed > 0 ? `${shuttleSpeed.toFixed(1)} r/s` : "Idle"})
                   </span>
                   {isAnimating && (
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
