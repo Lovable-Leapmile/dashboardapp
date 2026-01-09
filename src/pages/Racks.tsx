@@ -181,6 +181,32 @@ const Racks = () => {
     });
   };
 
+  // Custom sort for S-0-0-X-0 pattern: higher rack number (X) appears on top
+  const sortS00Pattern = (slots: Slot[]) => {
+    const s00Pattern = /^S-0-0-(\d+)-0$/;
+
+    return [...slots].sort((a, b) => {
+      const matchA = a.slot_id.match(s00Pattern);
+      const matchB = b.slot_id.match(s00Pattern);
+
+      // If both match S-0-0-X-0 pattern, sort by rack number (X) descending
+      if (matchA && matchB) {
+        const rackA = parseInt(matchA[1]);
+        const rackB = parseInt(matchB[1]);
+        return rackB - rackA; // Higher rack number on top
+      }
+
+      // If only one matches, keep the matching one in its position
+      if (matchA) return -1;
+      if (matchB) return 1;
+
+      // For non-matching slots, use descending order by last two digits
+      const aNum = parseInt(a.slot_id.slice(-2)) || 0;
+      const bNum = parseInt(b.slot_id.slice(-2)) || 0;
+      return bNum - aNum;
+    });
+  };
+
   const sortSlotsByIdDescending = (slots: Slot[]) => {
     // First check if any slots match S-1-0-X-Y pattern
     const s10Pattern = /^S-1-0-\d+-\d+$/;
@@ -189,6 +215,15 @@ const Racks = () => {
     // If S-1-0-X-Y pattern slots exist, use the special sorting
     if (hasS10Slots) {
       return sortS10Pattern(slots);
+    }
+
+    // Check if any slots match S-0-0-X-0 pattern
+    const s00Pattern = /^S-0-0-\d+-0$/;
+    const hasS00Slots = slots.some((slot) => s00Pattern.test(slot.slot_id));
+
+    // If S-0-0-X-0 pattern slots exist, use the special sorting
+    if (hasS00Slots) {
+      return sortS00Pattern(slots);
     }
 
     // Default: sort by last two digits descending
