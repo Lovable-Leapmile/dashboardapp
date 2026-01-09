@@ -33,6 +33,7 @@ const Home = () => {
   const [userName, setUserName] = useState("");
   const [robotNumRacks, setRobotNumRacks] = useState(0);
   const [robotNumDepths, setRobotNumDepths] = useState(0);
+  const [robotNumRows, setRobotNumRows] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [actionHistory, setActionHistory] = useState<ActionHistoryItem[]>([]);
   const navigate = useNavigate();
@@ -243,6 +244,7 @@ const Home = () => {
         const robotConfig = data.records[0];
         setRobotNumRacks(robotConfig.robot_num_racks || 0);
         setRobotNumDepths(robotConfig.robot_num_depths || 0);
+        setRobotNumRows(robotConfig.robot_num_rows || 2);
       }
     } catch (error) {
       console.error("Error fetching robot configuration:", error);
@@ -332,7 +334,8 @@ const Home = () => {
             >
               {/* Combined Row 1, Shuttle Movement, and Row 0 with borders */}
               <div className="inline-flex bg-white rounded-lg border border-gray-200 shadow-sm">
-                {/* Row 1 Section */}
+                {/* Row 1 Section - Only show if more than 1 row */}
+                {robotNumRows > 1 && (
               <div className="flex flex-col items-center p-3 border-r border-gray-200">
                 <div className="text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
                   Row 1
@@ -358,9 +361,10 @@ const Home = () => {
                   ))}
                 </div>
               </div>
+                )}
 
-              {/* Shuttle Movement Section - positioned BETWEEN Row 1 and Row 0 */}
-              <div className="flex flex-col items-center p-3 border-r border-gray-200 bg-gray-50/50">
+              {/* Shuttle Movement Section - positioned BETWEEN Row 1 and Row 0 (or next to Row 0 if only 1 row) */}
+              <div className={`flex flex-col items-center p-3 ${robotNumRows > 1 ? 'border-r border-gray-200' : ''} bg-gray-50/50`}>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
