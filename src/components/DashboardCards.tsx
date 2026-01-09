@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Bot, Package, Layers, Zap, Flame, Battery, RefreshCw } from "lucide-react";
+import { Bot, Package, Layers, Zap, RefreshCw } from "lucide-react";
 import { getRobotManagerBase, getNanostoreBase } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
 
