@@ -302,19 +302,13 @@ export const DashboardCards = () => {
                 <div className="text-lg font-bold text-foreground">{powerInfo.current}</div>
                 <div className="text-[10px] text-muted-foreground font-medium">Current</div>
               </div>
-              <div className="bg-amber-500/15 rounded-lg p-2.5 border border-amber-500/30 shadow-sm">
-                <div className="flex items-center justify-center gap-1.5">
-                  <Flame className="w-4 h-4 text-amber-500" />
-                  <span className="text-lg font-bold text-amber-600">{powerInfo.power}</span>
-                </div>
-                <div className="text-[10px] text-muted-foreground font-medium text-center mt-0.5">Power</div>
+              <div className="bg-amber-500/15 rounded-lg p-2.5 border border-amber-500/30 shadow-sm text-center">
+                <div className="text-lg font-bold text-amber-600">{powerInfo.power}</div>
+                <div className="text-[10px] text-muted-foreground font-medium mt-0.5">Power</div>
               </div>
-              <div className="bg-green-500/15 rounded-lg p-2.5 border border-green-500/30 shadow-sm">
-                <div className="flex items-center justify-center gap-1.5">
-                  <Battery className="w-4 h-4 text-green-500" />
-                  <span className="text-lg font-bold text-green-600">{powerInfo.energy}</span>
-                </div>
-                <div className="text-[10px] text-muted-foreground font-medium text-center mt-0.5">Energy</div>
+              <div className="bg-green-500/15 rounded-lg p-2.5 border border-green-500/30 shadow-sm text-center">
+                <div className="text-lg font-bold text-green-600">{powerInfo.energy}</div>
+                <div className="text-[10px] text-muted-foreground font-medium mt-0.5">Energy</div>
               </div>
             </div>
           ) : (
