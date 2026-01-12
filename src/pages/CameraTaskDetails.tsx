@@ -14,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { getDefaultGridProps } from "@/lib/agGridUtils";
 import { getCameraManagerBase } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
+import noRecordsImage from "@/assets/no_records.png";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -249,7 +250,9 @@ const CameraTaskDetails = () => {
         {loading ? (
           <div className="text-center text-muted-foreground py-12">Loading camera events...</div>
         ) : events.length === 0 ? (
-          <div className="text-center text-muted-foreground py-12">No camera events found for this task</div>
+          <div className="flex items-center justify-center" style={{ height: "100dvh" }}>
+            <img src={noRecordsImage} alt="No records" className="w-48 sm:w-[340px]" />
+          </div>
         ) : (
           <div className="ag-theme-quartz w-full" style={{ height: "calc(100vh - 145px)" }}>
             <AgGridReact

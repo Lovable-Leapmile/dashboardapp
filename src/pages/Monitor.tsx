@@ -212,8 +212,8 @@ const Monitor = () => {
 
           {/* Empty state */}
           {!isLoading && !error && !statusData && (
-            <div className="flex justify-center py-12">
-              <img src={noRecordsImg} alt="No records" className="max-w-xs" />
+            <div className="flex items-center justify-center" style={{ height: "100dvh" }}>
+              <img src={noRecordsImg} alt="No records" className="w-48 sm:w-[340px]" />
             </div>
           )}
         </div>

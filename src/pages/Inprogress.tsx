@@ -156,7 +156,7 @@ const Inprogress = () => {
 
       <main className="p-2 sm:p-4">
         {!loading && rowData.length === 0 ? (
-          <div className="flex flex-col items-center justify-center" style={{ minHeight: "calc(100vh - 180px)" }}>
+          <div className="flex items-center justify-center" style={{ height: "100dvh" }}>
             <img src={noRecordsImage} alt="No Record found" className="w-48 sm:w-[340px]" />
           </div>
         ) : (

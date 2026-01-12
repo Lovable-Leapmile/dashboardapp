@@ -149,8 +149,8 @@ const Camera = () => {
           {loading ? (
             <div className="text-center text-muted-foreground py-12">Loading tasks...</div>
           ) : filteredTasks.length === 0 ? (
-            <div className="flex justify-center py-12">
-              <img src={noRecordsImg} alt="No records" className="max-w-xs" />
+            <div className="flex items-center justify-center" style={{ height: "100dvh" }}>
+              <img src={noRecordsImg} alt="No records" className="w-48 sm:w-[340px]" />
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
