@@ -118,11 +118,12 @@ const Index = () => {
       <div className="absolute top-4 right-4 z-20">
         <Button
           variant="outline"
+          size="sm"
           onClick={handleChangeApiName}
-          className="bg-white/90 hover:bg-white text-gray-700 hover:text-gray-700 border-gray-200 shadow-md backdrop-blur-sm"
+          className="bg-white/90 hover:bg-white text-gray-700 hover:text-gray-700 border-gray-200 shadow-md backdrop-blur-sm hover-scale"
         >
-          <Settings className="w-4 h-4 mr-2" />
-          Change API Name
+          <Settings className="w-3 h-3 mr-1.5" />
+          Change API
         </Button>
       </div>
 
