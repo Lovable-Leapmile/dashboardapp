@@ -6,6 +6,7 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { getCameraManagerBase } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
+import noRecordsImg from "@/assets/no_records.png";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -148,7 +149,9 @@ const Camera = () => {
           {loading ? (
             <div className="text-center text-muted-foreground py-12">Loading tasks...</div>
           ) : filteredTasks.length === 0 ? (
-            <div className="text-center text-muted-foreground py-12">No tasks found</div>
+            <div className="flex justify-center py-12">
+              <img src={noRecordsImg} alt="No records" className="max-w-xs" />
+            </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
               {filteredTasks.map((task) => (
