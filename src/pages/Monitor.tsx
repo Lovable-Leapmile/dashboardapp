@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { getPubSubBase } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
+import noRecordsImg from "@/assets/no_records.png";
 
 interface StatusMessage {
   msg?: string;
@@ -211,9 +212,8 @@ const Monitor = () => {
 
           {/* Empty state */}
           {!isLoading && !error && !statusData && (
-            <div className="flex flex-col items-center justify-center h-64 text-center">
-              <p className="text-muted-foreground text-lg">No status data available</p>
-              <p className="text-muted-foreground text-sm mt-1">Waiting for robot data...</p>
+            <div className="flex justify-center py-12">
+              <img src={noRecordsImg} alt="No records" className="max-w-xs" />
             </div>
           )}
         </div>
