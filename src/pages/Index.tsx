@@ -119,7 +119,7 @@ const Index = () => {
         <Button
           variant="outline"
           onClick={handleChangeApiName}
-          className="bg-white/90 hover:bg-white text-gray-700 border-gray-200 shadow-md backdrop-blur-sm"
+          className="bg-white/90 hover:bg-white text-gray-700 hover:text-gray-700 border-gray-200 shadow-md backdrop-blur-sm"
         >
           <Settings className="w-4 h-4 mr-2" />
           Change API Name
