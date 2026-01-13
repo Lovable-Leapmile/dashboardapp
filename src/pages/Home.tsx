@@ -493,6 +493,10 @@ const Home = () => {
                               <span className="font-medium">Rack:</span> {shuttleState.store_rack ?? "N/A"} |{" "}
                               <span className="font-medium">Row:</span> {shuttleState.store_row === -1 ? "N/A" : shuttleState.store_row}
                             </div>
+                            <div className="text-muted-foreground">
+                              <span className="font-medium">Depth:</span>{" "}
+                              {shuttleState.store_depth !== null ? shuttleState.store_depth : "N/A"}
+                            </div>
                           </div>
                         </TooltipContent>
                       </Tooltip>
