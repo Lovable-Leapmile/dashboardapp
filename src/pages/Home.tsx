@@ -337,7 +337,7 @@ const Home = () => {
                 {/* Row 1 Section - Only show if more than 1 row */}
                 {robotNumRows > 1 && (
               <div className="flex flex-col items-center p-3 border-r border-gray-200">
-                <div className="flex items-center gap-2 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                <div className="flex items-center gap-4 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
                   <span className="text-[10px] font-medium text-muted-foreground">D-1</span>
                   <span>Row 1</span>
                   <span className="text-[10px] font-medium text-muted-foreground">D-0</span>
@@ -532,7 +532,7 @@ const Home = () => {
 
               {/* Row 0 Section */}
               <div className="flex flex-col items-center p-3">
-                <div className="flex items-center gap-2 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                <div className="flex items-center gap-4 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
                   <span className="text-[10px] font-medium text-muted-foreground">D-0</span>
                   <span>Row 0</span>
                   <span className="text-[10px] font-medium text-muted-foreground">D-1</span>
