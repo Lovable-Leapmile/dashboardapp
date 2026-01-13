@@ -337,19 +337,14 @@ const Home = () => {
                 {/* Row 1 Section - Only show if more than 1 row */}
                 {robotNumRows > 1 && (
               <div className="flex flex-col items-center p-3 border-r border-gray-200">
-                <div className="text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
-                  Row 1
+                <div className="flex items-center gap-2 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                  <span className="text-[10px] font-medium text-muted-foreground">D-1</span>
+                  <span>Row 1</span>
+                  <span className="text-[10px] font-medium text-muted-foreground">D-0</span>
                 </div>
                 <div className="flex gap-2 sm:gap-[10px]">
                   {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
                     <div key={`row1-depth${depthIdx}`} className="flex flex-col gap-2 sm:gap-[10px]">
-                      {/* Depth label at top of each column - Row 1 shows reversed (D-1 left, D-0 right) */}
-                      <div 
-                        className="text-[10px] font-medium text-center text-muted-foreground mb-1"
-                        style={{ minHeight: "14px" }}
-                      >
-                        D-{robotNumDepths - 1 - depthIdx}
-                      </div>
                       {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                         <div
                           key={`row1-depth${depthIdx}-rack${rackIdx}`}
@@ -537,19 +532,14 @@ const Home = () => {
 
               {/* Row 0 Section */}
               <div className="flex flex-col items-center p-3">
-                <div className="text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
-                  Row 0
+                <div className="flex items-center gap-2 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                  <span className="text-[10px] font-medium text-muted-foreground">D-0</span>
+                  <span>Row 0</span>
+                  <span className="text-[10px] font-medium text-muted-foreground">D-1</span>
                 </div>
                 <div className="flex gap-2 sm:gap-[10px]">
                   {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
                     <div key={`row0-depth${depthIdx}`} className="flex flex-col gap-2 sm:gap-[10px]">
-                      {/* Depth label at top of each column */}
-                      <div 
-                        className="text-[10px] font-medium text-center text-muted-foreground mb-1"
-                        style={{ minHeight: "14px" }}
-                      >
-                        D-{depthIdx}
-                      </div>
                       {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                         <div
                           key={`row0-depth${depthIdx}-rack${rackIdx}`}
