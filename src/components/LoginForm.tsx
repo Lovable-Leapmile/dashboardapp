@@ -183,7 +183,7 @@ const LoginForm = () => {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-xl py-6 font-semibold text-base transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/30 mt-8"
+            className="w-full rounded-xl py-6 font-semibold text-base transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/30 mt-8 animate-pulse-glow"
             style={{ backgroundColor: '#351C75' }}
           >
             {isLoading ? "Logging in..." : "Login"}
