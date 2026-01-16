@@ -333,7 +333,7 @@ const Home = () => {
               }}
             >
               {/* Combined Row 1, Shuttle Movement, and Row 0 with borders */}
-              <div className="inline-flex bg-white rounded-lg border border-gray-200 shadow-sm">
+              <div className="inline-flex bg-white rounded-lg border border-gray-200 shadow-sm h-[100vh]">
                 {/* Row 1 Section - Only show if more than 1 row */}
                 {robotNumRows > 1 && (
               <div className="flex flex-col items-center p-3 border-r border-gray-200">
