@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { getStoredAuthToken } from "@/lib/auth";
 import { getPubSubBase } from "@/lib/api";
+import { getStoredApiConfig } from "@/lib/apiConfig";
 
 export interface ShuttleState {
   // Initial data from first record
@@ -104,8 +105,22 @@ export const useShuttlePubSub = () => {
 
     try {
       setIsLoading(true);
+      
+      // Get dynamic apiname and robotname from localStorage
+      const apiConfig = getStoredApiConfig();
+      const robotname = localStorage.getItem("robotname");
+      
+      if (!apiConfig || !robotname) {
+        // Fallback or skip if not configured yet
+        setIsLoading(false);
+        return;
+      }
+      
+      // Construct dynamic topic: ${apiname}_${robotname}
+      const topic = `${apiConfig.apiName}_${robotname}`;
+      
       const response = await fetch(
-        `${getPubSubBase()}/subscribe?topic=amsstores1_AMSSTORES1-Nano&num_records=4`,
+        `${getPubSubBase()}/subscribe?topic=${encodeURIComponent(topic)}&num_records=4`,
         {
           method: "GET",
           headers: {

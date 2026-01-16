@@ -245,6 +245,11 @@ const Home = () => {
         setRobotNumRacks(robotConfig.robot_num_racks || 0);
         setRobotNumDepths(robotConfig.robot_num_depths || 0);
         setRobotNumRows(robotConfig.robot_num_rows || 2);
+        
+        // Store robot_name in localStorage for dynamic API calls
+        if (robotConfig.robot_name) {
+          localStorage.setItem("robotname", robotConfig.robot_name);
+        }
       }
     } catch (error) {
       console.error("Error fetching robot configuration:", error);
