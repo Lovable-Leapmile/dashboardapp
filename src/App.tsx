@@ -25,6 +25,7 @@ import Pending from "./pages/Pending";
 import TrayReady from "./pages/TrayReady";
 import Inprogress from "./pages/Inprogress";
 import Completed from "./pages/Completed";
+import Map from "./pages/Map";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -81,6 +82,7 @@ const App = () => {
             <Route path="/tray-ready" element={<TrayReady />} />
             <Route path="/inprogress" element={<Inprogress />} />
             <Route path="/completed" element={<Completed />} />
+            <Route path="/map" element={<Map />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

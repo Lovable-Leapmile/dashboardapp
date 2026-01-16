@@ -352,7 +352,7 @@ const Racks = () => {
                     Row 1
                   </div>
                   <div className="flex gap-3">
-                    {/* Depth 2 - Vertical Column (Left) */}
+                    {/* Depth 1 - Vertical Column (Left) */}
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex flex-col gap-2">
                         {row1Depth1Slots.map((slot, idx) => (
@@ -361,9 +361,9 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 2</div>
+                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 1</div>
                     </div>
-                    {/* Depth 1 - Vertical Column (Right) */}
+                    {/* Depth 0 - Vertical Column (Right) */}
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex flex-col gap-2">
                         {row1Depth0Slots.map((slot, idx) => (
@@ -372,7 +372,7 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 1</div>
+                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 0</div>
                     </div>
                   </div>
                 </div>
@@ -396,7 +396,7 @@ const Racks = () => {
                     Row 0
                   </div>
                   <div className="flex gap-3">
-                    {/* Depth 1 - Vertical Column (Left) */}
+                    {/* Depth 0 - Vertical Column (Left) */}
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex flex-col gap-2">
                         {row0Depth1Slots.map((slot, idx) => (
@@ -405,9 +405,9 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 1</div>
+                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 0</div>
                     </div>
-                    {/* Depth 2 - Vertical Column (Right) */}
+                    {/* Depth 1 - Vertical Column (Right) */}
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex flex-col gap-2">
                         {row0Depth0Slots.map((slot, idx) => (
@@ -416,7 +416,7 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 2</div>
+                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 1</div>
                     </div>
                   </div>
                 </div>
