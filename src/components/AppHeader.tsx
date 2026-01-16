@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ScrollText, Activity, LogOut, Camera, Menu, X, Home, ClipboardList, Video, FileText, Settings, Box, Layers, Grid3X3, Building2, TrendingUp, Download, Shield } from "lucide-react";
+import { ScrollText, Activity, LogOut, Camera, Menu, X, Home, ClipboardList, Video, FileText, Settings, Box, Layers, Grid3X3, Building2, TrendingUp, Download, Shield, MapPin } from "lucide-react";
 import headerLogo from "@/assets/header-logo.png";
 import { useState } from "react";
 import html2canvas from "html2canvas";
@@ -35,9 +35,10 @@ interface AppHeaderProps {
   isCameraPage?: boolean;
   isReportsPage?: boolean;
   isLogsPage?: boolean;
+  isMapPage?: boolean;
 }
 
-const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isCameraPage, isReportsPage, isLogsPage }: AppHeaderProps) => {
+const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isCameraPage, isReportsPage, isLogsPage, isMapPage }: AppHeaderProps) => {
   const navigate = useNavigate();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -331,6 +332,24 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
               </TooltipTrigger>
               <TooltipContent side="bottom" className="bg-white text-gray-800 border border-gray-200">
                 <p>Monitor</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div 
+                  className="hidden sm:flex rounded-full items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/30 w-10 h-10"
+                  style={{ 
+                    backgroundColor: isMapPage ? 'rgba(255, 255, 255, 0.40)' : 'rgba(255, 255, 255, 0.20)', 
+                    boxShadow: isMapPage ? '0 0 0 2px rgba(255, 255, 255, 0.5)' : 'none'
+                  }}
+                  onClick={() => navigate("/map")}
+                >
+                  <MapPin className="text-white w-[18px] h-[18px]" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="bg-white text-gray-800 border border-gray-200">
+                <p>Map</p>
               </TooltipContent>
             </Tooltip>
 
