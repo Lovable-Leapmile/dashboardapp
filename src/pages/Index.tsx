@@ -68,6 +68,9 @@ const Index = () => {
     // Clear sessionStorage
     sessionStorage.clear();
 
+    // Clear the current API name so the textbox is empty
+    setCurrentApiName("");
+
     // Open the same API Config modal
     setShowChangeApiModal(true);
   };
