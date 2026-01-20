@@ -283,7 +283,7 @@ const Logs = () => {
       
       // Read apiname and robotname from localStorage
       const apiname = localStorage.getItem("api_name") || "";
-      const robotname = localStorage.getItem("robot_name") || "";
+      const robotname = localStorage.getItem("robotname") || "";
       
       if (!apiname || !robotname) {
         setLoading(false);
