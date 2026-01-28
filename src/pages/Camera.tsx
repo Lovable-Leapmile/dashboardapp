@@ -6,7 +6,6 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { getCameraManagerBase } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
-import { getRawValue, setValue } from "@/lib/cookieStorage";
 import noRecordsImg from "@/assets/no_records.png";
 import {
   DropdownMenu,
@@ -33,8 +32,7 @@ const Camera = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [sortOption, setSortOption] = useState<SortOption>(() => {
-    // Read from cookies ONLY (single source of truth)
-    const saved = getRawValue(FILTER_STORAGE_KEY);
+    const saved = localStorage.getItem(FILTER_STORAGE_KEY);
     return (saved as SortOption) || "latest";
   });
 
@@ -72,8 +70,7 @@ const Camera = () => {
   const handleSortChange = (value: string) => {
     const newSort = value as SortOption;
     setSortOption(newSort);
-    // Store in cookies ONLY (single source of truth)
-    setValue(FILTER_STORAGE_KEY, newSort);
+    localStorage.setItem(FILTER_STORAGE_KEY, newSort);
   };
 
   const fetchTasks = async () => {

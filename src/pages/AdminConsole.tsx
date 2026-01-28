@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { getAdminConsoleUrl } from "@/lib/api";
-import { getRawValue } from "@/lib/cookieStorage";
 import noRecordsImage from "@/assets/no_records.png";
 
 const AdminConsole = () => {
@@ -15,9 +14,8 @@ const AdminConsole = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Read from cookies only (single source of truth)
-    const storedUserName = getRawValue("user_name");
-    const storedUserId = getRawValue("user_id");
+    const storedUserName = localStorage.getItem("user_name");
+    const storedUserId = localStorage.getItem("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");

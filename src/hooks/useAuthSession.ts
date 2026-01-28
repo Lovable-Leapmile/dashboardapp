@@ -1,11 +1,4 @@
 import { useEffect, useRef, useCallback } from "react";
-import { 
-  getRawValue, 
-  setValue, 
-  removeValue, 
-  clearAllCookies, 
-  refreshCookieExpiry 
-} from "@/lib/cookieStorage";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
@@ -13,18 +6,9 @@ const SESSION_DURATION_DAYS = 7;
 const SESSION_DURATION_MS = SESSION_DURATION_DAYS * 24 * 60 * 60 * 1000;
 const WARNING_BEFORE_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes before expiry
 
-/**
- * Global function to extend session - can be called from anywhere
- * Updates cookies only (single source of truth)
- */
+// Global function to extend session - can be called from anywhere
 export const extendSession = () => {
-  const newTimestamp = Date.now().toString();
-  setValue("login_timestamp", newTimestamp);
-  
-  // Refresh all cookie expiry dates
-  const newExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  refreshCookieExpiry(newExpiry);
-  
+  localStorage.setItem("login_timestamp", Date.now().toString());
   toast({
     title: "Session Extended",
     description: "Your session has been extended for another 7 days.",
@@ -50,10 +34,9 @@ export const useAuthSession = () => {
     }
 
     const checkSession = () => {
-      // Read from cookies only (single source of truth)
-      const userId = getRawValue("user_id");
-      const userName = getRawValue("user_name");
-      const loginTimestamp = getRawValue("login_timestamp");
+      const userId = localStorage.getItem("user_id");
+      const userName = localStorage.getItem("user_name");
+      const loginTimestamp = localStorage.getItem("login_timestamp");
 
       // Not logged in
       if (!userId || !userName) {
@@ -69,10 +52,10 @@ export const useAuthSession = () => {
         const timeUntilExpiry = SESSION_DURATION_MS - sessionAge;
 
         if (sessionAge > SESSION_DURATION_MS) {
-          // Session expired, clear cookies and redirect
-          removeValue("user_id");
-          removeValue("user_name");
-          removeValue("login_timestamp");
+          // Session expired, clear storage and redirect
+          localStorage.removeItem("user_id");
+          localStorage.removeItem("user_name");
+          localStorage.removeItem("login_timestamp");
           navigate("/");
           return false;
         }
@@ -105,9 +88,9 @@ export const useAuthSession = () => {
 
           // Schedule auto-logout
           logoutTimeoutRef.current = setTimeout(() => {
-            removeValue("user_id");
-            removeValue("user_name");
-            removeValue("login_timestamp");
+            localStorage.removeItem("user_id");
+            localStorage.removeItem("user_name");
+            localStorage.removeItem("login_timestamp");
             toast({
               title: "Session Expired",
               description: "Your session has expired. Please log in again.",
@@ -118,8 +101,8 @@ export const useAuthSession = () => {
         }
       } else {
         // No timestamp, treat as expired for security
-        removeValue("user_id");
-        removeValue("user_name");
+        localStorage.removeItem("user_id");
+        localStorage.removeItem("user_name");
         navigate("/");
         return false;
       }
@@ -140,30 +123,33 @@ export const useAuthSession = () => {
     };
   }, [navigate, location.pathname]);
 
-  const logout = () => {
+const logout = () => {
     if (warningTimeoutRef.current) {
       clearTimeout(warningTimeoutRef.current);
     }
     if (logoutTimeoutRef.current) {
       clearTimeout(logoutTimeoutRef.current);
     }
-    // Clear all cookies and localStorage using the utility
-    clearAllCookies();
-    // Clear sessionStorage
+    // Clear all localStorage
+    localStorage.clear();
+    // Clear all sessionStorage
     sessionStorage.clear();
+    // Clear all cookies
+    document.cookie.split(";").forEach((cookie) => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+    });
     navigate("/");
   };
 
   return { logout, extendSession: handleExtendSession };
 };
 
-/**
- * Check if session is valid using cookies only (single source of truth)
- */
 export const isSessionValid = (): boolean => {
-  const userId = getRawValue("user_id");
-  const userName = getRawValue("user_name");
-  const loginTimestamp = getRawValue("login_timestamp");
+  const userId = localStorage.getItem("user_id");
+  const userName = localStorage.getItem("user_name");
+  const loginTimestamp = localStorage.getItem("login_timestamp");
 
   if (!userId || !userName || !loginTimestamp) {
     return false;

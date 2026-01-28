@@ -4,7 +4,6 @@ import ApiConfigModal from "@/components/ApiConfigModal";
 import backgroundImage from "@/assets/dashboard_login_bg.png";
 import { isApiConfigured, getStoredApiConfig } from "@/lib/apiConfig";
 import { getStoredAuthToken } from "@/lib/auth";
-import { getRawValue, clearAllCookies } from "@/lib/cookieStorage";
 import { Button } from "@/components/ui/button";
 
 
@@ -19,11 +18,11 @@ const Index = () => {
     if (hasCheckedRef.current) return;
     hasCheckedRef.current = true;
 
-    // Check if all auth-related data is missing (using cookie-first approach)
+    // Check if all auth-related data is missing
     const authToken = getStoredAuthToken();
-    const userId = getRawValue("user_id");
-    const userName = getRawValue("user_name");
-    const loginTimestamp = getRawValue("login_timestamp");
+    const userId = localStorage.getItem("user_id");
+    const userName = localStorage.getItem("user_name");
+    const loginTimestamp = localStorage.getItem("login_timestamp");
     const apiConfigured = isApiConfigured();
 
     // Check cookies for any auth data
@@ -56,9 +55,16 @@ const Index = () => {
   };
 
   const handleChangeApiName = () => {
-    // Clear all app cookies and localStorage using the utility
-    clearAllCookies();
-    
+    // Clear all cookies
+    document.cookie.split(";").forEach((cookie) => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+    });
+
+    // Clear localStorage
+    localStorage.clear();
+
     // Clear sessionStorage
     sessionStorage.clear();
 

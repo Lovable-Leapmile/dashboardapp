@@ -7,7 +7,6 @@ import { useAuthSession } from "@/hooks/useAuthSession";
 import { useShuttlePubSub } from "@/hooks/useShuttlePubSub";
 import { getStoredAuthToken } from "@/lib/auth";
 import { getRobotManagerBase } from "@/lib/api";
-import { getRawValue, setValue } from "@/lib/cookieStorage";
 import {
   Tooltip,
   TooltipContent,
@@ -203,9 +202,8 @@ const Home = () => {
   };
 
   useEffect(() => {
-    // Read from cookies ONLY (single source of truth)
-    const storedUserName = getRawValue("user_name");
-    const storedUserId = getRawValue("user_id");
+    const storedUserName = localStorage.getItem("user_name");
+    const storedUserId = localStorage.getItem("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");
@@ -248,9 +246,9 @@ const Home = () => {
         setRobotNumDepths(robotConfig.robot_num_depths || 0);
         setRobotNumRows(robotConfig.robot_num_rows || 2);
         
-        // Store robot_name in cookies for dynamic API calls
+        // Store robot_name in localStorage for dynamic API calls
         if (robotConfig.robot_name) {
-          setValue("robotname", robotConfig.robot_name);
+          localStorage.setItem("robotname", robotConfig.robot_name);
         }
       }
     } catch (error) {

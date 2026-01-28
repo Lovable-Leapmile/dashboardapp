@@ -8,7 +8,6 @@ import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { apiGet, getNanostoreBase, getRobotManagerBase, withQuery } from "@/lib/api";
-import { getRawValue } from "@/lib/cookieStorage";
 import noRecordsImage from "@/assets/no_records.png";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RefreshCw, Download } from "lucide-react";
@@ -528,9 +527,8 @@ const Reports = () => {
   }, [reportType, toast, navigate]);
 
   useEffect(() => {
-    // Read from cookies only (single source of truth)
-    const storedUserName = getRawValue("user_name");
-    const storedUserId = getRawValue("user_id");
+    const storedUserName = localStorage.getItem("user_name");
+    const storedUserId = localStorage.getItem("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");

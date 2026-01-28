@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import { Globe, Loader2, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { setValue } from "@/lib/cookieStorage";
 
 interface ApiTesterModalProps {
   open: boolean;
@@ -83,10 +82,11 @@ const ApiTesterModal = ({ open, onOpenChange }: ApiTesterModalProps) => {
       // Since no-cors doesn't give us status, we assume success if no error thrown
       setTestResult("success");
       
-      // Store the new API configuration in cookies only
+      // Store the new API configuration
       const apiNamePart = trimmedApi.split(".")[0];
+      const API_CONFIG_KEY = "api_config";
       const config = { apiName: apiNamePart, baseUrl: apiUrl };
-      setValue("api_config", config);
+      localStorage.setItem(API_CONFIG_KEY, JSON.stringify(config));
 
       toast({
         title: "API Configured",

@@ -5,7 +5,6 @@ import SlotDetailsPanel from "@/components/SlotDetailsPanel";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { getRobotManagerBase } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
-import { getRawValue, setValue } from "@/lib/cookieStorage";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import blockImg from "@/assets/block.png";
 import stationImg from "@/assets/station.png";
@@ -40,9 +39,8 @@ const Racks = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Read from cookies only (single source of truth)
-    const storedUserName = getRawValue("user_name");
-    const storedUserId = getRawValue("user_id");
+    const storedUserName = localStorage.getItem("user_name");
+    const storedUserId = localStorage.getItem("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");
@@ -51,13 +49,13 @@ const Racks = () => {
 
     setUserName(storedUserName);
 
-    // Load selected rack from cookies, default to 0
-    const storedSelectedRack = getRawValue("selected_rack");
+    // Load selected rack from localStorage, default to 0
+    const storedSelectedRack = localStorage.getItem("selected_rack");
     if (storedSelectedRack !== null) {
       setSelectedRack(parseInt(storedSelectedRack));
     } else {
       setSelectedRack(0);
-      setValue("selected_rack", "0");
+      localStorage.setItem("selected_rack", "0");
     }
 
     fetchRobotConfig();
@@ -126,15 +124,15 @@ const Racks = () => {
 
       const data = await response.json();
 
-      // Store robot configuration in cookies ONLY (single source of truth)
+      // Store robot configuration globally
       if (data.records && data.records.length > 0) {
         const robotConfig = data.records[0];
         const numRacksValue = robotConfig.robot_num_racks || 0;
 
-        setValue("robot_num_rows", robotConfig.robot_num_rows?.toString() || "0");
-        setValue("robot_num_racks", numRacksValue.toString());
-        setValue("robot_num_slots", robotConfig.robot_num_slots?.toString() || "0");
-        setValue("robot_num_depths", robotConfig.robot_num_depths?.toString() || "0");
+        localStorage.setItem("robot_num_rows", robotConfig.robot_num_rows?.toString() || "0");
+        localStorage.setItem("robot_num_racks", numRacksValue.toString());
+        localStorage.setItem("robot_num_slots", robotConfig.robot_num_slots?.toString() || "0");
+        localStorage.setItem("robot_num_depths", robotConfig.robot_num_depths?.toString() || "0");
 
         setNumRacks(numRacksValue);
 
@@ -210,8 +208,7 @@ const Racks = () => {
 
   const handleRackSelect = (index: number) => {
     setSelectedRack(index);
-    // Store in cookies ONLY (single source of truth)
-    setValue("selected_rack", index.toString());
+    localStorage.setItem("selected_rack", index.toString());
     setSelectedSlotId(null);
     setSlotDetails(null);
   };

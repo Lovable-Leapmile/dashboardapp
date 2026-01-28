@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { getStoredAuthToken } from "@/lib/auth";
 import { getPubSubBase } from "@/lib/api";
 import { getStoredApiConfig } from "@/lib/apiConfig";
-import { getRawValue } from "@/lib/cookieStorage";
 
 export interface ShuttleState {
   // Initial data from first record
@@ -107,9 +106,9 @@ export const useShuttlePubSub = () => {
     try {
       setIsLoading(true);
       
-      // Get dynamic apiname and robotname from cookies ONLY (single source of truth)
+      // Get dynamic apiname and robotname from localStorage
       const apiConfig = getStoredApiConfig();
-      const robotname = getRawValue("robotname");
+      const robotname = localStorage.getItem("robotname");
       
       if (!apiConfig || !robotname) {
         // Fallback or skip if not configured yet
