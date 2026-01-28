@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { ScrollText, Activity, LogOut, Camera, Menu, X, Home, ClipboardList, Video, FileText, Settings, Box, Layers, Grid3X3, Building2, TrendingUp, Download, Shield, MapPin } from "lucide-react";
+import { ScrollText, Activity, LogOut, Camera, Menu, Home, ClipboardList, Video, FileText, Settings, Box, Layers, Grid3X3, Building2, TrendingUp, Download, Shield, MapPin } from "lucide-react";
 import headerLogo from "@/assets/header-logo.png";
 import { useState } from "react";
 import html2canvas from "html2canvas";
+import { clearAllCookies } from "@/lib/cookieStorage";
 import {
   Tooltip,
   TooltipContent,
@@ -44,16 +45,10 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
-    // Clear all localStorage
-    localStorage.clear();
-    // Clear all sessionStorage
+    // Clear all cookies and localStorage using the utility
+    clearAllCookies();
+    // Clear sessionStorage
     sessionStorage.clear();
-    // Clear all cookies
-    document.cookie.split(";").forEach((cookie) => {
-      const eqPos = cookie.indexOf("=");
-      const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-    });
     navigate("/");
   };
 
