@@ -343,9 +343,9 @@ const Home = () => {
                 {robotNumRows > 1 && (
               <div className="flex flex-col items-center p-3 border-r border-gray-200">
                 <div className="flex items-center gap-4 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
-                  <span className="text-[10px] font-medium text-muted-foreground">D-1</span>
+                  <span className="text-[10px] font-medium text-muted-foreground">Depth-1</span>
                   <span>Row 1</span>
-                  <span className="text-[10px] font-medium text-muted-foreground">D-0</span>
+                  <span className="text-[10px] font-medium text-muted-foreground">Depth-0</span>
                 </div>
                 <div className="flex gap-2 sm:gap-[10px]">
                   {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
@@ -562,9 +562,9 @@ const Home = () => {
               {/* Row 0 Section */}
               <div className="flex flex-col items-center p-3">
                 <div className="flex items-center gap-4 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
-                  <span className="text-[10px] font-medium text-muted-foreground">D-0</span>
+                  <span className="text-[10px] font-medium text-muted-foreground">Depth-0</span>
                   <span>Row 0</span>
-                  <span className="text-[10px] font-medium text-muted-foreground">D-1</span>
+                  <span className="text-[10px] font-medium text-muted-foreground">Depth-1</span>
                 </div>
                 <div className="flex gap-2 sm:gap-[10px]">
                   {Array.from({ length: robotNumDepths }, (_, depthIdx) => (
