@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { getNanostoreBase } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
+import { getRawValue } from "@/lib/cookieStorage";
 import noRecordsImage from "@/assets/no_records.png";
 import { getDefaultGridProps } from "@/lib/agGridUtils";
 
@@ -69,8 +70,9 @@ const Extremes = () => {
   ];
 
   useEffect(() => {
-    const storedUserName = localStorage.getItem("user_name");
-    const storedUserId = localStorage.getItem("user_id");
+    // Read from cookies only (single source of truth)
+    const storedUserName = getRawValue("user_name");
+    const storedUserId = getRawValue("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");

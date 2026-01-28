@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { apiGet, getRobotManagerBase, withQuery } from "@/lib/api";
 import noRecordsImage from "@/assets/no_records.png";
+import { getRawValue } from "@/lib/cookieStorage";
 import { Badge } from "@/components/ui/badge";
 import { Loader2 } from "lucide-react";
 import { createDateColumnDef, getDefaultGridProps } from "@/lib/agGridUtils";
@@ -111,8 +112,9 @@ const Completed = () => {
   ];
 
   useEffect(() => {
-    const storedUserName = localStorage.getItem("user_name");
-    const storedUserId = localStorage.getItem("user_id");
+    // Read from cookies only (single source of truth)
+    const storedUserName = getRawValue("user_name");
+    const storedUserId = getRawValue("user_id");
 
     if (!storedUserName || !storedUserId) {
       navigate("/");

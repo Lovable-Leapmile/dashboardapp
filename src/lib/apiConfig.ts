@@ -8,7 +8,8 @@ export interface ApiConfig {
 }
 
 /**
- * Get stored API config from cookies (primary) or localStorage (fallback)
+ * Get stored API config from cookies ONLY (no localStorage fallback)
+ * Cookies are the single source of truth
  */
 export const getStoredApiConfig = (): ApiConfig | null => {
   try {
@@ -23,7 +24,7 @@ export const getStoredApiConfig = (): ApiConfig | null => {
 };
 
 /**
- * Store API config in both cookies and localStorage
+ * Store API config in cookies ONLY
  */
 export const storeApiConfig = (apiName: string): ApiConfig => {
   const trimmed = apiName.trim();
@@ -34,7 +35,7 @@ export const storeApiConfig = (apiName: string): ApiConfig => {
 };
 
 /**
- * Clear API config from both cookies and localStorage
+ * Clear API config from cookies
  */
 export const clearApiConfig = (): void => {
   removeValue(API_CONFIG_KEY);

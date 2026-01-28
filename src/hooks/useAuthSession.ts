@@ -1,6 +1,4 @@
 import { useEffect, useRef, useCallback } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
 import { 
   getRawValue, 
   setValue, 
@@ -8,6 +6,8 @@ import {
   clearAllCookies, 
   refreshCookieExpiry 
 } from "@/lib/cookieStorage";
+import { useNavigate, useLocation } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
 const SESSION_DURATION_DAYS = 7;
 const SESSION_DURATION_MS = SESSION_DURATION_DAYS * 24 * 60 * 60 * 1000;
@@ -15,7 +15,7 @@ const WARNING_BEFORE_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes before expiry
 
 /**
  * Global function to extend session - can be called from anywhere
- * Updates both cookies and localStorage
+ * Updates cookies only (single source of truth)
  */
 export const extendSession = () => {
   const newTimestamp = Date.now().toString();
@@ -50,7 +50,7 @@ export const useAuthSession = () => {
     }
 
     const checkSession = () => {
-      // Use cookie-first getValue with localStorage fallback
+      // Read from cookies only (single source of truth)
       const userId = getRawValue("user_id");
       const userName = getRawValue("user_name");
       const loginTimestamp = getRawValue("login_timestamp");
@@ -69,7 +69,7 @@ export const useAuthSession = () => {
         const timeUntilExpiry = SESSION_DURATION_MS - sessionAge;
 
         if (sessionAge > SESSION_DURATION_MS) {
-          // Session expired, clear storage and redirect
+          // Session expired, clear cookies and redirect
           removeValue("user_id");
           removeValue("user_name");
           removeValue("login_timestamp");
@@ -149,8 +149,6 @@ export const useAuthSession = () => {
     }
     // Clear all cookies using the utility
     clearAllCookies();
-    // Clear all localStorage
-    localStorage.clear();
     // Clear all sessionStorage
     sessionStorage.clear();
     // Clear any remaining cookies manually
@@ -166,7 +164,7 @@ export const useAuthSession = () => {
 };
 
 /**
- * Check if session is valid using cookies with localStorage fallback
+ * Check if session is valid using cookies only (single source of truth)
  */
 export const isSessionValid = (): boolean => {
   const userId = getRawValue("user_id");

@@ -1,10 +1,11 @@
 /**
  * Cookie Storage Utility
- * Migrates localStorage values to cookies and provides unified get/set operations
- * with cookie as primary source and localStorage as fallback.
+ * Migrates localStorage values to cookies, removes them from localStorage,
+ * and provides cookie-only read/write operations.
+ * Cookies are the SINGLE source of truth - NO localStorage fallback.
  */
 
-// Keys to migrate from localStorage to cookies
+// Keys to migrate from localStorage to cookies (and then remove from localStorage)
 const COOKIE_KEYS = [
   "api_config",
   "auth_token",
@@ -33,11 +34,12 @@ const isSecureContext = (): boolean => {
 
 /**
  * Calculate cookie expiry date
- * - If login_timestamp exists, set expiry to 24 hours from that timestamp
+ * - If login_timestamp exists (in cookie or localStorage during migration), set expiry to 24 hours from that timestamp
  * - Otherwise, default to 7 days from now
  */
-const getExpiryDate = (): Date => {
-  const loginTimestamp = localStorage.getItem("login_timestamp");
+const getExpiryDate = (loginTimestampValue?: string | null): Date => {
+  // Try to get login_timestamp from cookie first, then localStorage (for migration)
+  const loginTimestamp = loginTimestampValue ?? getCookie("login_timestamp");
   
   if (loginTimestamp) {
     const timestamp = parseInt(loginTimestamp, 10);
@@ -99,96 +101,72 @@ export const deleteCookie = (name: string): void => {
 };
 
 /**
- * Get a value from cookies with localStorage fallback
- * Cookies are the primary source; localStorage is used only if cookie is missing
+ * Get a value from cookies ONLY (no localStorage fallback)
+ * Cookies are the single source of truth
  * @param key - The key to retrieve
  * @returns The value (parsed if JSON) or null
  */
 export const getValue = <T = string>(key: string): T | null => {
-  // Try cookie first (primary source)
   const cookieValue = getCookie(key);
   
-  if (cookieValue !== null) {
-    // Try to parse as JSON if it looks like JSON
-    if (
-      (cookieValue.startsWith("{") && cookieValue.endsWith("}")) ||
-      (cookieValue.startsWith("[") && cookieValue.endsWith("]"))
-    ) {
-      try {
-        return JSON.parse(cookieValue) as T;
-      } catch {
-        return cookieValue as unknown as T;
-      }
-    }
-    return cookieValue as unknown as T;
+  if (cookieValue === null) {
+    return null;
   }
   
-  // Fallback to localStorage
-  const localValue = localStorage.getItem(key);
-  
-  if (localValue !== null) {
-    // Try to parse as JSON if it looks like JSON
-    if (
-      (localValue.startsWith("{") && localValue.endsWith("}")) ||
-      (localValue.startsWith("[") && localValue.endsWith("]"))
-    ) {
-      try {
-        return JSON.parse(localValue) as T;
-      } catch {
-        return localValue as unknown as T;
-      }
+  // Try to parse as JSON if it looks like JSON
+  if (
+    (cookieValue.startsWith("{") && cookieValue.endsWith("}")) ||
+    (cookieValue.startsWith("[") && cookieValue.endsWith("]"))
+  ) {
+    try {
+      return JSON.parse(cookieValue) as T;
+    } catch {
+      return cookieValue as unknown as T;
     }
-    return localValue as unknown as T;
   }
   
-  return null;
+  return cookieValue as unknown as T;
 };
 
 /**
- * Get a raw string value from cookies with localStorage fallback
+ * Get a raw string value from cookies ONLY (no localStorage fallback)
  * Does not attempt JSON parsing
  * @param key - The key to retrieve
  * @returns The raw string value or null
  */
 export const getRawValue = (key: string): string | null => {
-  // Try cookie first (primary source)
-  const cookieValue = getCookie(key);
-  if (cookieValue !== null) {
-    return cookieValue;
-  }
-  
-  // Fallback to localStorage
-  return localStorage.getItem(key);
+  return getCookie(key);
 };
 
 /**
- * Set a value in both cookies and localStorage for redundancy
+ * Set a value in cookies ONLY (no localStorage backup)
  * @param key - The key to set
  * @param value - The value (will be stringified if object/array)
  * @param expiryDate - Optional custom expiry date for the cookie
  */
 export const setValue = (key: string, value: unknown, expiryDate?: Date): void => {
   const stringValue = typeof value === "string" ? value : JSON.stringify(value);
-  
-  // Set in cookie (primary)
   setCookie(key, stringValue, expiryDate);
-  
-  // Also set in localStorage (backup)
-  localStorage.setItem(key, stringValue);
 };
 
 /**
- * Remove a value from both cookies and localStorage
+ * Remove a value from cookies (and localStorage for cleanup)
  * @param key - The key to remove
  */
 export const removeValue = (key: string): void => {
   deleteCookie(key);
-  localStorage.removeItem(key);
+  // Also clean up localStorage if it exists (for legacy cleanup)
+  try {
+    localStorage.removeItem(key);
+  } catch {
+    // Ignore localStorage errors
+  }
 };
 
 /**
- * Migrate localStorage values to cookies
- * Only runs once per session to avoid duplicate writes
+ * Migrate localStorage values to cookies and REMOVE from localStorage
+ * Only runs once per session to avoid duplicate cookie writes
+ * After migration, localStorage keys are deleted
  */
 export const migrateLocalStorageToCookies = (): void => {
   // Check if migration already ran this session
@@ -196,14 +174,21 @@ export const migrateLocalStorageToCookies = (): void => {
     return;
   }
   
-  const expiryDate = getExpiryDate();
+  // Get login_timestamp from localStorage first (needed for expiry calculation)
+  const loginTimestampFromStorage = localStorage.getItem("login_timestamp");
+  const expiryDate = getExpiryDate(loginTimestampFromStorage);
   
   for (const key of COOKIE_KEYS) {
     const localValue = localStorage.getItem(key);
     
     // Only migrate if value exists in localStorage and not already in cookies
-    if (localValue !== null && getCookie(key) === null) {
-      setCookie(key, localValue, expiryDate);
+    if (localValue !== null) {
+      if (getCookie(key) === null) {
+        // Migrate value to cookie
+        setCookie(key, localValue, expiryDate);
+      }
+      // ALWAYS remove from localStorage after migration attempt
+      localStorage.removeItem(key);
     }
   }
   

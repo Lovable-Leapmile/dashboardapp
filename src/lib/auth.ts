@@ -11,23 +11,21 @@ const candidateKeys = [
 ] as const;
 
 /**
- * Get stored auth token from cookies (primary) or localStorage/sessionStorage (fallback)
+ * Get stored auth token from cookies ONLY (no localStorage fallback)
+ * Cookies are the single source of truth
  */
 export const getStoredAuthToken = (): string | null => {
   for (const key of candidateKeys) {
-    // Try cookie first
     const cookieValue = getCookie(key);
-    if (cookieValue && cookieValue.trim()) return cookieValue.trim();
-    
-    // Fallback to localStorage/sessionStorage
-    const v = localStorage.getItem(key) || sessionStorage.getItem(key);
-    if (v && v.trim()) return v.trim();
+    if (cookieValue && cookieValue.trim()) {
+      return cookieValue.trim();
+    }
   }
   return null;
 };
 
 /**
- * Store auth token in both cookies and localStorage
+ * Store auth token in cookies ONLY
  */
 export const storeAuthToken = (rawToken: unknown) => {
   if (typeof rawToken !== "string") return;
@@ -36,7 +34,6 @@ export const storeAuthToken = (rawToken: unknown) => {
 
   const normalized = t.toLowerCase().startsWith("bearer ") ? t : `Bearer ${t}`;
   
-  // Store in cookie (primary) and localStorage (backup)
+  // Store in cookie only
   setCookie(AUTH_TOKEN_STORAGE_KEY, normalized);
-  localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, normalized);
 };
