@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { secureStorage } from "@/lib/secureStorage";
 
 const SESSION_DURATION_DAYS = 7;
 const SESSION_DURATION_MS = SESSION_DURATION_DAYS * 24 * 60 * 60 * 1000;
@@ -8,7 +9,7 @@ const WARNING_BEFORE_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes before expiry
 
 // Global function to extend session - can be called from anywhere
 export const extendSession = () => {
-  localStorage.setItem("login_timestamp", Date.now().toString());
+  secureStorage.setItem("login_timestamp", Date.now().toString());
   toast({
     title: "Session Extended",
     description: "Your session has been extended for another 7 days.",
@@ -34,9 +35,9 @@ export const useAuthSession = () => {
     }
 
     const checkSession = () => {
-      const userId = localStorage.getItem("user_id");
-      const userName = localStorage.getItem("user_name");
-      const loginTimestamp = localStorage.getItem("login_timestamp");
+      const userId = secureStorage.getItem("user_id");
+      const userName = secureStorage.getItem("user_name");
+      const loginTimestamp = secureStorage.getItem("login_timestamp");
 
       // Not logged in
       if (!userId || !userName) {
@@ -53,9 +54,9 @@ export const useAuthSession = () => {
 
         if (sessionAge > SESSION_DURATION_MS) {
           // Session expired, clear storage and redirect
-          localStorage.removeItem("user_id");
-          localStorage.removeItem("user_name");
-          localStorage.removeItem("login_timestamp");
+          secureStorage.removeItem("user_id");
+          secureStorage.removeItem("user_name");
+          secureStorage.removeItem("login_timestamp");
           navigate("/");
           return false;
         }
@@ -88,9 +89,9 @@ export const useAuthSession = () => {
 
           // Schedule auto-logout
           logoutTimeoutRef.current = setTimeout(() => {
-            localStorage.removeItem("user_id");
-            localStorage.removeItem("user_name");
-            localStorage.removeItem("login_timestamp");
+            secureStorage.removeItem("user_id");
+            secureStorage.removeItem("user_name");
+            secureStorage.removeItem("login_timestamp");
             toast({
               title: "Session Expired",
               description: "Your session has expired. Please log in again.",
@@ -101,8 +102,8 @@ export const useAuthSession = () => {
         }
       } else {
         // No timestamp, treat as expired for security
-        localStorage.removeItem("user_id");
-        localStorage.removeItem("user_name");
+        secureStorage.removeItem("user_id");
+        secureStorage.removeItem("user_name");
         navigate("/");
         return false;
       }
@@ -147,9 +148,9 @@ const logout = () => {
 };
 
 export const isSessionValid = (): boolean => {
-  const userId = localStorage.getItem("user_id");
-  const userName = localStorage.getItem("user_name");
-  const loginTimestamp = localStorage.getItem("login_timestamp");
+  const userId = secureStorage.getItem("user_id");
+  const userName = secureStorage.getItem("user_name");
+  const loginTimestamp = secureStorage.getItem("login_timestamp");
 
   if (!userId || !userName || !loginTimestamp) {
     return false;

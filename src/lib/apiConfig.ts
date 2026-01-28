@@ -1,3 +1,5 @@
+import { secureStorage } from "./secureStorage";
+
 const API_CONFIG_KEY = "api_config";
 
 export interface ApiConfig {
@@ -7,10 +9,8 @@ export interface ApiConfig {
 
 export const getStoredApiConfig = (): ApiConfig | null => {
   try {
-    const stored = localStorage.getItem(API_CONFIG_KEY);
-    if (!stored) return null;
-    const parsed = JSON.parse(stored) as ApiConfig;
-    if (parsed.apiName && parsed.baseUrl) {
+    const parsed = secureStorage.getJSON<ApiConfig>(API_CONFIG_KEY);
+    if (parsed?.apiName && parsed?.baseUrl) {
       return parsed;
     }
     return null;
@@ -23,12 +23,12 @@ export const storeApiConfig = (apiName: string): ApiConfig => {
   const trimmed = apiName.trim();
   const baseUrl = `https://${trimmed}.leapmile.com`;
   const config: ApiConfig = { apiName: trimmed, baseUrl };
-  localStorage.setItem(API_CONFIG_KEY, JSON.stringify(config));
+  secureStorage.setJSON(API_CONFIG_KEY, config);
   return config;
 };
 
 export const clearApiConfig = (): void => {
-  localStorage.removeItem(API_CONFIG_KEY);
+  secureStorage.removeItem(API_CONFIG_KEY);
 };
 
 export const isApiConfigured = (): boolean => {

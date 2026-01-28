@@ -1,3 +1,5 @@
+import { secureStorage } from "./secureStorage";
+
 export const AUTH_TOKEN_STORAGE_KEY = "auth_token";
 
 const candidateKeys = [
@@ -10,7 +12,7 @@ const candidateKeys = [
 
 export const getStoredAuthToken = (): string | null => {
   for (const key of candidateKeys) {
-    const v = localStorage.getItem(key) || sessionStorage.getItem(key);
+    const v = secureStorage.getItem(key) || sessionStorage.getItem(key);
     if (v && v.trim()) return v.trim();
   }
   return null;
@@ -22,5 +24,5 @@ export const storeAuthToken = (rawToken: unknown) => {
   if (!t) return;
 
   const normalized = t.toLowerCase().startsWith("bearer ") ? t : `Bearer ${t}`;
-  localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, normalized);
+  secureStorage.setItem(AUTH_TOKEN_STORAGE_KEY, normalized);
 };

@@ -4,6 +4,7 @@ import ApiConfigModal from "@/components/ApiConfigModal";
 import backgroundImage from "@/assets/dashboard_login_bg.png";
 import { isApiConfigured, getStoredApiConfig } from "@/lib/apiConfig";
 import { getStoredAuthToken } from "@/lib/auth";
+import { secureStorage } from "@/lib/secureStorage";
 import { Button } from "@/components/ui/button";
 
 
@@ -20,9 +21,9 @@ const Index = () => {
 
     // Check if all auth-related data is missing
     const authToken = getStoredAuthToken();
-    const userId = localStorage.getItem("user_id");
-    const userName = localStorage.getItem("user_name");
-    const loginTimestamp = localStorage.getItem("login_timestamp");
+    const userId = secureStorage.getItem("user_id");
+    const userName = secureStorage.getItem("user_name");
+    const loginTimestamp = secureStorage.getItem("login_timestamp");
     const apiConfigured = isApiConfigured();
 
     // Check cookies for any auth data
