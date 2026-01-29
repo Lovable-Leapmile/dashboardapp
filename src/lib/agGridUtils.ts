@@ -215,6 +215,7 @@ export const postProcessAgGridPopup = (params: PostProcessPopupParams) => {
  * Default AG Grid props to ensure popups work correctly
  */
 export const getDefaultGridProps = () => ({
+  theme: "legacy" as const,
   popupParent: typeof document !== "undefined" ? document.body : null,
   postProcessPopup: postProcessAgGridPopup,
   enableCellTextSelection: true,
