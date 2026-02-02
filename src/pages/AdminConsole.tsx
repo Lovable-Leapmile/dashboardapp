@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { getAdminConsoleUrl } from "@/lib/api";
-import noRecordsImage from "@/assets/no_records.png";
+import { Settings } from "lucide-react";
 
 const AdminConsole = () => {
   useAuthSession();
@@ -61,8 +61,39 @@ const AdminConsole = () => {
 
       <main className="p-2 sm:p-4">
         {hasError || !adminUrl ? (
-          <div className="flex items-center justify-center animate-fade-in" style={{ height: "100dvh" }}>
-            <img src={noRecordsImage} alt="No page found" className="w-48 sm:w-[340px]" />
+          <div className="flex items-center justify-center animate-fade-in" style={{ height: "calc(100vh - 130px)" }}>
+            <div className="flex flex-col items-center justify-center text-center space-y-6">
+              {/* Animated Settings Icon */}
+              <div className="relative">
+                <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" style={{ animationDuration: "2s" }} />
+                <div className="relative bg-primary/10 rounded-full p-8 animate-pulse" style={{ animationDuration: "1.5s" }}>
+                  <Settings className="w-16 h-16 text-primary animate-spin" style={{ animationDuration: "8s" }} />
+                </div>
+              </div>
+
+              {/* Coming Soon Text */}
+              <div className="space-y-3">
+                <h1 className="text-3xl font-bold text-foreground animate-fade-in">
+                  Admin Console
+                </h1>
+                <div className="flex items-center justify-center gap-2">
+                  <span className="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+                  <p className="text-lg text-muted-foreground font-medium">
+                    Work in Progress
+                  </p>
+                </div>
+                <p className="text-sm text-muted-foreground max-w-md animate-fade-in" style={{ animationDelay: "0.2s" }}>
+                  We're actively working on it and will roll out the update soon.
+                </p>
+              </div>
+
+              {/* Animated Progress Indicator */}
+              <div className="flex items-center gap-2 mt-4">
+                <div className="w-3 h-3 rounded-full bg-primary animate-bounce" style={{ animationDelay: "0ms" }} />
+                <div className="w-3 h-3 rounded-full bg-primary animate-bounce" style={{ animationDelay: "150ms" }} />
+                <div className="w-3 h-3 rounded-full bg-primary animate-bounce" style={{ animationDelay: "300ms" }} />
+              </div>
+            </div>
           </div>
         ) : (
           <div className="relative w-full" style={{ height: "calc(100vh - 130px)", minHeight: "400px" }}>
