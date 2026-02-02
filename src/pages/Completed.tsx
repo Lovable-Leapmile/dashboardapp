@@ -217,6 +217,7 @@ const Completed = () => {
         ) : (
           <div className="ag-theme-quartz w-full" style={{ height: "calc(100vh - 143px)" }}>
             <AgGridReact
+              theme="legacy"
               rowData={rowData}
               columnDefs={columnDefs}
               defaultColDef={{

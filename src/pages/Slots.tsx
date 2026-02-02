@@ -176,6 +176,7 @@ const Slots = () => {
         ) : (
           <div className="ag-theme-quartz w-full" style={{ height: "calc(100vh - 145px)" }}>
             <AgGridReact
+              theme="legacy"
               rowData={rowData}
               columnDefs={columnDefs}
               defaultColDef={{

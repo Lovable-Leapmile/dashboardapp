@@ -256,6 +256,7 @@ const CameraTaskDetails = () => {
         ) : (
           <div className="ag-theme-quartz w-full" style={{ height: "calc(100vh - 145px)" }}>
             <AgGridReact
+              theme="legacy"
               rowData={events}
               columnDefs={columnDefs}
               defaultColDef={{

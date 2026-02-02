@@ -367,6 +367,7 @@ const Logs = () => {
         ) : (
           <div className="ag-theme-quartz w-full overflow-visible" style={{ height: "calc(100vh - 90px)" }}>
             <AgGridReact
+              theme="legacy"
               rowData={rowData}
               columnDefs={columnDefs}
               defaultColDef={{
