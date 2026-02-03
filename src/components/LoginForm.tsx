@@ -8,8 +8,9 @@ import { storeAuthToken } from "@/lib/auth";
 import { secureStorage } from "@/lib/secureStorage";
 import { getUserBase } from "@/lib/api";
 import { Eye, EyeOff } from "lucide-react";
+import { useCurrentLogo } from "@/hooks/useTheme";
 import loginIllustration from "@/assets/login.gif";
-import logo from "@/assets/logo.png";
+import defaultLogo from "@/assets/logo.png";
 
 const LoginForm = () => {
   const [mobileNumber, setMobileNumber] = useState("");
@@ -19,6 +20,8 @@ const LoginForm = () => {
   const phoneInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const dynamicLogo = useCurrentLogo();
+  const logo = dynamicLogo || defaultLogo;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -185,8 +188,7 @@ const LoginForm = () => {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-xl py-6 font-semibold text-base transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/30 mt-8"
-            style={{ backgroundColor: '#351C75' }}
+            className="w-full rounded-xl py-6 font-semibold text-base transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-primary/30 mt-8 bg-primary text-primary-foreground"
           >
             {isLoading ? "Logging in..." : "Login"}
           </Button>

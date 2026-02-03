@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { ScrollText, Activity, LogOut, Camera, Menu, X, Home, ClipboardList, Video, FileText, Settings, Box, Layers, Grid3X3, Building2, TrendingUp, Download, Shield, MapPin } from "lucide-react";
-import headerLogo from "@/assets/header-logo.png";
+import { ScrollText, Activity, LogOut, Camera, Menu, Home, ClipboardList, Video, FileText, Settings, Box, Layers, Grid3X3, Building2, TrendingUp, Download, Shield, MapPin } from "lucide-react";
 import { useState } from "react";
 import html2canvas from "html2canvas";
+import { useCurrentLogo } from "@/hooks/useTheme";
+import headerLogo from "@/assets/header-logo.png";
 import {
   Tooltip,
   TooltipContent,
@@ -42,6 +43,8 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
   const navigate = useNavigate();
   const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const dynamicLogo = useCurrentLogo();
+  const currentLogo = dynamicLogo || headerLogo;
 
   const handleLogout = () => {
     // Clear all localStorage
@@ -137,8 +140,8 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
   return (
     <div className="sticky top-0 z-50">
       <header 
-        className="flex items-center justify-between px-2 sm:px-4"
-        style={{ backgroundColor: '#351C75', height: '55px' }}
+        className="flex items-center justify-between px-2 sm:px-4 bg-primary"
+        style={{ height: '55px' }}
       >
         <div className="flex items-center gap-2 sm:gap-[10px]">
           {/* Mobile Hamburger Menu */}
@@ -153,10 +156,10 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
               </button>
             </SheetTrigger>
             <SheetContent side="left" className="w-[280px] p-0 bg-white">
-              <SheetHeader className="p-4 border-b" style={{ backgroundColor: '#351C75' }}>
+              <SheetHeader className="p-4 border-b bg-primary">
                 <div className="flex items-center gap-3">
-                  <img src={headerLogo} alt="Logo" className="w-[100px] object-contain" />
-                  <SheetTitle className="text-white text-lg">Menu</SheetTitle>
+                  <img src={currentLogo} alt="Logo" className="w-[100px] object-contain" />
+                  <SheetTitle className="text-primary-foreground text-lg">Menu</SheetTitle>
                 </div>
               </SheetHeader>
               
@@ -262,7 +265,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity shrink-0 mr-[10px]"
             onClick={() => navigate("/home")}
           >
-            <img src={headerLogo} alt="Logo" className="w-[90px] object-contain" />
+            <img src={currentLogo} alt="Logo" className="w-[90px] object-contain" />
           </div>
           
           {/* Desktop Navigation */}

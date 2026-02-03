@@ -40,22 +40,22 @@ All colors MUST be HSL.
     
     --login-overlay: 145 40% 16%;
     --login-title: 268 42% 62%;
+    
+    /* Status colors */
+    --success: 142 76% 36%;
+    --warning: 38 92% 50%;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* AG Grid header color */
+    --ag-grid-header: 268 42% 62%;
   }
 
   .dark {
@@ -206,7 +206,7 @@ All colors MUST be HSL.
   position: sticky !important;
   top: 0 !important;
   z-index: 10 !important;
-  background-color: #8e77c3 !important;
+  background-color: hsl(var(--ag-grid-header)) !important;
   height: 50px !important;
   min-height: 50px !important;
   max-height: 50px !important;

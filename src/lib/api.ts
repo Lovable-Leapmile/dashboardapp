@@ -1,7 +1,7 @@
 import { getStoredAuthToken } from "@/lib/auth";
-import { getApiBaseUrl, getStoredApiConfig } from "@/lib/apiConfig";
+import { getApiBaseUrl, getApiName } from "@/lib/apiConfig";
 
-// Dynamic API base URL - retrieved from stored configuration
+// Dynamic API base URL - retrieved from environment or stored configuration
 export const getApiOrigin = (): string => getApiBaseUrl();
 
 export const getRobotManagerBase = (): string => `${getApiOrigin()}/robotmanager`;
@@ -12,11 +12,11 @@ export const getCameraManagerBase = (): string => `${getApiOrigin()}/cameramanag
 
 // Get the admin console URL using the dynamic API name
 export const getAdminConsoleUrl = (): string => {
-  const config = getStoredApiConfig();
-  if (!config) {
+  const apiName = getApiName();
+  if (!apiName) {
     return "";
   }
-  return `https://${config.apiName}.leapmile.com/nanostoreapp/`;
+  return `https://${apiName}.leapmile.com/nanostoreapp/`;
 };
 
 // Get the web app URL with port 6500
