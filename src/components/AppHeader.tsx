@@ -158,7 +158,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             <SheetContent side="left" className="w-[280px] p-0 bg-white">
               <SheetHeader className="p-4 border-b bg-primary">
                 <div className="flex items-center gap-3">
-                  <img src={currentLogo} alt="Logo" className="w-[100px] object-contain" />
+                  <img src={currentLogo} alt="Logo" className="h-8 max-w-[100px] object-contain" />
                   <SheetTitle className="text-primary-foreground text-lg">Menu</SheetTitle>
                 </div>
               </SheetHeader>
@@ -265,7 +265,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             className="flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity shrink-0 mr-[10px]"
             onClick={() => navigate("/home")}
           >
-            <img src={currentLogo} alt="Logo" className="w-[90px] object-contain" />
+            <img src={currentLogo} alt="Logo" className="h-8 max-w-[120px] object-contain" />
           </div>
           
           {/* Desktop Navigation */}
