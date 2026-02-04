@@ -273,11 +273,19 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             {mainNavItems.map((item) => (
               <span 
                 key={item.path}
-                className={`text-base cursor-pointer hover:opacity-80 whitespace-nowrap ${item.active ? 'font-semibold' : ''}`} 
-                style={{ color: item.active ? 'white' : 'rgba(255, 255, 255, 0.5)' }}
+                className="text-base cursor-pointer hover:opacity-100 whitespace-nowrap relative group"
+                style={{ 
+                  color: item.active ? 'white' : 'rgba(255, 255, 255, 0.5)',
+                  fontWeight: item.active ? 600 : 400
+                }}
                 onClick={() => navigate(item.path)}
               >
                 {item.label}
+                <span 
+                  className={`absolute bottom-[-4px] left-0 h-0.5 bg-white transition-all duration-300 ${
+                    item.active ? 'w-full' : 'w-0 group-hover:w-full'
+                  }`}
+                ></span>
               </span>
             ))}
           </nav>
