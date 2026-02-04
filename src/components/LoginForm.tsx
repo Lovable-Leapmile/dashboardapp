@@ -8,7 +8,7 @@ import { storeAuthToken } from "@/lib/auth";
 import { secureStorage } from "@/lib/secureStorage";
 import { getUserBase } from "@/lib/api";
 import { Eye, EyeOff } from "lucide-react";
-import { useCurrentLogo } from "@/hooks/useTheme";
+import { useLoginLogo } from "@/hooks/useTheme";
 import loginIllustration from "@/assets/login.gif";
 import defaultLogo from "@/assets/logo.png";
 
@@ -20,7 +20,7 @@ const LoginForm = () => {
   const phoneInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const dynamicLogo = useCurrentLogo();
+  const dynamicLogo = useLoginLogo();
   const logo = dynamicLogo || defaultLogo;
 
   const handleLogin = async (e: React.FormEvent) => {

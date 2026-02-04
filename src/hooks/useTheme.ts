@@ -18,18 +18,9 @@ export function useTheme() {
   };
 }
 
-export function useCurrentLogo() {
-  const [logo, setLogo] = useState<string>(() => {
-    // Import the logo dynamically based on the current skin
-    const skin = getCurrentSkin();
-    
-    // For LEAPMILE_UI, use the existing logo
-    if (skin === 'LEAPMILE_UI') {
-      return '';
-    }
-    
-    return '';
-  });
+// Logo for login page (colored logos)
+export function useLoginLogo() {
+  const [logo, setLogo] = useState<string>('');
 
   useEffect(() => {
     const loadLogo = async () => {
@@ -42,41 +33,67 @@ export function useCurrentLogo() {
             setLogo(leapmileLogo.default);
             break;
           case 'BIAL_UI':
-            try {
-              const bialLogo = await import('@/assets/logos/bial-logo.png');
-              setLogo(bialLogo.default);
-            } catch {
-              // Fallback to default logo if BIAL logo doesn't exist
-              const fallback = await import('@/assets/logo.png');
-              setLogo(fallback.default);
-            }
+            const bialLogo = await import('@/assets/logos/bial-logo.png');
+            setLogo(bialLogo.default);
             break;
           case 'AMS_UI':
-            try {
-              const amsLogo = await import('@/assets/logos/ams-logo.png');
-              setLogo(amsLogo.default);
-            } catch {
-              const fallback = await import('@/assets/logo.png');
-              setLogo(fallback.default);
-            }
+            const amsLogo = await import('@/assets/logos/ams-logo.png');
+            setLogo(amsLogo.default);
             break;
           case 'DHL_UI':
-            try {
-              const dhlLogo = await import('@/assets/logos/dhl-logo.png');
-              setLogo(dhlLogo.default);
-            } catch {
-              const fallback = await import('@/assets/logo.png');
-              setLogo(fallback.default);
-            }
+            const dhlLogo = await import('@/assets/logos/dhl-logo.png');
+            setLogo(dhlLogo.default);
             break;
           default:
             const defaultLogo = await import('@/assets/logo.png');
             setLogo(defaultLogo.default);
         }
       } catch {
-        // Ultimate fallback
         const defaultLogo = await import('@/assets/logo.png');
         setLogo(defaultLogo.default);
+      }
+    };
+
+    loadLogo();
+  }, []);
+
+  return logo;
+}
+
+// Logo for header (white logo for LEAPMILE_UI, same as login for others)
+export function useCurrentLogo() {
+  const [logo, setLogo] = useState<string>('');
+
+  useEffect(() => {
+    const loadLogo = async () => {
+      const skin = getCurrentSkin();
+      
+      try {
+        switch (skin) {
+          case 'LEAPMILE_UI':
+            // Use white header logo for LEAPMILE_UI in dashboard
+            const headerLogo = await import('@/assets/header-logo.png');
+            setLogo(headerLogo.default);
+            break;
+          case 'BIAL_UI':
+            const bialLogo = await import('@/assets/logos/bial-logo.png');
+            setLogo(bialLogo.default);
+            break;
+          case 'AMS_UI':
+            const amsLogo = await import('@/assets/logos/ams-logo.png');
+            setLogo(amsLogo.default);
+            break;
+          case 'DHL_UI':
+            const dhlLogo = await import('@/assets/logos/dhl-logo.png');
+            setLogo(dhlLogo.default);
+            break;
+          default:
+            const headerLogoDefault = await import('@/assets/header-logo.png');
+            setLogo(headerLogoDefault.default);
+        }
+      } catch {
+        const headerLogo = await import('@/assets/header-logo.png');
+        setLogo(headerLogo.default);
       }
     };
 
