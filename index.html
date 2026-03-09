@@ -3,8 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- CSP meta tag to allow inline styles for React, AG Grid, and UI components -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https:; connect-src 'self' https: wss:; frame-src 'self' https:;" />
+    <!--
+      CSP should be configured on the hosting server via HTTP headers.
+      Required directives for AG Grid icons and React:
+        style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+        font-src 'self' https://fonts.gstatic.com data:;
+        img-src 'self' data: blob: https:;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:;
+        connect-src 'self' https: wss:;
+    -->
     <link rel="icon" type="image/png" href="/favicon.png" />
     <title>Dashboard</title>
     <meta name="description" content="Secure login portal for accessing your account" />
