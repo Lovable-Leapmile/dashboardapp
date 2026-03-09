@@ -150,6 +150,24 @@ export const createDateColumnDef = (field: string, headerName: string, options: 
   ...options,
 });
 
+const createGridIcon = (svgBody: string) =>
+  `<span aria-hidden="true" style="display:inline-flex;align-items:center;justify-content:center;width:100%;height:100%;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${svgBody}</svg></span>`;
+
+const agGridCspSafeIcons: Record<string, string> = {
+  menu: createGridIcon("<circle cx='12' cy='5' r='1.5' /><circle cx='12' cy='12' r='1.5' /><circle cx='12' cy='19' r='1.5' />"),
+  filter: createGridIcon("<path d='M3 5h18l-7 8v5l-4 2v-7L3 5z' />"),
+  columns: createGridIcon("<rect x='3' y='4' width='6' height='16' /><rect x='10.5' y='4' width='10.5' height='16' />"),
+  sortAscending: createGridIcon("<path d='M8 17V7' /><path d='m4 11 4-4 4 4' /><path d='M14 17h6' /><path d='M14 13h4' /><path d='M14 9h2' />"),
+  sortDescending: createGridIcon("<path d='M8 7v10' /><path d='m4 13 4 4 4-4' /><path d='M14 17h2' /><path d='M14 13h4' /><path d='M14 9h6' />"),
+  sortUnSort: createGridIcon("<path d='m8 7-3 3h6z' /><path d='m8 17 3-3H5z' />"),
+  first: createGridIcon("<path d='M19 6 9 12l10 6V6z' /><path d='M5 6v12' />"),
+  last: createGridIcon("<path d='m5 6 10 6-10 6V6z' /><path d='M19 6v12' />"),
+  previous: createGridIcon("<path d='m15 18-8-6 8-6v12z' />"),
+  next: createGridIcon("<path d='m9 6 8 6-8 6V6z' />"),
+  smallLeft: createGridIcon("<path d='m14 18-6-6 6-6' />"),
+  smallRight: createGridIcon("<path d='m10 6 6 6-6 6' />"),
+};
+
 const clamp = (val: number, min: number, max: number) => Math.min(Math.max(val, min), max);
 
 /**
