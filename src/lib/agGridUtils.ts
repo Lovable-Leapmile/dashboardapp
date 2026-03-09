@@ -239,6 +239,7 @@ export const getDefaultGridProps = () => ({
   enableCellTextSelection: true,
   ensureDomOrder: true,
   suppressMenuHide: true,
+  icons: agGridCspSafeIcons,
 });
 
 // Legacy export for backward compatibility
