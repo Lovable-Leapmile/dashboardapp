@@ -145,7 +145,7 @@ const Trays = () => {
                 filter: true,
               }}
               pagination={true}
-              paginationPageSize={50}
+              paginationPageSize={100000}
               rowHeight={35}
               {...getDefaultGridProps()}
               onGridReady={(params) => {
