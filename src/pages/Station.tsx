@@ -23,6 +23,7 @@ interface SlotData {
   slot_height: number;
   slot_status: string;
   updated_at: string;
+  comment: string;
 }
 
 const Station = () => {
