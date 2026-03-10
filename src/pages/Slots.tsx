@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { AgGridReact } from "ag-grid-react";
@@ -11,6 +11,7 @@ import { getRobotManagerBase } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
 import noRecordsImage from "@/assets/no_records.png";
 import { createDateColumnDef, getDefaultGridProps } from "@/lib/agGridUtils";
+import { Search, X } from "lucide-react";
 
 // Register AG Grid Community modules (required in v34+)
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -26,14 +27,26 @@ interface SlotData {
   comment: string;
 }
 
+const mapTags = (records: any[]) =>
+  records.map((r: any) => ({
+    ...r,
+    tags: Array.isArray(r.tags)
+      ? r.tags
+      : typeof r.tags === "string"
+        ? r.tags.split(",").map((s: string) => s.trim()).filter(Boolean)
+        : [],
+  }));
+
 const Slots = () => {
-  useAuthSession(); // Session validation
-  const [userName, setUserName] = useState("");
+  useAuthSession();
   const [rowData, setRowData] = useState<SlotData[]>([]);
-  const [totalCount, setTotalCount] = useState(0);
+  const [allData, setAllData] = useState<SlotData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [slotSearch, setSlotSearch] = useState("");
+  const [searching, setSearching] = useState(false);
   const [quickFilter, setQuickFilter] = useState("");
   const gridApiRef = useRef<any>(null);
+  const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -109,7 +122,6 @@ const Slots = () => {
       return;
     }
 
-    setUserName(storedUserName);
     fetchSlotsData();
   }, [navigate]);
 
@@ -128,7 +140,7 @@ const Slots = () => {
 
       if (response.status === 404) {
         setRowData([]);
-        setTotalCount(0);
+        setAllData([]);
         setLoading(false);
         return;
       }
@@ -139,18 +151,8 @@ const Slots = () => {
 
       const data = await response.json();
       console.log("Fetched slots:", data?.records?.length);
-      setTotalCount(data.count || 0);
-      const mapped = (data.records || []).map((r: any) => ({
-        ...r,
-        tags: Array.isArray(r.tags)
-          ? r.tags
-          : typeof r.tags === "string"
-            ? r.tags
-                .split(",")
-                .map((s: string) => s.trim())
-                .filter(Boolean)
-            : [],
-      }));
+      const mapped = mapTags(data.records || []);
+      setAllData(mapped);
       setRowData(mapped);
     } catch (error) {
       toast({
@@ -164,17 +166,109 @@ const Slots = () => {
     }
   };
 
+  const searchSlotById = useCallback(async (slotId: string) => {
+    if (!slotId.trim()) {
+      setRowData(allData);
+      return;
+    }
+
+    try {
+      setSearching(true);
+      const token = getStoredAuthToken();
+      if (!token) return;
+
+      const response = await fetch(
+        `${getRobotManagerBase()}/slots?slot_id=${encodeURIComponent(slotId.trim())}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const records = data.records || [];
+        if (records.length > 0) {
+          setRowData(mapTags(records));
+          return;
+        }
+      }
+
+      // API returned no results — fall back to client-side filter
+      const filtered = allData.filter((row) =>
+        row.slot_id?.toLowerCase().includes(slotId.trim().toLowerCase())
+      );
+      setRowData(filtered);
+    } catch {
+      // On error, fall back to client-side filter
+      const filtered = allData.filter((row) =>
+        row.slot_id?.toLowerCase().includes(slotId.trim().toLowerCase())
+      );
+      setRowData(filtered);
+    } finally {
+      setSearching(false);
+    }
+  }, [allData]);
+
+  const handleSlotSearchChange = (value: string) => {
+    setSlotSearch(value);
+    if (searchTimeoutRef.current) clearTimeout(searchTimeoutRef.current);
+
+    if (!value.trim()) {
+      setRowData(allData);
+      return;
+    }
+
+    // Debounce API call by 500ms
+    searchTimeoutRef.current = setTimeout(() => {
+      searchSlotById(value);
+    }, 500);
+  };
+
+  const clearSearch = () => {
+    setSlotSearch("");
+    setRowData(allData);
+  };
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
       <AppHeader selectedTab="Slots" />
 
       <main className="p-2 sm:p-4">
+        {/* Slot ID Search Bar */}
+        <div className="mb-2 flex items-center gap-2">
+          <div className="relative w-64">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search by Slot ID..."
+              value={slotSearch}
+              onChange={(e) => handleSlotSearchChange(e.target.value)}
+              className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+            {slotSearch && (
+              <button
+                onClick={clearSearch}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          {searching && (
+            <span className="text-xs text-muted-foreground animate-pulse">Searching...</span>
+          )}
+        </div>
+
         {!loading && rowData.length === 0 ? (
-          <div className="flex items-center justify-center" style={{ height: "100dvh" }}>
+          <div className="flex items-center justify-center" style={{ height: "calc(100vh - 200px)" }}>
             <img src={noRecordsImage} alt="No records found" className="w-48 sm:w-[340px]" />
           </div>
         ) : (
-          <div className="ag-theme-quartz w-full" style={{ height: "calc(100vh - 145px)" }}>
+          <div className="ag-theme-quartz w-full" style={{ height: "calc(100vh - 180px)" }}>
             <AgGridReact
               theme="legacy"
               rowData={rowData}
