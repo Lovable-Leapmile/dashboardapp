@@ -185,10 +185,11 @@ const Slots = () => {
                 sortable: true,
                 filter: true,
               }}
+              {...getDefaultGridProps()}
               pagination={true}
               paginationPageSize={100000}
+              paginationPageSizeSelector={false}
               rowHeight={35}
-              {...getDefaultGridProps()}
               onGridReady={(params) => {
                 gridApiRef.current = params.api;
                 params.api.setGridOption("quickFilterText", quickFilter);
