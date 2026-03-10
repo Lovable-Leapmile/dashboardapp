@@ -89,6 +89,14 @@ const Station = () => {
       valueFormatter: (params) => params.value ?? "N/A",
     },
     createDateColumnDef("updated_at", "Updated At", { flex: 1.5 }),
+    {
+      field: "comment",
+      headerName: "Comment",
+      sortable: true,
+      filter: true,
+      flex: 1.5,
+      valueFormatter: (params) => params.value ?? "N/A",
+    },
   ];
 
   useEffect(() => {
