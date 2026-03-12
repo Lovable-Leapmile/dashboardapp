@@ -21,8 +21,8 @@ export const useAuthSession = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const warningShownRef = useRef(false);
-  const warningTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const logoutTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const warningTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const logoutTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const handleExtendSession = useCallback(() => {
     extendSession();
