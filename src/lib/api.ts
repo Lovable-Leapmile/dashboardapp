@@ -10,13 +10,13 @@ export const getUserBase = (): string => `${getApiOrigin()}/user`;
 export const getPubSubBase = (): string => `${getApiOrigin()}/pubsub`;
 export const getCameraManagerBase = (): string => `${getApiOrigin()}/cameramanager`;
 
-// Get the admin console URL using the dynamic API name
+// Get the admin console URL using the base URL
 export const getAdminConsoleUrl = (): string => {
-  const apiName = getApiName();
-  if (!apiName) {
+  const origin = getApiOrigin();
+  if (!origin) {
     return "";
   }
-  return `https://${apiName}.leapmile.com/nanostoreapp/`;
+  return `${origin}/nanostoreapp/home`;
 };
 
 // Get the web app URL with port 6500
