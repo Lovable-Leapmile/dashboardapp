@@ -48,6 +48,7 @@ const Slots = () => {
   const [quickFilter, setQuickFilter] = useState("");
   const gridApiRef = useRef<any>(null);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const traySearchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
