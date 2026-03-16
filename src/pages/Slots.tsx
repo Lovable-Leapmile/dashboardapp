@@ -43,10 +43,12 @@ const Slots = () => {
   const [allData, setAllData] = useState<SlotData[]>([]);
   const [loading, setLoading] = useState(true);
   const [slotSearch, setSlotSearch] = useState("");
+  const [traySearch, setTraySearch] = useState("");
   const [searching, setSearching] = useState(false);
   const [quickFilter, setQuickFilter] = useState("");
   const gridApiRef = useRef<any>(null);
   const searchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const traySearchTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -233,25 +235,107 @@ const Slots = () => {
     setRowData(allData);
   };
 
+  const searchByTrayId = useCallback(async (trayId: string) => {
+    if (!trayId.trim()) {
+      setRowData(allData);
+      return;
+    }
+
+    try {
+      setSearching(true);
+      const token = getStoredAuthToken();
+      if (!token) return;
+
+      const response = await fetch(
+        `${getRobotManagerBase()}/slots?tray_id=${encodeURIComponent(trayId.trim())}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        const records = data.records || [];
+        if (records.length > 0) {
+          setRowData(mapTags(records));
+          return;
+        }
+      }
+
+      const filtered = allData.filter((row) =>
+        row.tray_id?.toLowerCase().includes(trayId.trim().toLowerCase())
+      );
+      setRowData(filtered);
+    } catch {
+      const filtered = allData.filter((row) =>
+        row.tray_id?.toLowerCase().includes(trayId.trim().toLowerCase())
+      );
+      setRowData(filtered);
+    } finally {
+      setSearching(false);
+    }
+  }, [allData]);
+
+  const handleTraySearchChange = (value: string) => {
+    setTraySearch(value);
+    if (traySearchTimeoutRef.current) clearTimeout(traySearchTimeoutRef.current);
+
+    if (!value.trim()) {
+      setRowData(allData);
+      return;
+    }
+
+    traySearchTimeoutRef.current = setTimeout(() => {
+      searchByTrayId(value);
+    }, 500);
+  };
+
+  const clearTraySearch = () => {
+    setTraySearch("");
+    setRowData(allData);
+  };
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
       <AppHeader selectedTab="Slots" />
 
       <main className="p-2 sm:p-4">
-        {/* Slot ID Search Bar */}
-        <div className="mb-2 flex items-center gap-2">
+        {/* Search Bars */}
+        <div className="mb-2 flex items-center gap-2 flex-wrap">
           <div className="relative w-64">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="text"
               placeholder="Search by Slot ID..."
               value={slotSearch}
-              onChange={(e) => handleSlotSearchChange(e.target.value)}
+              onChange={(e) => { handleSlotSearchChange(e.target.value); setTraySearch(""); }}
               className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
             />
             {slotSearch && (
               <button
                 onClick={clearSearch}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+          <div className="relative w-64">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              type="text"
+              placeholder="Search by Tray ID..."
+              value={traySearch}
+              onChange={(e) => { handleTraySearchChange(e.target.value); setSlotSearch(""); }}
+              className="h-9 w-full rounded-md border border-input bg-background pl-9 pr-8 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-ring"
+            />
+            {traySearch && (
+              <button
+                onClick={clearTraySearch}
                 className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 <X className="h-4 w-4" />
