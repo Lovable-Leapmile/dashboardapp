@@ -43,6 +43,7 @@ const Slots = () => {
   const [allData, setAllData] = useState<SlotData[]>([]);
   const [loading, setLoading] = useState(true);
   const [slotSearch, setSlotSearch] = useState("");
+  const [traySearch, setTraySearch] = useState("");
   const [searching, setSearching] = useState(false);
   const [quickFilter, setQuickFilter] = useState("");
   const gridApiRef = useRef<any>(null);
