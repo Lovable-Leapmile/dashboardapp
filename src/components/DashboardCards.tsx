@@ -85,6 +85,7 @@ export const DashboardCards = () => {
       const data = await response.json();
       if (data.records && data.records.length > 0) {
         setRobotInfo(data.records[0]);
+        setRobotNumDepths(data.records[0].robot_num_depths || 0);
       }
     } catch (error) {
       console.error("Error fetching robot info:", error);

@@ -78,7 +78,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
       "Station": "/station",
       "Extremes": "/extremes",
       "APK Link": "/apk-link",
-      "Admin Console": "/admin-console"
+      "Tablet App": "/admin-console"
     };
     if (routes[tab]) {
       navigate(routes[tab]);

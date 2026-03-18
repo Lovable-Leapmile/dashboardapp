@@ -43,7 +43,12 @@ const Trays = () => {
     { field: "tray_divider", headerName: "Divider", sortable: true, filter: true, flex: 1 },
     { field: "tray_lockcount", headerName: "Lock Count", sortable: true, filter: true, flex: 1 },
     { field: "tray_height", headerName: "Height (mm)", sortable: true, filter: true, flex: 1 },
-    { field: "tray_weight", headerName: "Weight", sortable: true, filter: true, flex: 1 },
+    { field: "tray_weight", headerName: "Weight (Kg)", sortable: true, filter: true, flex: 1,
+      valueFormatter: (params) => {
+        if (params.value === null || params.value === undefined) return "N/A";
+        return `${params.value}Kg`;
+      },
+    },
     {
       field: "tags",
       headerName: "Tags",
