@@ -57,7 +57,7 @@ const AdminConsole = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
-      <AppHeader selectedTab="Tablet App" />
+      <AppHeader selectedTab="Admin Console" />
 
       <main className="p-2 sm:p-4">
         {hasError || !adminUrl ? (
