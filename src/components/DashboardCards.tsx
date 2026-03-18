@@ -253,7 +253,7 @@ export const DashboardCards = () => {
               <div className="flex items-center justify-center bg-primary/10 rounded-lg py-2 px-3">
                 <span className="text-lg font-bold text-primary tracking-wide">{robotInfo.robot_name}</span>
               </div>
-              <div className="grid grid-cols-4 gap-2">
+              <div className={`grid ${robotNumDepths > 1 ? 'grid-cols-4' : 'grid-cols-3'} gap-2`}>
                 <div className="text-center py-2 bg-background/80 rounded-lg border border-border/50 shadow-sm">
                   <div className="text-lg font-bold text-foreground">{robotInfo.robot_num_rows}</div>
                   <div className="text-[10px] text-muted-foreground font-medium">Rows</div>
@@ -266,8 +266,12 @@ export const DashboardCards = () => {
                   <div className="text-lg font-bold text-foreground">{robotInfo.robot_num_slots}</div>
                   <div className="text-[10px] text-muted-foreground font-medium">Slots</div>
                 </div>
-                <div className="text-center py-2 bg-background/80 rounded-lg border border-border/50 shadow-sm">
-                  <div className="text-lg font-bold text-foreground">{robotInfo.robot_num_depths}</div>
+                {robotNumDepths > 1 && (
+                  <div className="text-center py-2 bg-background/80 rounded-lg border border-border/50 shadow-sm">
+                    <div className="text-lg font-bold text-foreground">{robotInfo.robot_num_depths}</div>
+                    <div className="text-[10px] text-muted-foreground font-medium">Depths</div>
+                  </div>
+                )}
                   <div className="text-[10px] text-muted-foreground font-medium">Depths</div>
                 </div>
               </div>
