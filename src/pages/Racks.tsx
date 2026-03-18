@@ -129,13 +129,15 @@ const Racks = () => {
       if (data.records && data.records.length > 0) {
         const robotConfig = data.records[0];
         const numRacksValue = robotConfig.robot_num_racks || 0;
+        const numDepthsValue = robotConfig.robot_num_depths || 0;
 
         localStorage.setItem("robot_num_rows", robotConfig.robot_num_rows?.toString() || "0");
         localStorage.setItem("robot_num_racks", numRacksValue.toString());
         localStorage.setItem("robot_num_slots", robotConfig.robot_num_slots?.toString() || "0");
-        localStorage.setItem("robot_num_depths", robotConfig.robot_num_depths?.toString() || "0");
+        localStorage.setItem("robot_num_depths", numDepthsValue.toString());
 
         setNumRacks(numRacksValue);
+        setRobotNumDepths(numDepthsValue);
 
         console.log("Robot configuration stored globally:", {
           robot_num_rows: robotConfig.robot_num_rows,
