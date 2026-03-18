@@ -40,6 +40,7 @@ interface PowerInfo {
 
 export const DashboardCards = () => {
   const [robotInfo, setRobotInfo] = useState<RobotInfo | null>(null);
+  const [robotNumDepths, setRobotNumDepths] = useState(0);
   const [slotInfo, setSlotInfo] = useState<SlotInfo | null>(null);
   const [trayInfo, setTrayInfo] = useState<TrayInfo | null>(null);
   const [powerInfo, setPowerInfo] = useState<PowerInfo | null>(null);
@@ -84,6 +85,7 @@ export const DashboardCards = () => {
       const data = await response.json();
       if (data.records && data.records.length > 0) {
         setRobotInfo(data.records[0]);
+        setRobotNumDepths(data.records[0].robot_num_depths || 0);
       }
     } catch (error) {
       console.error("Error fetching robot info:", error);
@@ -251,7 +253,7 @@ export const DashboardCards = () => {
               <div className="flex items-center justify-center bg-primary/10 rounded-lg py-2 px-3">
                 <span className="text-lg font-bold text-primary tracking-wide">{robotInfo.robot_name}</span>
               </div>
-              <div className="grid grid-cols-4 gap-2">
+              <div className={`grid ${robotNumDepths > 1 ? 'grid-cols-4' : 'grid-cols-3'} gap-2`}>
                 <div className="text-center py-2 bg-background/80 rounded-lg border border-border/50 shadow-sm">
                   <div className="text-lg font-bold text-foreground">{robotInfo.robot_num_rows}</div>
                   <div className="text-[10px] text-muted-foreground font-medium">Rows</div>
@@ -264,10 +266,12 @@ export const DashboardCards = () => {
                   <div className="text-lg font-bold text-foreground">{robotInfo.robot_num_slots}</div>
                   <div className="text-[10px] text-muted-foreground font-medium">Slots</div>
                 </div>
-                <div className="text-center py-2 bg-background/80 rounded-lg border border-border/50 shadow-sm">
-                  <div className="text-lg font-bold text-foreground">{robotInfo.robot_num_depths}</div>
-                  <div className="text-[10px] text-muted-foreground font-medium">Depths</div>
-                </div>
+                {robotNumDepths > 1 && (
+                  <div className="text-center py-2 bg-background/80 rounded-lg border border-border/50 shadow-sm">
+                    <div className="text-lg font-bold text-foreground">{robotInfo.robot_num_depths}</div>
+                    <div className="text-[10px] text-muted-foreground font-medium">Depths</div>
+                  </div>
+                )}
               </div>
             </div>
           ) : (

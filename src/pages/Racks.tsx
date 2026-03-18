@@ -33,6 +33,7 @@ const Racks = () => {
   const [row1Depth0Slots, setRow1Depth0Slots] = useState<Slot[]>([]);
   const [row0Depth1Slots, setRow0Depth1Slots] = useState<Slot[]>([]);
   const [row0Depth0Slots, setRow0Depth0Slots] = useState<Slot[]>([]);
+  const [robotNumDepths, setRobotNumDepths] = useState(0);
   const [selectedSlotId, setSelectedSlotId] = useState<string | null>(null);
   const [slotDetails, setSlotDetails] = useState<SlotDetails | null>(null);
   const [activeStationSlotIds, setActiveStationSlotIds] = useState<Set<string>>(new Set());
@@ -128,13 +129,15 @@ const Racks = () => {
       if (data.records && data.records.length > 0) {
         const robotConfig = data.records[0];
         const numRacksValue = robotConfig.robot_num_racks || 0;
+        const numDepthsValue = robotConfig.robot_num_depths || 0;
 
         localStorage.setItem("robot_num_rows", robotConfig.robot_num_rows?.toString() || "0");
         localStorage.setItem("robot_num_racks", numRacksValue.toString());
         localStorage.setItem("robot_num_slots", robotConfig.robot_num_slots?.toString() || "0");
-        localStorage.setItem("robot_num_depths", robotConfig.robot_num_depths?.toString() || "0");
+        localStorage.setItem("robot_num_depths", numDepthsValue.toString());
 
         setNumRacks(numRacksValue);
+        setRobotNumDepths(numDepthsValue);
 
         console.log("Robot configuration stored globally:", {
           robot_num_rows: robotConfig.robot_num_rows,
@@ -352,18 +355,20 @@ const Racks = () => {
                     Row 1
                   </div>
                   <div className="flex gap-3">
-                    {/* Depth 1 - Vertical Column (Left) */}
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="flex flex-col gap-2">
-                        {row1Depth1Slots.map((slot, idx) => (
-                          <div key={`r1d1-${idx}`}>
-                            <SlotBox slot={slot} />
-                          </div>
-                        ))}
+                    {/* Depth 1 - Only show if more than 1 depth */}
+                    {robotNumDepths > 1 && (
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="flex flex-col gap-2">
+                          {row1Depth1Slots.map((slot, idx) => (
+                            <div key={`r1d1-${idx}`}>
+                              <SlotBox slot={slot} />
+                            </div>
+                          ))}
+                        </div>
+                        <div className="text-xs font-medium mt-3 text-gray-500">Depth 1</div>
                       </div>
-                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 1</div>
-                    </div>
-                    {/* Depth 0 - Vertical Column (Right) */}
+                    )}
+                    {/* Depth 0 */}
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex flex-col gap-2">
                         {row1Depth0Slots.map((slot, idx) => (
@@ -372,7 +377,7 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 0</div>
+                      {robotNumDepths > 1 && <div className="text-xs font-medium mt-3 text-gray-500">Depth 0</div>}
                     </div>
                   </div>
                 </div>
@@ -396,7 +401,7 @@ const Racks = () => {
                     Row 0
                   </div>
                   <div className="flex gap-3">
-                    {/* Depth 0 - Vertical Column (Left) */}
+                    {/* Depth 0 */}
                     <div className="flex flex-col items-center gap-2">
                       <div className="flex flex-col gap-2">
                         {row0Depth1Slots.map((slot, idx) => (
@@ -405,19 +410,21 @@ const Racks = () => {
                           </div>
                         ))}
                       </div>
-                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 0</div>
+                      {robotNumDepths > 1 && <div className="text-xs font-medium mt-3 text-gray-500">Depth 0</div>}
                     </div>
-                    {/* Depth 1 - Vertical Column (Right) */}
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="flex flex-col gap-2">
-                        {row0Depth0Slots.map((slot, idx) => (
-                          <div key={`r0d0-${idx}`}>
-                            <SlotBox slot={slot} />
-                          </div>
-                        ))}
+                    {/* Depth 1 - Only show if more than 1 depth */}
+                    {robotNumDepths > 1 && (
+                      <div className="flex flex-col items-center gap-2">
+                        <div className="flex flex-col gap-2">
+                          {row0Depth0Slots.map((slot, idx) => (
+                            <div key={`r0d0-${idx}`}>
+                              <SlotBox slot={slot} />
+                            </div>
+                          ))}
+                        </div>
+                        <div className="text-xs font-medium mt-3 text-gray-500">Depth 1</div>
                       </div>
-                      <div className="text-xs font-medium mt-3 text-gray-500">Depth 1</div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>

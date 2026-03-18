@@ -57,7 +57,7 @@ const AdminConsole = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
-      <AppHeader selectedTab="Admin Console" />
+      <AppHeader selectedTab="Tablet App" />
 
       <main className="p-2 sm:p-4">
         {hasError || !adminUrl ? (
@@ -74,7 +74,7 @@ const AdminConsole = () => {
               {/* Coming Soon Text */}
               <div className="space-y-3">
                 <h1 className="text-3xl font-bold text-foreground animate-fade-in">
-                  Admin Console
+                  Tablet App
                 </h1>
                 <div className="flex items-center justify-center gap-2">
                   <span className="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
@@ -101,14 +101,14 @@ const AdminConsole = () => {
               <div className="absolute inset-0 flex items-center justify-center bg-gray-50 z-10">
                 <div className="text-center space-y-3">
                   <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent mx-auto"></div>
-                  <p className="text-sm text-muted-foreground">Loading Admin Console...</p>
+                  <p className="text-sm text-muted-foreground">Loading Tablet App...</p>
                 </div>
               </div>
             )}
             <iframe
               src={adminUrl}
               className="w-full h-full border-0 rounded-lg"
-              title="Admin Console"
+              title="Tablet App"
               onLoad={handleIframeLoad}
               onError={handleIframeError}
               sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"

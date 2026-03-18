@@ -78,7 +78,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
       "Station": "/station",
       "Extremes": "/extremes",
       "APK Link": "/apk-link",
-      "Admin Console": "/admin-console"
+      "Tablet App": "/admin-console"
     };
     if (routes[tab]) {
       navigate(routes[tab]);
@@ -127,7 +127,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
     { label: "Station", icon: Building2, tab: "Station" },
     { label: "Extremes", icon: TrendingUp, tab: "Extremes" },
     { label: "APK Link", icon: Download, tab: "APK Link" },
-    { label: "Admin Console", icon: Shield, tab: "Admin Console" },
+    { label: "Tablet App", icon: Shield, tab: "Tablet App" },
   ];
 
   const taskTabs = [
