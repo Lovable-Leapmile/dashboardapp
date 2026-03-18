@@ -271,6 +271,7 @@ export const DashboardCards = () => {
                     <div className="text-lg font-bold text-foreground">{robotInfo.robot_num_depths}</div>
                     <div className="text-[10px] text-muted-foreground font-medium">Depths</div>
                   </div>
+                )}
               </div>
             </div>
           ) : (
