@@ -40,6 +40,7 @@ interface PowerInfo {
 
 export const DashboardCards = () => {
   const [robotInfo, setRobotInfo] = useState<RobotInfo | null>(null);
+  const [robotNumDepths, setRobotNumDepths] = useState(0);
   const [slotInfo, setSlotInfo] = useState<SlotInfo | null>(null);
   const [trayInfo, setTrayInfo] = useState<TrayInfo | null>(null);
   const [powerInfo, setPowerInfo] = useState<PowerInfo | null>(null);
