@@ -74,7 +74,7 @@ const AdminConsole = () => {
               {/* Coming Soon Text */}
               <div className="space-y-3">
                 <h1 className="text-3xl font-bold text-foreground animate-fade-in">
-                  Tablet App
+                  Admin Console
                 </h1>
                 <div className="flex items-center justify-center gap-2">
                   <span className="inline-block w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
