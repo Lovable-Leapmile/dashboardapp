@@ -1,5 +1,6 @@
 import { ColDef, PostProcessPopupParams } from "ag-grid-community";
 import { format, isValid, parse, parseISO } from "date-fns";
+import AgGridDatePicker from "@/components/ag-grid/AgGridDatePicker";
 
 /**
  * Best-effort parsing for API date strings so AG Grid date filtering works reliably.
@@ -107,6 +108,7 @@ export const dateTimeFilterComparator = (filterDate: Date, cellValue: unknown): 
  */
 export const dateFilterParams = {
   comparator: dateFilterComparator,
+  includeTime: false,
   browserDatePicker: false,
   minValidYear: 2000,
   maxValidYear: 2100,
@@ -141,9 +143,21 @@ export const formatDateTime12 = (value: unknown): string => {
 export const createDateColumnDef = (field: string, headerName: string, options: Partial<ColDef> = {}): ColDef => ({
   field,
   headerName,
+  cellDataType: false,
   sortable: true,
+  comparator: (valueA, valueB) => {
+    const a = parseToDate(valueA)?.getTime();
+    const b = parseToDate(valueB)?.getTime();
+
+    if (!Number.isFinite(a) && !Number.isFinite(b)) return 0;
+    if (!Number.isFinite(a)) return -1;
+    if (!Number.isFinite(b)) return 1;
+    return a === b ? 0 : a! < b! ? -1 : 1;
+  },
   filter: "agDateColumnFilter",
   filterParams: dateFilterParams,
+  filterValueGetter: (params) => parseToDate(params.data?.[field]),
+  dateComponent: AgGridDatePicker,
   flex: 1.2,
   minWidth: 150,
   valueFormatter: (params) => formatDateTime12(params.value),
