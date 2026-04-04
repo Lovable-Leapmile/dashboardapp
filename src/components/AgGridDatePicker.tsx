@@ -1,24 +1,36 @@
-import { forwardRef, useImperativeHandle, useState, useCallback, useRef } from "react";
+import { forwardRef, useImperativeHandle, useState, useRef, useEffect } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 
+// AG Grid passes params as props to custom date components
 interface AgGridDatePickerProps {
-  onDateChanged: () => void;
+  onDateChanged?: () => void;
+  [key: string]: any;
 }
 
 const AgGridDatePicker = forwardRef((props: AgGridDatePickerProps, ref) => {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const dateRef = useRef<Date | undefined>(undefined);
+  const onDateChangedRef = useRef<(() => void) | undefined>(undefined);
 
-  const handleSelect = useCallback(
-    (selected: Date | undefined) => {
-      setDate(selected);
-      dateRef.current = selected;
+  // AG Grid may pass onDateChanged directly or via params
+  useEffect(() => {
+    if (typeof props.onDateChanged === "function") {
+      onDateChangedRef.current = props.onDateChanged;
+    }
+  }, [props.onDateChanged]);
+
+  const handleSelect = (selected: Date | undefined) => {
+    setDate(selected);
+    dateRef.current = selected;
+    // Notify AG Grid the date changed
+    if (typeof onDateChangedRef.current === "function") {
+      onDateChangedRef.current();
+    } else if (typeof props.onDateChanged === "function") {
       props.onDateChanged();
-    },
-    [props]
-  );
+    }
+  };
 
   useImperativeHandle(ref, () => ({
     getDate() {
@@ -28,6 +40,10 @@ const AgGridDatePicker = forwardRef((props: AgGridDatePickerProps, ref) => {
       const d = newDate ?? undefined;
       dateRef.current = d;
       setDate(d);
+    },
+    // AG Grid may call this to set the callback
+    setOnDateChanged(callback: () => void) {
+      onDateChangedRef.current = callback;
     },
   }));
 
