@@ -129,7 +129,7 @@ export const formatDateTime12 = (value: unknown): string => {
   const d = parseToDate(value);
   if (!d) return value == null || value === "" ? "N/A" : String(value);
   try {
-    return format(d, "yyyy-MM-dd hh:mm:ss a");
+    return format(d, "dd-MM-yyyy");
   } catch {
     return String(value);
   }
