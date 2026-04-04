@@ -604,27 +604,36 @@ const Home = () => {
                 {actionHistory.length === 0 ? (
                   <p className="text-[10px] text-muted-foreground">No actions recorded yet</p>
                 ) : (
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     {actionHistory.slice(0, 3).map((item, idx) => (
                       <div 
                         key={idx} 
-                        className="flex items-center gap-1 text-[10px]"
+                        className="p-1.5 rounded bg-muted/40 border border-border/50"
                       >
-                        <span
-                          className="w-1.5 h-1.5 rounded-full shrink-0"
-                          style={{
-                            backgroundColor: getStatusColor(item.action).bg,
-                            border: `1.5px solid ${getStatusColor(item.action).border}`,
-                          }}
-                        />
-                        <span className="font-medium text-foreground truncate">{item.action}</span>
-                        <span className="text-muted-foreground ml-auto text-[9px]">
-                          {item.timestamp.toLocaleTimeString("en-IN", { 
-                            timeZone: "Asia/Kolkata",
-                            hour: "2-digit",
-                            minute: "2-digit"
-                          })}
-                        </span>
+                        <div className="flex items-center gap-1 text-[10px]">
+                          <span
+                            className="w-1.5 h-1.5 rounded-full shrink-0"
+                            style={{
+                              backgroundColor: getStatusColor(item.action).bg,
+                              border: `1.5px solid ${getStatusColor(item.action).border}`,
+                            }}
+                          />
+                          <span className="font-medium text-foreground">{item.action}</span>
+                          <span className="text-muted-foreground ml-auto text-[9px]">
+                            {item.timestamp.toLocaleTimeString("en-IN", { 
+                              timeZone: "Asia/Kolkata",
+                              hour: "2-digit",
+                              minute: "2-digit"
+                            })}
+                          </span>
+                        </div>
+                        <div className="text-[9px] text-muted-foreground mt-0.5 pl-3">
+                          {item.trayId ? (
+                            <span>Tray: <span className="font-medium text-foreground">{item.trayId}</span> → Slot <span className="font-medium text-foreground">{item.slot ?? "N/A"}</span></span>
+                          ) : (
+                            <span>No tray info</span>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
