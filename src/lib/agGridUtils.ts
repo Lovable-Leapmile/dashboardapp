@@ -107,10 +107,10 @@ export const dateTimeFilterComparator = (filterDate: Date, cellValue: unknown): 
  */
 export const dateFilterParams = {
   comparator: dateFilterComparator,
-  browserDatePicker: false,
+  browserDatePicker: true,
   minValidYear: 2000,
   maxValidYear: 2100,
-  inRangeFloatingFilterDateFormat: "dd-MM-yyyy",
+  inRangeFloatingFilterDateFormat: "dd/MM/yyyy",
   filterOptions: [
     "equals",
     "notEqual", 
