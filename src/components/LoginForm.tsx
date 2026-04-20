@@ -39,10 +39,10 @@ const LoginForm = () => {
     setIsLoading(true);
     
     try {
-      const userBase = "/user";
       // Backend only supports GET - credentials sent via query params
+      // Use VITE_BASE_URL via getApiUrl instead of hosted origin
       const response = await fetch(
-        `${userBase}/validate?user_phone=${encodeURIComponent(mobileNumber)}&password=${encodeURIComponent(password)}`
+        getApiUrl(`/user/validate?user_phone=${encodeURIComponent(mobileNumber)}&password=${encodeURIComponent(password)}`)
       );
       const data = await response.json();
 
