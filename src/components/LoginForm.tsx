@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { storeAuthToken } from "@/lib/auth";
 import { secureStorage } from "@/lib/secureStorage";
-import { getApiUrl, authenticatedFetch } from "@/lib/api";
+import { getApiUrl } from "@/lib/api";
 import { Eye, EyeOff } from "lucide-react";
 import { useLoginLogo } from "@/hooks/useTheme";
 import loginIllustration from "@/assets/login.gif";
@@ -39,10 +39,10 @@ const LoginForm = () => {
     setIsLoading(true);
     
     try {
-      const userBase = "/user";
       // Backend only supports GET - credentials sent via query params
+      // Use VITE_BASE_URL via getApiUrl instead of hosted origin
       const response = await fetch(
-        `${userBase}/validate?user_phone=${encodeURIComponent(mobileNumber)}&password=${encodeURIComponent(password)}`
+        getApiUrl(`/user/validate?user_phone=${encodeURIComponent(mobileNumber)}&password=${encodeURIComponent(password)}`)
       );
       const data = await response.json();
 
