@@ -67,3 +67,39 @@ export const apiGet = async <T = any>(url: string, options: ApiFetchOptions = {}
   const data = (await res.json()) as T;
   return { res, data };
 };
+/**
+ * Construct full API URL from a path
+ * @param path - API path starting with /
+ * @returns Full URL with origin
+ */
+export const getApiUrl = (path: string): string => {
+  const origin = getApiOrigin();
+  // Remove leading slash if present to avoid double slashes
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  return `${origin}${cleanPath}`;
+};
+
+/**
+ * Enhanced fetch wrapper that automatically injects the active
+ * session's authToken from sessionStorage into the Authorization header.
+ *
+ * @param url - The target API endpoint (full URL or path)
+ * @param options - Standard RequestInit options
+ * @returns Promise<Response>
+ */
+export const authenticatedFetch = async (url: string, options: RequestInit = {}) => {
+  const authToken = sessionStorage.getItem("authToken");
+
+  const headers = new Headers(options.headers || {});
+  if (authToken && !headers.has("Authorization")) {
+    headers.set("Authorization", `Bearer ${authToken}`);
+  }
+
+  // If url is just a path (starts with /), prepend the API origin
+  const fullUrl = url.startsWith("http") ? url : getApiUrl(url);
+
+  return fetch(fullUrl, {
+    ...options,
+    headers,
+  });
+};
