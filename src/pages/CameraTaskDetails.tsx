@@ -4,7 +4,7 @@ import AppHeader from "@/components/AppHeader";
 import { AgGridReact } from "ag-grid-react";
 import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
+import "ag-grid-community/styles/ag-theme-quartz-no-font.css";
 import { Play, Download, ArrowLeft, RefreshCw, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuthSession } from "@/hooks/useAuthSession";
@@ -58,8 +58,8 @@ const CameraTaskDetails = () => {
     try {
       const token = getStoredAuthToken();
       if (!token) return;
-      const response = await fetch(
-        `/cameramanager/camera_events?clip_status=ready&task_id=${task_id}`,
+      const response = await authenticatedFetch(
+        getApiUrl(`/cameramanager/camera_events?clip_status=ready&task_id=${task_id}`),
         {
           headers: {
             Authorization: token,

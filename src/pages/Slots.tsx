@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-quartz.css";
+import "ag-grid-community/styles/ag-theme-quartz-no-font.css";
 import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
 import { useToast } from "@/hooks/use-toast";
 import { useAuthSession } from "@/hooks/useAuthSession";
@@ -179,8 +179,8 @@ const Slots = () => {
       const token = getStoredAuthToken();
       if (!token) return;
 
-      const response = await fetch(
-        `/robotmanager/slots?slot_id=${encodeURIComponent(slotId.trim())}`,
+      const response = await authenticatedFetch(
+        getApiUrl(`/robotmanager/slots?slot_id=${encodeURIComponent(slotId.trim())}`),
         {
           method: "GET",
           headers: {
@@ -246,8 +246,8 @@ const Slots = () => {
       const token = getStoredAuthToken();
       if (!token) return;
 
-      const response = await fetch(
-        `/robotmanager/slots?tray_id=${encodeURIComponent(trayId.trim())}`,
+      const response = await authenticatedFetch(
+        getApiUrl(`/robotmanager/slots?tray_id=${encodeURIComponent(trayId.trim())}`),
         {
           method: "GET",
           headers: {
