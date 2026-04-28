@@ -25,28 +25,37 @@ type ReportType =
   | "rack_transaction"
   | "order_failure_transaction";
 
-// Format date as YYYY-MM-DD HH:mm (matching Python logic)
+// Format date as DD-MM-YYYY hh:mm:ss AM/PM
 // Parse the timestamp string directly without timezone conversion to preserve the API's reported time.
 const formatDateTime = (value: string | null | undefined): string => {
   if (!value) return "";
   try {
-    // Match "YYYY-MM-DDTHH:mm" or "YYYY-MM-DD HH:mm" with optional seconds/fractions
     const match = String(value).match(
-      /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/,
+      /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::(\d{2}))?/,
     );
+    let year: string, month: string, day: string, hh: number, mm: string, ss: string;
     if (match) {
-      const [, year, month, day, hours, minutes] = match;
-      return `${year}-${month}-${day} ${hours}:${minutes}`;
+      year = match[1];
+      month = match[2];
+      day = match[3];
+      hh = parseInt(match[4], 10);
+      mm = match[5];
+      ss = match[6] ?? "00";
+    } else {
+      const date = new Date(value);
+      if (isNaN(date.getTime())) return String(value);
+      year = String(date.getUTCFullYear());
+      month = String(date.getUTCMonth() + 1).padStart(2, "0");
+      day = String(date.getUTCDate()).padStart(2, "0");
+      hh = date.getUTCHours();
+      mm = String(date.getUTCMinutes()).padStart(2, "0");
+      ss = String(date.getUTCSeconds()).padStart(2, "0");
     }
-    // Fallback: use Date but without timezone shift
-    const date = new Date(value);
-    if (isNaN(date.getTime())) return String(value);
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-    const day = String(date.getUTCDate()).padStart(2, "0");
-    const hours = String(date.getUTCHours()).padStart(2, "0");
-    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+    const ampm = hh >= 12 ? "PM" : "AM";
+    let h12 = hh % 12;
+    if (h12 === 0) h12 = 12;
+    const hStr = String(h12).padStart(2, "0");
+    return `${day}-${month}-${year} ${hStr}:${mm}:${ss} ${ampm}`;
   } catch {
     return String(value);
   }
