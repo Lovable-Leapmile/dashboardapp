@@ -301,7 +301,7 @@ const Reports = () => {
     if (data.status === "success" && data.count !== 0) {
       return (data.records || []).map((item: any) => ({
         transaction_date: formatDateTime(item.updated_at),
-        receive_date: item.inbound_date || "",
+        receive_date: formatDateTime(item.created_at),
         item_id: item.item_id,
         stock: item.available_quantity,
         tray_divider: item.tray_divider,
