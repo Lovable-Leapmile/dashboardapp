@@ -27,26 +27,17 @@ interface StatusMessage {
   [key: string]: string | undefined;
 }
 
-// Ordered fields for display
-const FIELD_ORDER = [
-  { key: "ROBOT_ID", label: "Robot ID" },
-  { key: "SUPERVISOR STATUS", label: "Supervisor Status" },
-  { key: "msg", label: "Message" },
-  { key: "PLC ERRORS", label: "PLC Errors" },
-  { key: "PLC READS", label: "PLC Reads" },
-  { key: "PLC WRITES", label: "PLC Writes" },
-  { key: "NUM HOMINGS", label: "Num Homings" },
-  { key: "SUPERVISOR START TIME", label: "Supervisor Start Time" },
-  { key: "UPTIME", label: "Uptime" },
-  { key: "RECOVERIES MAGNET", label: "Recoveries Magnet" },
-  { key: "RECOVERIES PUSHPULL", label: "Recoveries Push/Pull" },
-  { key: "RECOVERIES HORZVERT", label: "Recoveries Horz/Vert" },
-  { key: "GOTO OPS", label: "Goto Ops" },
-  { key: "RETRIEVE OPS", label: "Retrieve Ops" },
-  { key: "STORE OPS", label: "Store Ops" },
-  { key: "device_id", label: "Device ID" },
-  { key: "UPDATED_AT", label: "Updated At" },
-];
+// Convert any key (e.g. "SUPERVISOR START TIME", "device_id") into a friendly label
+const toLabel = (key: string): string => {
+  if (key === "UPDATED_AT") return "Updated At";
+  return key
+    .replace(/[_-]+/g, " ")
+    .toLowerCase()
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+};
+
+// Highlighted fields shown first when present
+const PRIORITY_KEYS = ["ROBOT_ID", "SUPERVISOR STATUS"];
 
 interface StatusCardProps {
   fieldKey: string;
