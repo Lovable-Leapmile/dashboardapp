@@ -164,15 +164,20 @@ const Monitor = () => {
   const renderStatusCards = () => {
     if (!statusData) return null;
 
+    const allKeys = Object.keys(statusData).filter((k) => statusData[k] !== undefined && statusData[k] !== null);
+    const priority = PRIORITY_KEYS.filter((k) => allKeys.includes(k));
+    const rest = allKeys.filter((k) => !PRIORITY_KEYS.includes(k));
+    const orderedKeys = [...priority, ...rest];
+
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 sm:p-6">
-        {FIELD_ORDER.map(({ key, label }, index) => (
-          <StatusCard 
+        {orderedKeys.map((key, index) => (
+          <StatusCard
             key={key}
             fieldKey={key}
-            label={label} 
-            value={statusData[key]} 
-            isHighlight={index < 2}
+            label={toLabel(key)}
+            value={statusData[key]}
+            isHighlight={index < priority.length}
           />
         ))}
       </div>
