@@ -36,8 +36,9 @@ const toLabel = (key: string): string => {
     .replace(/\b\w/g, (c) => c.toUpperCase());
 };
 
-// Highlighted fields shown first when present
-const PRIORITY_KEYS = ["ROBOT_ID", "SUPERVISOR STATUS"];
+// Detect ISO/datetime-like values dynamically (no hardcoded keys)
+const isDateLike = (v: string): boolean =>
+  /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}/.test(v);
 
 interface StatusCardProps {
   fieldKey: string;
@@ -47,19 +48,18 @@ interface StatusCardProps {
 }
 
 const formatValue = (key: string, value: string | undefined): string => {
-  if (!value) return "N/A";
+  if (value === undefined || value === null || value === "") return "N/A";
+  const str = String(value);
 
-  // Format datetime fields
-  if (key === "SUPERVISOR START TIME" || key === "UPDATED_AT") {
+  // Auto-format any datetime-like value, regardless of key
+  if (isDateLike(str)) {
     try {
-      const date = new Date(value.replace(" ", "T"));
-      return format(date, "dd MMM yyyy, hh:mm:ss a");
-    } catch {
-      return value;
-    }
+      const date = new Date(str.replace(" ", "T"));
+      if (!isNaN(date.getTime())) return format(date, "dd MMM yyyy, hh:mm:ss a");
+    } catch { /* fall through */ }
   }
 
-  return value;
+  return str;
 };
 
 const StatusCard = memo(({ fieldKey, label, value, isHighlight }: StatusCardProps) => {
@@ -164,20 +164,18 @@ const Monitor = () => {
   const renderStatusCards = () => {
     if (!statusData) return null;
 
-    const allKeys = Object.keys(statusData).filter((k) => statusData[k] !== undefined && statusData[k] !== null);
-    const priority = PRIORITY_KEYS.filter((k) => allKeys.includes(k));
-    const rest = allKeys.filter((k) => !PRIORITY_KEYS.includes(k));
-    const orderedKeys = [...priority, ...rest];
+    const orderedKeys = Object.keys(statusData).filter(
+      (k) => statusData[k] !== undefined && statusData[k] !== null && String(statusData[k]) !== ""
+    );
 
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 sm:p-6">
-        {orderedKeys.map((key, index) => (
+        {orderedKeys.map((key) => (
           <StatusCard
             key={key}
             fieldKey={key}
             label={toLabel(key)}
             value={statusData[key]}
-            isHighlight={index < priority.length}
           />
         ))}
       </div>
