@@ -48,19 +48,18 @@ interface StatusCardProps {
 }
 
 const formatValue = (key: string, value: string | undefined): string => {
-  if (!value) return "N/A";
+  if (value === undefined || value === null || value === "") return "N/A";
+  const str = String(value);
 
-  // Format datetime fields
-  if (key === "SUPERVISOR START TIME" || key === "UPDATED_AT") {
+  // Auto-format any datetime-like value, regardless of key
+  if (isDateLike(str)) {
     try {
-      const date = new Date(value.replace(" ", "T"));
-      return format(date, "dd MMM yyyy, hh:mm:ss a");
-    } catch {
-      return value;
-    }
+      const date = new Date(str.replace(" ", "T"));
+      if (!isNaN(date.getTime())) return format(date, "dd MMM yyyy, hh:mm:ss a");
+    } catch { /* fall through */ }
   }
 
-  return value;
+  return str;
 };
 
 const StatusCard = memo(({ fieldKey, label, value, isHighlight }: StatusCardProps) => {
