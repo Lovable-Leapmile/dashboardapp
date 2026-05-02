@@ -164,9 +164,34 @@ const Monitor = () => {
   const renderStatusCards = () => {
     if (!statusData) return null;
 
-    const orderedKeys = Object.keys(statusData).filter(
+    const PREFERRED_ORDER = [
+      "ROBOT_ID",
+      "SUPERVISOR START TIME",
+      "UPDATED_AT",
+      "UPTIME",
+      "GOTO OPS",
+      "STORE OPS",
+      "RETRIEVE OPS",
+      "NUM HOMINGS",
+      "PLC READS",
+      "PLC WRITES",
+      "PLC RETRIES",
+      "PLC ERRORS",
+      "RECOVERIES MAGNET",
+      "RECOVERIES HORZVERT",
+      "RECOVERIES PUSHPULL",
+      "msg",
+      "SUPERVISOR STATUS",
+    ];
+
+    const availableKeys = Object.keys(statusData).filter(
       (k) => statusData[k] !== undefined && statusData[k] !== null && String(statusData[k]) !== ""
     );
+
+    const orderedKeys = [
+      ...PREFERRED_ORDER.filter((k) => availableKeys.includes(k)),
+      ...availableKeys.filter((k) => !PREFERRED_ORDER.includes(k)),
+    ];
 
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-4 sm:p-6">
