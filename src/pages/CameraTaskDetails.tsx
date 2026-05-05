@@ -25,7 +25,28 @@ interface CameraEvent {
   clip_filename: string;
   camera_device_id: string;
   clip_url: string;
+  last_updated?: string;
+  updated_at?: string;
 }
+
+const formatRelativeTime = (value?: string): string => {
+  if (!value) return "—";
+  const d = new Date(typeof value === "string" ? value.replace(" ", "T") : value);
+  if (isNaN(d.getTime())) return "—";
+  const diffMs = Date.now() - d.getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins} min${mins > 1 ? "s" : ""} ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return "Yesterday";
+  if (days < 30) return `${days} days ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
+  const years = Math.floor(days / 365);
+  return `${years} year${years > 1 ? "s" : ""} ago`;
+};
 
 const CameraTaskDetails = () => {
   useAuthSession();
@@ -153,25 +174,10 @@ const CameraTaskDetails = () => {
       colId: "start_time_relative",
       flex: 1,
       minWidth: 140,
-      valueGetter: (params: any) => params.data?.clip_start_time,
+      valueGetter: (params: any) => params.data?.last_updated || params.data?.updated_at || params.data?.clip_start_time,
       cellRenderer: (params: any) => {
-        const v = params.data?.clip_start_time;
-        if (!v) return "—";
-        const d = new Date(typeof v === "string" ? v.replace(" ", "T") : v);
-        if (isNaN(d.getTime())) return "—";
-        const diffMs = Date.now() - d.getTime();
-        const mins = Math.floor(diffMs / 60000);
-        if (mins < 1) return "Just now";
-        if (mins < 60) return `${mins} min${mins > 1 ? "s" : ""} ago`;
-        const hours = Math.floor(mins / 60);
-        if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-        const days = Math.floor(hours / 24);
-        if (days === 1) return "Yesterday";
-        if (days < 30) return `${days} days ago`;
-        const months = Math.floor(days / 30);
-        if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
-        const years = Math.floor(days / 365);
-        return `${years} year${years > 1 ? "s" : ""} ago`;
+        const updatedValue = params.data?.last_updated || params.data?.updated_at || params.data?.clip_start_time;
+        return formatRelativeTime(updatedValue);
       },
     },
     {
