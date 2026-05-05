@@ -14,7 +14,7 @@ const formatLastUpdated = (value?: string): string => {
   const d = new Date(value);
   if (isNaN(d.getTime())) return "N/A";
   if (isToday(d)) return format(d, "hh:mm a");
-  if (isYesterday(d)) return "Yesterday";
+  // if (isYesterday(d)) return "Yesterday";
   return format(d, "dd MMM yyyy");
 };
 
@@ -29,7 +29,7 @@ const formatRelative = (value?: string): string => {
   const hours = Math.floor(mins / 60);
   if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
   const days = Math.floor(hours / 24);
-  if (days === 1) return "Yesterday";
+  // if (days === 1) return "Yesterday";
   if (days < 7) return `${days} days ago`;
   return formatDistanceToNowStrict(d, { addSuffix: true });
 };
@@ -193,7 +193,9 @@ const Camera = () => {
                     className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 px-4 py-3 cursor-pointer hover:bg-primary/5 transition-colors items-center"
                   >
                     <div className="sm:col-span-5 font-medium text-foreground truncate">{task.task_id}</div>
-                    <div className="sm:col-span-4 text-sm text-muted-foreground">{formatLastUpdated(task.last_updated)}</div>
+                    <div className="sm:col-span-4 text-sm text-muted-foreground">
+                      {formatLastUpdated(task.last_updated)}
+                    </div>
                     <div className="sm:col-span-3">
                       <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
                         <Clock className="h-3 w-3" />
