@@ -55,7 +55,7 @@ const formatValue = (key: string, value: string | undefined): string => {
   if (isDateLike(str)) {
     try {
       const date = new Date(str.replace(" ", "T"));
-      if (!isNaN(date.getTime())) return format(date, "dd MMM yyyy, hh:mm:ss a");
+      if (!isNaN(date.getTime())) return format(date, "d/M/yyyy hh:mm:ss a");
     } catch { /* fall through */ }
   }
 
