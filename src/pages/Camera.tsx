@@ -2,11 +2,37 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { Input } from "@/components/ui/input";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, Clock } from "lucide-react";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { getApiUrl, authenticatedFetch } from "@/lib/api";
 import { getStoredAuthToken } from "@/lib/auth";
 import noRecordsImg from "@/assets/no_records.png";
+import { format, formatDistanceToNowStrict, isToday, isYesterday } from "date-fns";
+
+const formatLastUpdated = (value?: string): string => {
+  if (!value) return "N/A";
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return "N/A";
+  if (isToday(d)) return format(d, "hh:mm a");
+  if (isYesterday(d)) return "Yesterday";
+  return format(d, "dd MMM yyyy");
+};
+
+const formatRelative = (value?: string): string => {
+  if (!value) return "—";
+  const d = new Date(value);
+  if (isNaN(d.getTime())) return "—";
+  const diffMs = Date.now() - d.getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins} min${mins > 1 ? "s" : ""} ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return "Yesterday";
+  if (days < 7) return `${days} days ago`;
+  return formatDistanceToNowStrict(d, { addSuffix: true });
+};
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -153,16 +179,30 @@ const Camera = () => {
               <img src={noRecordsImg} alt="No records" className="w-48 sm:w-[340px]" />
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
-              {filteredTasks.map((task) => (
-                <div
-                  key={task.task_id}
-                  onClick={() => handleTaskClick(task.task_id)}
-                  className="bg-card border border-border rounded-lg p-2 sm:p-3 cursor-pointer hover:bg-primary/5 hover:shadow-md hover:border-primary/30 transition-all duration-200 flex items-center justify-center min-h-[40px]"
-                >
-                  <span className="text-foreground font-medium truncate text-sm sm:text-base">{task.task_id}</span>
-                </div>
-              ))}
+            <div className="bg-card border border-border rounded-lg overflow-hidden">
+              <div className="hidden sm:grid grid-cols-12 gap-4 px-4 py-3 bg-muted/40 border-b border-border text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                <div className="col-span-5">Task ID</div>
+                <div className="col-span-4">Last Updated</div>
+                <div className="col-span-3">When</div>
+              </div>
+              <ul className="divide-y divide-border">
+                {filteredTasks.map((task) => (
+                  <li
+                    key={task.task_id}
+                    onClick={() => handleTaskClick(task.task_id)}
+                    className="grid grid-cols-1 sm:grid-cols-12 gap-2 sm:gap-4 px-4 py-3 cursor-pointer hover:bg-primary/5 transition-colors items-center"
+                  >
+                    <div className="sm:col-span-5 font-medium text-foreground truncate">{task.task_id}</div>
+                    <div className="sm:col-span-4 text-sm text-muted-foreground">{formatLastUpdated(task.last_updated)}</div>
+                    <div className="sm:col-span-3">
+                      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-xs font-medium">
+                        <Clock className="h-3 w-3" />
+                        {formatRelative(task.last_updated)}
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
