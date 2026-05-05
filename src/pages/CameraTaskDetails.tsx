@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import { AgGridReact } from "ag-grid-react";
-import { ColDef, ModuleRegistry, AllCommunityModule } from "ag-grid-community";
+import { ModuleRegistry, AllCommunityModule } from "ag-grid-community";
+import type { ColDef, ICellRendererParams, ValueGetterParams } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz-no-font.css";
 import { Play, Download, ArrowLeft, RefreshCw, ChevronLeft, ChevronRight, Image as ImageIcon } from "lucide-react";
@@ -25,7 +26,33 @@ interface CameraEvent {
   clip_filename: string;
   camera_device_id: string;
   clip_url: string;
+  last_updated?: string;
+  updated_at?: string;
 }
+
+interface CameraTaskSummary {
+  task_id: string | null;
+  last_updated?: string;
+}
+
+const formatRelativeTime = (value?: string): string => {
+  if (!value) return "—";
+  const d = new Date(typeof value === "string" ? value.replace(" ", "T") : value);
+  if (isNaN(d.getTime())) return "—";
+  const diffMs = Date.now() - d.getTime();
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins} min${mins > 1 ? "s" : ""} ago`;
+  const hours = Math.floor(mins / 60);
+  if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
+  const days = Math.floor(hours / 24);
+  if (days === 1) return "Yesterday";
+  if (days < 30) return `${days} days ago`;
+  const months = Math.floor(days / 30);
+  if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
+  const years = Math.floor(days / 365);
+  return `${years} year${years > 1 ? "s" : ""} ago`;
+};
 
 const CameraTaskDetails = () => {
   useAuthSession();
@@ -37,10 +64,12 @@ const CameraTaskDetails = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [taskLastUpdated, setTaskLastUpdated] = useState<string>();
 
   useEffect(() => {
     if (taskId) {
       fetchCameraEvents(taskId);
+      fetchTaskLastUpdated(taskId);
     }
   }, [taskId]);
 
@@ -75,6 +104,24 @@ const CameraTaskDetails = () => {
       console.error("Error fetching camera events:", error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchTaskLastUpdated = async (task_id: string) => {
+    try {
+      const token = getStoredAuthToken();
+      if (!token) return;
+      const response = await authenticatedFetch(getApiUrl(`/cameramanager/camera_events/tasks`), {
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      const task = data.records?.find((record: CameraTaskSummary) => record.task_id === task_id);
+      setTaskLastUpdated(task?.last_updated);
+    } catch (error) {
+      console.error("Error fetching task last updated:", error);
     }
   };
 
@@ -153,25 +200,11 @@ const CameraTaskDetails = () => {
       colId: "start_time_relative",
       flex: 1,
       minWidth: 140,
-      valueGetter: (params: any) => params.data?.clip_start_time,
-      cellRenderer: (params: any) => {
-        const v = params.data?.clip_start_time;
-        if (!v) return "—";
-        const d = new Date(typeof v === "string" ? v.replace(" ", "T") : v);
-        if (isNaN(d.getTime())) return "—";
-        const diffMs = Date.now() - d.getTime();
-        const mins = Math.floor(diffMs / 60000);
-        if (mins < 1) return "Just now";
-        if (mins < 60) return `${mins} min${mins > 1 ? "s" : ""} ago`;
-        const hours = Math.floor(mins / 60);
-        if (hours < 24) return `${hours} hour${hours > 1 ? "s" : ""} ago`;
-        const days = Math.floor(hours / 24);
-        if (days === 1) return "Yesterday";
-        if (days < 30) return `${days} days ago`;
-        const months = Math.floor(days / 30);
-        if (months < 12) return `${months} month${months > 1 ? "s" : ""} ago`;
-        const years = Math.floor(days / 365);
-        return `${years} year${years > 1 ? "s" : ""} ago`;
+      valueGetter: (params: ValueGetterParams<CameraEvent>) =>
+        params.data?.last_updated || params.data?.updated_at || taskLastUpdated || params.data?.clip_start_time,
+      cellRenderer: (params: ICellRendererParams<CameraEvent>) => {
+        const updatedValue = params.data?.last_updated || params.data?.updated_at || taskLastUpdated || params.data?.clip_start_time;
+        return formatRelativeTime(updatedValue);
       },
     },
     {
@@ -195,7 +228,8 @@ const CameraTaskDetails = () => {
     {
       headerName: "View",
       width: 100,
-      cellRenderer: (params: any) => {
+      cellRenderer: (params: ICellRendererParams<CameraEvent>) => {
+        if (!params.data) return null;
         const isVideo = params.data.clip_filename?.toLowerCase().endsWith(".mp4");
         return (
           <button
@@ -223,9 +257,9 @@ const CameraTaskDetails = () => {
     {
       headerName: "Download",
       width: 120,
-      cellRenderer: (params: any) => (
+      cellRenderer: (params: ICellRendererParams<CameraEvent>) => (
         <button
-          onClick={() => handleDownloadClick(params.data.clip_url)}
+          onClick={() => params.data && handleDownloadClick(params.data.clip_url)}
           className="flex items-center justify-center w-full h-full group"
         >
           <div className="p-2 rounded-full bg-primary/10 group-hover:bg-primary group-hover:scale-110 transition-all duration-200">
