@@ -169,16 +169,30 @@ const CameraTaskDetails = () => {
     {
       headerName: "View",
       width: 100,
-      cellRenderer: (params: any) => (
-        <button
-          onClick={() => handlePlayClick(params.data)}
-          className="flex items-center justify-center w-full h-full group"
-        >
-          <div className="p-2 rounded-full bg-primary/10 group-hover:bg-primary group-hover:scale-110 transition-all duration-200">
-            <Play className="h-4 w-4 text-primary group-hover:text-primary-foreground fill-current" />
-          </div>
-        </button>
-      ),
+      cellRenderer: (params: any) => {
+        const isVideo = params.data.clip_filename?.toLowerCase().endsWith(".mp4");
+        return (
+          <button
+            onClick={() => handlePlayClick(params.data)}
+            className="flex items-center justify-center w-full h-full group"
+            title={isVideo ? "Play video" : "View image"}
+          >
+            <div
+              className={`p-2 rounded-full group-hover:scale-110 transition-all duration-200 ${
+                isVideo
+                  ? "bg-primary/10 group-hover:bg-primary"
+                  : "bg-emerald-500/10 group-hover:bg-emerald-500"
+              }`}
+            >
+              {isVideo ? (
+                <Play className="h-4 w-4 text-primary group-hover:text-primary-foreground fill-current" />
+              ) : (
+                <ImageIcon className="h-4 w-4 text-emerald-600 group-hover:text-white" />
+              )}
+            </div>
+          </button>
+        );
+      },
     },
     {
       headerName: "Download",
