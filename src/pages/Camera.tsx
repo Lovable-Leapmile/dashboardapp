@@ -198,12 +198,32 @@ const Camera = () => {
                   <Calendar
                     mode="range"
                     selected={dateRange}
-                    onSelect={setDateRange}
+                    onSelect={(range) => {
+                      setDateRange(range);
+                      if (range?.from && range?.to) {
+                        setDatePickerOpen(false);
+                      }
+                    }}
                     numberOfMonths={2}
                     disabled={(date) => date > new Date()}
                     initialFocus
                     className={cn("p-3 pointer-events-auto")}
                   />
+                  <div className="flex justify-end gap-2 p-2 border-t border-border">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setDateRange(undefined);
+                        setDatePickerOpen(false);
+                      }}
+                    >
+                      Clear
+                    </Button>
+                    <Button size="sm" onClick={() => setDatePickerOpen(false)}>
+                      Close
+                    </Button>
+                  </div>
                 </PopoverContent>
               </Popover>
               {dateRange && (
