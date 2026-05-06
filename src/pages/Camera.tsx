@@ -168,6 +168,51 @@ const Camera = () => {
               />
             </div>
             <div className="flex items-center gap-3">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "h-10 justify-start text-left font-normal gap-2",
+                      !dateRange && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="h-4 w-4" />
+                    {dateRange?.from ? (
+                      dateRange.to ? (
+                        <span className="text-xs sm:text-sm whitespace-nowrap">
+                          {format(dateRange.from, "d/M/yyyy")} - {format(dateRange.to, "d/M/yyyy")}
+                        </span>
+                      ) : (
+                        <span className="text-xs sm:text-sm whitespace-nowrap">
+                          {format(dateRange.from, "d/M/yyyy")}
+                        </span>
+                      )
+                    ) : (
+                      <span className="text-xs sm:text-sm whitespace-nowrap">Filter by date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="range"
+                    selected={dateRange}
+                    onSelect={setDateRange}
+                    numberOfMonths={2}
+                    initialFocus
+                    className={cn("p-3 pointer-events-auto")}
+                  />
+                </PopoverContent>
+              </Popover>
+              {dateRange && (
+                <button
+                  onClick={() => setDateRange(undefined)}
+                  className="p-1 rounded-full hover:bg-accent transition-colors"
+                  title="Clear date filter"
+                >
+                  <X className="h-4 w-4 text-foreground" />
+                </button>
+              )}
               <DropdownMenu>
                 <DropdownMenuTrigger
                   className="h-10 w-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0"
