@@ -84,6 +84,7 @@ const CameraTaskDetails = () => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [taskLastUpdated, setTaskLastUpdated] = useState<string>();
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
 
   const parseEventDate = (value?: string): Date | null => {
     if (!value) return null;
