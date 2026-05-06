@@ -84,6 +84,7 @@ const CameraTaskDetails = () => {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
   const [taskLastUpdated, setTaskLastUpdated] = useState<string>();
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [datePickerOpen, setDatePickerOpen] = useState(false);
 
   const parseEventDate = (value?: string): Date | null => {
     if (!value) return null;
@@ -94,7 +95,7 @@ const CameraTaskDetails = () => {
 
   const filteredEvents = events.filter((event) => {
     if (!dateRange?.from && !dateRange?.to) return true;
-    const d = parseEventDate(event.created_at) || parseEventDate(event.clip_start_time);
+    const d = parseEventDate(event.clip_start_time);
     if (!d) return false;
     if (dateRange.from) {
       const from = new Date(dateRange.from);
@@ -330,7 +331,7 @@ const CameraTaskDetails = () => {
           </h1>
           <TooltipProvider>
             <div className="flex items-center gap-[15px]">
-              <Popover>
+              <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
@@ -358,11 +359,31 @@ const CameraTaskDetails = () => {
                   <Calendar
                     mode="range"
                     selected={dateRange}
-                    onSelect={setDateRange}
+                    onSelect={(range) => {
+                      setDateRange(range);
+                      if (range?.from && range?.to) {
+                        setDatePickerOpen(false);
+                      }
+                    }}
                     numberOfMonths={2}
                     initialFocus
                     className={cn("p-3 pointer-events-auto")}
                   />
+                  <div className="flex justify-end gap-2 p-2 border-t border-border">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setDateRange(undefined);
+                        setDatePickerOpen(false);
+                      }}
+                    >
+                      Clear
+                    </Button>
+                    <Button size="sm" onClick={() => setDatePickerOpen(false)}>
+                      Close
+                    </Button>
+                  </div>
                 </PopoverContent>
               </Popover>
               {dateRange && (
