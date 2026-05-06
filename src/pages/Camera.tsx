@@ -169,7 +169,7 @@ const Camera = () => {
               />
             </div>
             <div className="flex items-center gap-3">
-              <Popover>
+              <Popover open={datePickerOpen} onOpenChange={setDatePickerOpen}>
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
