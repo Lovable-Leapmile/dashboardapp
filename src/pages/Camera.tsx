@@ -117,7 +117,7 @@ const Camera = () => {
     });
 
     setFilteredTasks(sortedTasks);
-  }, [searchQuery, tasks, sortOption]);
+  }, [searchQuery, tasks, sortOption, dateRange]);
 
   const handleSortChange = (value: string) => {
     const newSort = value as SortOption;
