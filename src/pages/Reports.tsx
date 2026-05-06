@@ -10,7 +10,7 @@ import { useAuthSession } from "@/hooks/useAuthSession";
 import { apiGet, withQuery, getApiUrl, authenticatedFetch } from "@/lib/api";
 import noRecordsImage from "@/assets/no_records.png";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RefreshCw, Download } from "lucide-react";
+import { RefreshCw, Download, Camera as CameraIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { dateFilterParams, getDefaultGridProps, createDateColumnDef } from "@/lib/agGridUtils";
 
@@ -103,6 +103,28 @@ const Reports = () => {
       flex: 1.5,
       minWidth: 200,
       valueFormatter: (p) => p.value ?? "N/A",
+    },
+    {
+      headerName: "Camera",
+      field: "camera",
+      flex: 0.6,
+      minWidth: 90,
+      filter: false,
+      sortable: false,
+      cellRenderer: (p: any) => {
+        const trayId = p.data?.tray_id;
+        if (!trayId) return null;
+        return (
+          <button
+            type="button"
+            onClick={() => navigate(`/camera/${trayId}`)}
+            className="inline-flex items-center justify-center h-7 w-7 rounded hover:bg-accent text-primary"
+            title={`View camera for tray ${trayId}`}
+          >
+            <CameraIcon className="h-4 w-4" />
+          </button>
+        );
+      },
     },
   ];
 
