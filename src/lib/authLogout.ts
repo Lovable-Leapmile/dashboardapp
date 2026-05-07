@@ -21,8 +21,12 @@ export const forceLogout = (reason?: string) => {
       console.warn("[auth] Forced logout:", reason);
     } catch {}
   }
-  if (typeof window !== "undefined" && window.location.pathname !== "/") {
-    window.location.replace("/");
+  if (typeof window !== "undefined") {
+    const base = (import.meta.env.VITE_APP_BASE || "/").replace(/\/$/, "") || "/";
+    const target = base === "/" ? "/" : base + "/";
+    if (window.location.pathname !== target && window.location.pathname !== base) {
+      window.location.replace(target);
+    }
   }
 };
 
