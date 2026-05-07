@@ -8,6 +8,14 @@ import { storeAuthToken } from "@/lib/auth";
 import { secureStorage } from "@/lib/secureStorage";
 import { getApiUrl } from "@/lib/api";
 import { Eye, EyeOff } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { useLoginLogo } from "@/hooks/useTheme";
 import loginIllustration from "@/assets/login.gif";
 import defaultLogo from "@/assets/logo.png";
