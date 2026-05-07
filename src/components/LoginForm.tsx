@@ -85,10 +85,22 @@ const LoginForm = () => {
         return;
       }
 
-      const url = getApiUrl(`/user/user/change_password?user_phone=${encodeURIComponent(cpPhone)}&password=${encodeURIComponent(cpNewPassword)}`);
+      const tokenFromValidate = validateData.token;
+      const authHeader = tokenFromValidate
+        ? (String(tokenFromValidate).toLowerCase().startsWith("bearer ")
+            ? String(tokenFromValidate)
+            : `Bearer ${tokenFromValidate}`)
+        : "";
+
+      const url = getApiUrl(`/user/user/change_password`);
       const res = await fetch(url, {
         method: "PATCH",
-        headers: { "accept": "application/json" },
+        headers: {
+          "accept": "application/json",
+          "Content-Type": "application/json",
+          ...(authHeader ? { Authorization: authHeader } : {}),
+        },
+        body: JSON.stringify({ user_phone: cpPhone, password: cpNewPassword }),
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok && (data.status === "success" || data.status_code === 200)) {
