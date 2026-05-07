@@ -8,6 +8,14 @@ import { storeAuthToken } from "@/lib/auth";
 import { secureStorage } from "@/lib/secureStorage";
 import { getApiUrl } from "@/lib/api";
 import { Eye, EyeOff } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { useLoginLogo } from "@/hooks/useTheme";
 import loginIllustration from "@/assets/login.gif";
 import defaultLogo from "@/assets/logo.png";
@@ -17,11 +25,89 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [cpPhone, setCpPhone] = useState("");
+  const [cpOldPassword, setCpOldPassword] = useState("");
+  const [cpNewPassword, setCpNewPassword] = useState("");
+  const [cpConfirmPassword, setCpConfirmPassword] = useState("");
+  const [cpLoading, setCpLoading] = useState(false);
   const phoneInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   const dynamicLogo = useLoginLogo();
   const logo = dynamicLogo || defaultLogo;
+
+  const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_\-+=/\\[\];'`~]).{6,}$/;
+
+  const resetChangePasswordForm = () => {
+    setCpPhone("");
+    setCpOldPassword("");
+    setCpNewPassword("");
+    setCpConfirmPassword("");
+  };
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (cpPhone.length !== 10) {
+      toast({ title: "Invalid Phone Number", description: "Phone number must be exactly 10 digits", variant: "destructive" });
+      return;
+    }
+
+    // Validate old password by calling /user/validate
+    setCpLoading(true);
+    try {
+      const validateRes = await fetch(getApiUrl(`/user/validate`), {
+        method: "POST",
+        headers: { "accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({ user_phone: cpPhone, password: cpOldPassword }),
+      });
+      const validateData = await validateRes.json();
+      if (!validateRes.ok || !validateData.user_id) {
+        toast({ title: "Validation Failed", description: validateData.message || "Old password or phone is incorrect", variant: "destructive" });
+        setCpLoading(false);
+        return;
+      }
+
+      if (cpNewPassword !== cpConfirmPassword) {
+        toast({ title: "Password Mismatch", description: "New password and re-entered password do not match", variant: "destructive" });
+        setCpLoading(false);
+        return;
+      }
+
+      if (!passwordRegex.test(cpNewPassword)) {
+        toast({
+          title: "Weak Password",
+          description: "Password must contain uppercase, special characters, numbers and minimum 6 digits",
+          variant: "destructive",
+        });
+        setCpLoading(false);
+        return;
+      }
+
+      const url = getApiUrl(`/user/user/change_password?user_phone=${encodeURIComponent(cpPhone)}&password=${encodeURIComponent(cpNewPassword)}`);
+      const res = await fetch(url, {
+        method: "PATCH",
+        headers: { "accept": "application/json" },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && (data.status === "success" || data.status_code === 200)) {
+        toast({ title: "Success", description: data.message || "Password changed successfully" });
+        setShowChangePassword(false);
+        resetChangePasswordForm();
+      } else {
+        toast({
+          title: "Failed",
+          description: data.message || "Not authenticated",
+          variant: "destructive",
+        });
+      }
+    } catch {
+      toast({ title: "Error", description: "Failed to connect to server", variant: "destructive" });
+    } finally {
+      setCpLoading(false);
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -201,8 +287,104 @@ const LoginForm = () => {
           >
             {isLoading ? "Logging in..." : "Login"}
           </Button>
+
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => setShowChangePassword(true)}
+              className="text-sm text-primary hover:underline font-medium"
+            >
+              Change Password
+            </button>
+          </div>
         </form>
       </div>
+
+      {/* Change Password Dialog */}
+      <Dialog
+        open={showChangePassword}
+        onOpenChange={(open) => {
+          setShowChangePassword(open);
+          if (!open) resetChangePasswordForm();
+        }}
+      >
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Change Password</DialogTitle>
+            <DialogDescription>
+              Enter your mobile number and old password to verify, then set a new password.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleChangePassword} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="cp-phone">Mobile Number</Label>
+              <Input
+                id="cp-phone"
+                type="tel"
+                value={cpPhone}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/\D/g, "");
+                  if (v.length <= 10) setCpPhone(v);
+                }}
+                placeholder="Enter mobile number"
+                maxLength={10}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="cp-old">Old Password</Label>
+              <Input
+                id="cp-old"
+                type="password"
+                value={cpOldPassword}
+                onChange={(e) => setCpOldPassword(e.target.value)}
+                placeholder="Enter old password"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="cp-new">New Password</Label>
+              <Input
+                id="cp-new"
+                type="password"
+                value={cpNewPassword}
+                onChange={(e) => setCpNewPassword(e.target.value)}
+                placeholder="Enter new password"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="cp-confirm">Re-enter New Password</Label>
+              <Input
+                id="cp-confirm"
+                type="password"
+                value={cpConfirmPassword}
+                onChange={(e) => setCpConfirmPassword(e.target.value)}
+                placeholder="Re-enter new password"
+                required
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Password must contain uppercase, special characters, numbers &amp; minimum 6 digits
+              </p>
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setShowChangePassword(false);
+                  resetChangePasswordForm();
+                }}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={cpLoading}>
+                {cpLoading ? "Updating..." : "Update Password"}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <div className="mt-6 text-center text-xs text-gray-500 space-y-1">
