@@ -39,11 +39,17 @@ const LoginForm = () => {
     setIsLoading(true);
     
     try {
-      // Backend only supports GET - credentials sent via query params
-      // Use VITE_BASE_URL via getApiUrl instead of hosted origin
-      const response = await fetch(
-        getApiUrl(`/user/validate?user_phone=${encodeURIComponent(mobileNumber)}&password=${encodeURIComponent(password)}`)
-      );
+      const response = await fetch(getApiUrl(`/user/validate`), {
+        method: "POST",
+        headers: {
+          "accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_phone: mobileNumber,
+          password: password,
+        }),
+      });
       const data = await response.json();
 
       if (response.ok && data.user_id && data.user_name) {
