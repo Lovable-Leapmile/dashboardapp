@@ -48,17 +48,19 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
   const currentLogo = dynamicLogo || headerLogo;
 
   const handleLogout = () => {
-    // Clear all localStorage
+    // Clear all localStorage (includes encrypted secureStorage items)
     localStorage.clear();
     // Clear all sessionStorage
     sessionStorage.clear();
-    // Clear all cookies
+    // Clear all cookies including domain-scoped ones
     document.cookie.split(";").forEach((cookie) => {
       const eqPos = cookie.indexOf("=");
       const name = eqPos > -1 ? cookie.substring(0, eqPos).trim() : cookie.trim();
       document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=${window.location.hostname}`;
     });
-    navigate("/");
+    // Force full page reload to clear all React state, timers, and caches
+    window.location.replace("/");
   };
 
   const handleLogoutClick = () => {
