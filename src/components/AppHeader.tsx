@@ -1,3 +1,4 @@
+import { forceLogout } from "@/lib/authLogout";
 import { useNavigate } from "react-router-dom";
 import { ScrollText, Activity, LogOut, Camera, Menu, Home, ClipboardList, Video, FileText, Settings, Box, Layers, Grid3X3, Building2, TrendingUp, Download, Shield, MapPin } from "lucide-react";
 import { useState } from "react";
