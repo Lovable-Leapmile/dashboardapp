@@ -25,6 +25,9 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showCpOld, setShowCpOld] = useState(false);
+  const [showCpNew, setShowCpNew] = useState(false);
+  const [showCpConfirm, setShowCpConfirm] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [cpPhone, setCpPhone] = useState("");
   const [cpOldPassword, setCpOldPassword] = useState("");
