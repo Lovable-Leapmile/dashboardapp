@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
 import LoginForm from "@/components/LoginForm";
-import backgroundImage from "@/assets/dashboard_login_bg.png";
 import { isSessionValid } from "@/hooks/useAuthSession";
 import { getStoredAuthToken, isTokenExpired } from "@/lib/auth";
 
