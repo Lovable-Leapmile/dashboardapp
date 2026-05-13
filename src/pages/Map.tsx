@@ -3,10 +3,10 @@ import { MapPin } from "lucide-react";
 
 const Map = () => {
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
+    <div className="min-h-screen bg-[#fafafa]">
       <AppHeader selectedTab="" />
 
-      <main className="flex flex-col items-center justify-center p-8" style={{ minHeight: "calc(100vh - 110px)" }}>
+      <main className="flex flex-col items-center justify-center p-8 min-h-[calc(100vh-110px)]">
         <div className="flex flex-col items-center justify-center text-center space-y-6">
           {/* Animated Map Icon */}
           <div className="relative">

@@ -253,7 +253,7 @@ const Home = () => {
         method: "GET",
         headers: {
           Authorization: token,
-          "Content-Type": "application/json",
+"Content-Type": "application/json",
         },
       });
 
@@ -343,7 +343,7 @@ const Home = () => {
 
 
   return (
-    <div className="flex flex-col" style={{ backgroundColor: "#fafafa" }}>
+    <div className="flex flex-col bg-[#fafafa]">
       <AppHeader selectedTab="Robot" />
 
       <main className="flex-1 px-2 sm:px-4 py-2">
@@ -365,7 +365,7 @@ const Home = () => {
                 {/* Row 1 Section - Only show if more than 1 row */}
                 {robotNumRows > 1 && (
               <div className="flex flex-col items-center p-3 border-r border-gray-200">
-                <div className="flex items-center gap-4 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                <div className="flex items-center gap-4 text-xs font-semibold text-center mb-2 text-[#351c75]">
                   {robotNumDepths > 1 && <span className="text-[10px] font-medium text-muted-foreground">Depth-1</span>}
                   <span>Row 1</span>
                   {robotNumDepths > 1 && <span className="text-[10px] font-medium text-muted-foreground">Depth-0</span>}
@@ -398,7 +398,7 @@ const Home = () => {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-center mb-2 cursor-help" style={{ color: "#351c75" }}>
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-center mb-2 cursor-help text-[#351c75]">
                         <span>Shuttle</span>
                         <span className="text-[9px] font-medium text-muted-foreground">
                           ({shuttleSpeed > 0 ? `${shuttleSpeed.toFixed(1)} r/s` : "Idle"})
@@ -584,7 +584,7 @@ const Home = () => {
 
               {/* Row 0 Section */}
               <div className="flex flex-col items-center p-3">
-                <div className="flex items-center gap-4 text-xs font-semibold text-center mb-2" style={{ color: "#351c75" }}>
+                <div className="flex items-center gap-4 text-xs font-semibold text-center mb-2 text-[#351c75]">
                   {robotNumDepths > 1 && <span className="text-[10px] font-medium text-muted-foreground">Depth-0</span>}
                   <span>Row 0</span>
                   {robotNumDepths > 1 && <span className="text-[10px] font-medium text-muted-foreground">Depth-1</span>}

@@ -53,7 +53,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
         }}
       >
         <div className="flex items-center justify-between mb-6">
-          <div className="text-xl font-semibold" style={{ color: '#351c75' }}>
+          <div className="text-xl font-semibold text-[#351c75]">
             Slot Details
           </div>
           {isBlocked && (
@@ -69,7 +69,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
             <CardContent className="py-3 px-4">
               <div className="flex items-center justify-between gap-3">
                 <span className="text-sm font-medium text-muted-foreground min-w-fit">Slot ID:</span>
-                <span className="text-base font-semibold flex-1 text-right" style={{ color: '#351c75' }}>
+                <span className="text-base font-semibold flex-1 text-right text-[#351c75]">
                   {slotDetails.slot_id}
                 </span>
                 <button
@@ -77,7 +77,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                   className="p-2 hover:bg-muted rounded-md transition-colors flex-shrink-0"
                   aria-label="Show QR Code"
                 >
-                  <QrCode className="h-5 w-5" style={{ color: '#351c75' }} />
+                  <QrCode className="h-5 w-5 text-[#351c75]" />
                 </button>
               </div>
             </CardContent>
@@ -93,7 +93,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-muted-foreground">Tray ID:</span>
                     </div>
-                    <span className="text-base font-semibold flex-1 text-right" style={{ color: '#351c75' }}>
+                    <span className="text-base font-semibold flex-1 text-right text-[#351c75]">
                       {slotDetails.tray_id}
                     </span>
                     <button
@@ -101,7 +101,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                       className="p-2 hover:bg-muted rounded-md transition-colors flex-shrink-0"
                       aria-label="Show QR Code"
                     >
-                      <QrCode className="h-5 w-5" style={{ color: '#351c75' }} />
+                      <QrCode className="h-5 w-5 text-[#351c75]" />
                     </button>
                   </div>
                   
@@ -110,7 +110,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-muted-foreground">Station:</span>
                     </div>
-                    <span className="text-base font-semibold flex-1 text-right" style={{ color: '#351c75' }}>
+                    <span className="text-base font-semibold flex-1 text-right text-[#351c75]">
                       {slotDetails.slot_name}
                     </span>
                     <button
@@ -118,7 +118,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                       className="p-2 hover:bg-muted rounded-md transition-colors flex-shrink-0"
                       aria-label="Show QR Code"
                     >
-                      <QrCode className="h-5 w-5" style={{ color: '#351c75' }} />
+                      <QrCode className="h-5 w-5 text-[#351c75]" />
                     </button>
                   </div>
                 </div>
@@ -134,7 +134,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-muted-foreground min-w-fit">Tray ID:</span>
                   </div>
-                  <span className="text-base font-semibold flex-1 text-right" style={{ color: '#351c75' }}>
+                  <span className="text-base font-semibold flex-1 text-right text-[#351c75]">
                     {slotDetails.tray_id}
                   </span>
                   <button
@@ -142,7 +142,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                     className="p-2 hover:bg-muted rounded-md transition-colors flex-shrink-0"
                     aria-label="Show QR Code"
                   >
-                    <QrCode className="h-5 w-5" style={{ color: '#351c75' }} />
+                    <QrCode className="h-5 w-5 text-[#351c75]" />
                   </button>
                 </div>
               </CardContent>
@@ -157,7 +157,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-medium text-muted-foreground min-w-fit">Station:</span>
                   </div>
-                  <span className="text-base font-semibold flex-1 text-right" style={{ color: '#351c75' }}>
+                  <span className="text-base font-semibold flex-1 text-right text-[#351c75]">
                     {slotDetails.slot_name}
                   </span>
                   <button
@@ -165,7 +165,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
                     className="p-2 hover:bg-muted rounded-md transition-colors flex-shrink-0"
                     aria-label="Show QR Code"
                   >
-                    <QrCode className="h-5 w-5" style={{ color: '#351c75' }} />
+                    <QrCode className="h-5 w-5 text-[#351c75]" />
                   </button>
                 </div>
               </CardContent>
@@ -212,7 +212,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
         >
           {/* Row 1: Title with close button */}
           <div className="flex items-center justify-center relative px-6 pt-6 pb-2.5">
-            <DialogTitle className="text-lg font-semibold text-center" style={{ color: '#351c75' }}>
+            <DialogTitle className="text-lg font-semibold text-center text-[#351c75]">
               {qrTitle}
             </DialogTitle>
           </div>
@@ -232,7 +232,7 @@ const SlotDetailsPanel = ({ slotDetails, isVisible }: SlotDetailsPanelProps) => 
 
           {/* Row 3: Value Text */}
           <div className="flex items-center justify-center px-6 pb-6 pt-2">
-            <div className="text-center text-sm font-bold" style={{ color: '#351c75' }}>
+            <div className="text-center text-sm font-bold text-[#351c75]">
               {qrValue}
             </div>
           </div>
