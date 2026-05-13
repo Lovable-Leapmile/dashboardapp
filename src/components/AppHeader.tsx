@@ -74,14 +74,14 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
 
   const handleTabClick = (tab: string) => {
     const routes: { [key: string]: string } = {
-      "Robot": "/home",
-      "Racks": "/racks",
-      "Trays": "/trays",
-      "Slots": "/slots",
-      "Station": "/station",
-      "Extremes": "/extremes",
-      "APK Link": "/apk-link",
-      "Admin Console": "/admin-console"
+"Robot": "/home",
+"Racks": "/racks",
+"Trays": "/trays",
+"Slots": "/slots",
+"Station": "/station",
+"Extremes": "/extremes",
+"APK Link": "/apk-link",
+"Admin Console": "/admin-console"
     };
     if (routes[tab]) {
       navigate(routes[tab]);
@@ -146,7 +146,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
     <div className="sticky top-0 z-50">
       <header 
         className="flex items-center justify-between px-2 sm:px-4 bg-primary"
-        style={{ height: '55px' }}
+        className="h-[55px]"
       >
         <div className="flex items-center gap-2 sm:gap-[10px]">
           {/* Mobile Hamburger Menu */}
@@ -154,7 +154,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
             <SheetTrigger asChild>
               <button 
                 className="md:hidden rounded-lg flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity w-9 h-9"
-                style={{ backgroundColor: 'rgba(255, 255, 255, 0.15)' }}
+                className="bg-white/15"
                 aria-label="Open menu"
               >
                 <Menu className="text-white w-5 h-5" />
@@ -303,7 +303,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
                 <TooltipTrigger asChild>
                   <div 
                     className="rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/30 w-8 h-8 sm:w-10 sm:h-10"
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)' }}
+                    className="bg-white/20"
                     onClick={handleScreenshot}
                   >
                     <Camera className="text-white w-4 h-4 sm:w-[18px] sm:h-[18px]" />
@@ -373,7 +373,7 @@ const AppHeader = ({ selectedTab, isTasksPage, activeTaskTab, isMonitorPage, isC
               <TooltipTrigger asChild>
                 <div 
                   className="hidden sm:flex rounded-full items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:bg-white/30 w-10 h-10"
-                  style={{ backgroundColor: 'rgba(255, 255, 255, 0.20)' }}
+                  className="bg-white/20"
                   onClick={handleLogoutClick}
                 >
                   <LogOut className="text-white w-[18px] h-[18px]" />

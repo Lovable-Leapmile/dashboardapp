@@ -77,8 +77,8 @@ const LoginForm = () => {
       const validateRes = await fetch(getApiUrl(`/user/validate`), {
         method: "POST",
         headers: {
-          "accept": "application/json",
-          "Content-Type": "application/json",
+"accept": "application/json",
+"Content-Type": "application/json",
         },
         body: JSON.stringify({
           user_phone: cpPhone,
@@ -126,9 +126,9 @@ const LoginForm = () => {
       const res = await fetch(url, {
         method: "PATCH",
         headers: {
-          "accept": "application/json",
-          "Content-Type": "application/json",
-          "Authorization": authHeader,
+"accept": "application/json",
+"Content-Type": "application/json",
+"Authorization": authHeader,
         },
         body: JSON.stringify({
           user_phone: cpPhone,
@@ -174,8 +174,8 @@ const LoginForm = () => {
       const response = await fetch(getApiUrl(`/user/validate`), {
         method: "POST",
         headers: {
-          "accept": "application/json",
-          "Content-Type": "application/json",
+"accept": "application/json",
+"Content-Type": "application/json",
         },
         body: JSON.stringify({
           user_phone: mobileNumber,
@@ -233,7 +233,7 @@ const LoginForm = () => {
           src={logo} 
           alt="Leapmile Robotics" 
           className="object-contain drop-shadow-2xl"
-          style={{ width: '220px' }}
+          className="w-[220px]"
         />
       </div>
 

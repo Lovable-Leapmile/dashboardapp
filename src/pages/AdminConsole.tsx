@@ -56,12 +56,12 @@ const AdminConsole = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#fafafa" }}>
+    <div className="min-h-screen bg-[#fafafa]">
       <AppHeader selectedTab="Admin Console" />
 
       <main className="p-2 sm:p-4">
         {hasError || !adminUrl ? (
-          <div className="flex items-center justify-center animate-fade-in" style={{ height: "calc(100vh - 130px)" }}>
+          <div className="flex items-center justify-center animate-fade-in h-[calc(100vh-130px)]">
             <div className="flex flex-col items-center justify-center text-center space-y-6">
               {/* Animated Settings Icon */}
               <div className="relative">
