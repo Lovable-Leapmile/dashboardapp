@@ -358,13 +358,7 @@ const Home = () => {
                       {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                         <div
                           key={`row1-depth${depthIdx}-rack${rackIdx}`}
-                          className={`flex items-center justify-center text-xs sm:text-sm font-medium w-[60px] h-[22px] sm:w-[75px] sm:h-[25px] ${isSlotHighlighted(1, rackIdx, depthIdx) ? "animate-pulse-glow" : ""}`}
-                          style={{
-                            ...getSlotHighlightStyles(1, rackIdx, depthIdx),
-                            borderRadius: "4px",
-                            color: "#351c75",
-                            transition: "background-color 0.3s ease-in-out, border 0.3s ease-in-out",
-                          }}
+                          className={`flex items-center justify-center text-xs sm:text-sm font-medium w-[60px] h-[22px] sm:w-[75px] sm:h-[25px] rounded text-[#351c75] transition-colors duration-300 ${getSlotHighlightClass(1, rackIdx, depthIdx)} ${isSlotHighlighted(1, rackIdx, depthIdx) ? "animate-pulse-glow" : ""}`}
                         >
                           {rackIdx}
                         </div>
@@ -518,11 +512,7 @@ const Home = () => {
                       className="absolute -bottom-4 flex items-center gap-1"
                     >
                       <span
-                        className="w-2 h-2 rounded-full"
-                        style={{
-                          backgroundColor: getStatusColor(shuttleState.shuttle_action).bg,
-                          border: `2px solid ${getStatusColor(shuttleState.shuttle_action).border}`,
-                        }}
+                        className={`w-2 h-2 rounded-full status-dot ${getStatusClass(shuttleState.shuttle_action)}`}
                       />
                       {shuttleState.shuttle_action && (
                         <span
@@ -577,13 +567,7 @@ const Home = () => {
                       {Array.from({ length: robotNumRacks }, (_, rackIdx) => (
                         <div
                           key={`row0-depth${depthIdx}-rack${rackIdx}`}
-                          className={`flex items-center justify-center text-xs sm:text-sm font-medium w-[60px] h-[22px] sm:w-[75px] sm:h-[25px] ${isSlotHighlighted(0, rackIdx, depthIdx) ? "animate-pulse-glow" : ""}`}
-                          style={{
-                            ...getSlotHighlightStyles(0, rackIdx, depthIdx),
-                            borderRadius: "4px",
-                            color: "#351c75",
-                            transition: "background-color 0.3s ease-in-out, border 0.3s ease-in-out",
-                          }}
+                          className={`flex items-center justify-center text-xs sm:text-sm font-medium w-[60px] h-[22px] sm:w-[75px] sm:h-[25px] rounded text-[#351c75] transition-colors duration-300 ${getSlotHighlightClass(0, rackIdx, depthIdx)} ${isSlotHighlighted(0, rackIdx, depthIdx) ? "animate-pulse-glow" : ""}`}
                         >
                           {rackIdx}
                         </div>
@@ -617,11 +601,7 @@ const Home = () => {
                       >
                         <div className="flex items-center gap-1 text-[10px]">
                           <span
-                            className="w-1.5 h-1.5 rounded-full shrink-0"
-                            style={{
-                              backgroundColor: getStatusColor(item.action).bg,
-                              border: `1.5px solid ${getStatusColor(item.action).border}`,
-                            }}
+                            className={`w-1.5 h-1.5 rounded-full shrink-0 status-dot-small ${getStatusClass(item.action)}`}
                           />
                           <span className="font-medium text-foreground">{item.action}</span>
                           <span className="text-muted-foreground ml-auto text-[9px]">
