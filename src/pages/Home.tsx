@@ -337,10 +337,6 @@ const Home = () => {
             <div 
               ref={rackContainerRef}
               className="overflow-x-hidden scroll-smooth scrollbar-hide rounded-lg mx-auto lg:mx-0"
-              style={{ 
-                scrollbarWidth: 'none',
-                msOverflowStyle: 'none',
-              }}
             >
               {/* Combined Row 1, Shuttle Movement, and Row 0 with borders */}
               <div className="inline-flex bg-white rounded-lg border border-gray-200 shadow-sm">
@@ -426,44 +422,15 @@ const Home = () => {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <div 
-                  className="flex flex-col justify-start"
-                  style={{ 
-                    minWidth: "70px",
-                    position: "relative",
-                    height: `${getTrackHeight()}px`,
-                  }}
-                >
+                <div className={`flex flex-col justify-start shuttle-track track-height-${robotNumRacks}`}>
                   {/* Vertical track line - spans same height as rows */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      left: "50%",
-                      top: 0,
-                      height: `${getTrackHeight()}px`,
-                      width: "2px",
-                      transform: "translateX(-50%)",
-                      backgroundColor: "#6b7280",
-                      opacity: 0.25,
-                      zIndex: 0,
-                    }}
-                  />
+                  <div className={`shuttle-track-line track-height-${robotNumRacks}`} />
 
                 {/* Single animated shuttle */}
                 {isShuttleVisible() ? (
                   <div
                     ref={shuttleRef}
-                    className="flex flex-col items-center justify-center"
-                    style={{
-                      position: "absolute",
-                      left: "50%",
-                      top: 0,
-                      transform: `translate(-50%, ${animatedRackPosition}px)`,
-                      transition: "transform 1.5s cubic-bezier(0.25, 0.1, 0.25, 1)",
-                      height: "25px",
-                      zIndex: 1,
-                      willChange: "transform",
-                    }}
+                    className={`flex flex-col items-center justify-center shuttle-marker shuttle-rack-${Math.round(animatedRackPosition / (SLOT_HEIGHT + SLOT_GAP))}`}
                   >
                     <TooltipProvider>
                       <Tooltip>
@@ -471,12 +438,7 @@ const Home = () => {
                           <img
                             src={getShuttleImage()}
                             alt="shuttle"
-                            className="cursor-pointer relative z-10"
-                            style={{
-                              width: "60px",
-                              height: "25px",
-                              objectFit: "contain",
-                            }}
+                            className="cursor-pointer relative z-10 w-[60px] h-[25px] object-contain"
                           />
                         </TooltipTrigger>
                         <TooltipContent 
@@ -516,10 +478,7 @@ const Home = () => {
                       />
                       {shuttleState.shuttle_action && (
                         <span
-                          className="text-[8px] font-medium text-primary whitespace-nowrap"
-                          style={{
-                            textShadow: "0 0 2px rgba(255,255,255,0.8)",
-                          }}
+                          className="text-[8px] font-medium text-primary whitespace-nowrap shuttle-status-label"
                         >
                           {shuttleState.shuttle_action}
                         </span>
@@ -529,25 +488,12 @@ const Home = () => {
                 ) : (
                   /* Fallback: Show es-left.png on first rack when API returns null/404 */
                   <div
-                    className="flex flex-col items-center justify-center"
-                    style={{
-                      position: "absolute",
-                      left: "50%",
-                      top: 0,
-                      transform: `translate(-50%, ${calculateYPosition(0)}px)`,
-                      height: "25px",
-                      zIndex: 1,
-                    }}
+                    className="flex flex-col items-center justify-center shuttle-marker shuttle-rack-0"
                   >
                     <img
                       src={esRight}
                       alt="shuttle"
-                      className="relative z-10"
-                      style={{
-                        width: "60px",
-                        height: "25px",
-                        objectFit: "contain",
-                      }}
+                      className="relative z-10 w-[60px] h-[25px] object-contain"
                     />
                   </div>
                 )}
