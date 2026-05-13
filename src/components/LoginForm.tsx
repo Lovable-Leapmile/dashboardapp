@@ -232,8 +232,7 @@ const LoginForm = () => {
         <img 
           src={logo} 
           alt="Leapmile Robotics" 
-          className="object-contain drop-shadow-2xl"
-          className="w-[220px]"
+          className="object-contain drop-shadow-2xl w-[220px]"
         />
       </div>
 
