@@ -463,3 +463,49 @@ All colors MUST be HSL.
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.login-bg-image {
+  background-image: url("/src/assets/dashboard_login_bg.png");
+}
+
+.animation-duration-1500 {
+  animation-duration: 1.5s;
+}
+
+.animation-duration-2000 {
+  animation-duration: 2s;
+}
+
+.animation-duration-8000 {
+  animation-duration: 8s;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-150 {
+  animation-delay: 150ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+.wip-frame {
+  height: calc(100vh - 130px);
+  min-height: 400px;
+}
+
+.mobile-sheet-scroll {
+  max-height: calc(100vh - 65px);
+}
+
+.subnav-bar {
+  height: 55px;
+  background-color: hsl(0 0% 93%);
+}
+
+.subnav-link {
+  color: hsl(0 0% 33%);
+}
