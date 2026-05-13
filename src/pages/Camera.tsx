@@ -237,8 +237,7 @@ const Camera = () => {
               )}
               <DropdownMenu>
                 <DropdownMenuTrigger
-                  className="h-10 w-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0"
-                  className="bg-[#351C75]/15"
+                  className="h-10 w-10 rounded-full flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 shrink-0 bg-[#351C75]/15"
                   aria-label="Toggle filters"
                 >
                   <SlidersHorizontal className="h-[18px] w-[18px] text-[#351c75]" />
