@@ -2,6 +2,114 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html[data-theme="LEAPMILE_UI"] {
+    --primary: 266 60% 29%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 268 42% 62%;
+    --accent-foreground: 0 0% 100%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 266 60% 29%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --success: 142 76% 36%;
+    --warning: 38 92% 50%;
+    --login-overlay: 145 40% 16%;
+    --login-title: 268 42% 62%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+    --ag-grid-header: 268 42% 62%;
+  }
+
+  html[data-theme="BIAL_UI"],
+  html[data-theme="AMS_UI"] {
+    --primary: 204 79% 20%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 190 64% 34%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 190 64% 34%;
+    --accent-foreground: 0 0% 100%;
+    --background: 0 0% 100%;
+    --foreground: 210 13% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 13% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 13% 12%;
+    --muted: 210 22% 96%;
+    --muted-foreground: 212 10% 38%;
+    --border: 210 18% 84%;
+    --input: 210 18% 84%;
+    --ring: 204 79% 20%;
+    --destructive: 0 66% 47%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 132 49% 35%;
+    --warning: 43 100% 51%;
+    --login-overlay: 204 80% 16%;
+    --login-title: 190 64% 34%;
+    --sidebar-background: 196 43% 93%;
+    --sidebar-foreground: 204 80% 16%;
+    --sidebar-primary: 204 79% 20%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 196 43% 93%;
+    --sidebar-accent-foreground: 204 80% 16%;
+    --sidebar-border: 210 18% 84%;
+    --sidebar-ring: 190 64% 34%;
+    --ag-grid-header: 204 79% 20%;
+  }
+
+  html[data-theme="DHL_UI"] {
+    --primary: 48 100% 50%;
+    --primary-foreground: 0 0% 10%;
+    --secondary: 357 95% 43%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 357 95% 43%;
+    --accent-foreground: 0 0% 100%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 38%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
+    --ring: 48 100% 50%;
+    --destructive: 0 66% 47%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 123 46% 34%;
+    --warning: 37 95% 56%;
+    --login-overlay: 356 100% 32%;
+    --login-title: 48 100% 50%;
+    --sidebar-background: 49 100% 90%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 357 95% 43%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 49 100% 90%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 88%;
+    --sidebar-ring: 48 100% 50%;
+    --ag-grid-header: 357 95% 43%;
+  }
+}
+
 /* Self-hosted Roboto (no external network calls) */
 @font-face {
   font-family: "Roboto";
