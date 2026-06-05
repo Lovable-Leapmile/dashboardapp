@@ -202,11 +202,11 @@ export const postProcessAgGridPopup = (params: PostProcessPopupParams) => {
       popupEl.style.maxWidth = `calc(100vw - ${margin * 2}px)`;
       popupEl.style.overflowX = "auto";
 
-    const popupRect = popupEl.getBoundingClientRect();
+      const popupRect = popupEl.getBoundingClientRect();
 
-    // If we have a source element, anchor to it (this fixes "wrong position" issues)
-    if (sourceEl?.getBoundingClientRect) {
-      const sourceRect = sourceEl.getBoundingClientRect();
+      // If we have a source element, anchor to it (this fixes "wrong position" issues)
+      if (sourceEl?.getBoundingClientRect) {
+        const sourceRect = sourceEl.getBoundingClientRect();
 
       // Default: open below, left-aligned with the source
       let left = sourceRect.left;
@@ -231,12 +231,12 @@ export const postProcessAgGridPopup = (params: PostProcessPopupParams) => {
       popupEl.style.right = "auto";
       popupEl.style.bottom = "auto";
       popupEl.style.transform = "none";
-      return;
-    }
+        return;
+      }
 
-    // Fallback: just clamp current position into the viewport
-    const desiredLeft = clamp(popupRect.left, margin, window.innerWidth - popupRect.width - margin);
-    const desiredTop = clamp(popupRect.top, margin, window.innerHeight - popupRect.height - margin);
+      // Fallback: just clamp current position into the viewport
+      const desiredLeft = clamp(popupRect.left, margin, window.innerWidth - popupRect.width - margin);
+      const desiredTop = clamp(popupRect.top, margin, window.innerHeight - popupRect.height - margin);
 
     popupEl.style.left = `${desiredLeft + window.scrollX}px`;
     popupEl.style.top = `${desiredTop + window.scrollY}px`;
