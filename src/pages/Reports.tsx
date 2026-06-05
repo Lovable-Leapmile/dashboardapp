@@ -504,7 +504,7 @@ const Reports = () => {
 
     if (data.status === "success") {
       return (data.records || []).map((item: any) => ({
-        transaction_date: formatDateTime(item.updated_at),
+        transaction_date: item.updated_at,
         order_ref_id: item.order_ref,
         activity: item.activity,
         item_id: item.item_id,
