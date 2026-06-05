@@ -412,7 +412,7 @@ const Reports = () => {
 
         if (!trayMap[trayId]) {
           trayMap[trayId] = {
-            transaction_date: formatDateTime(item.updated_at),
+            transaction_date: item.updated_at,
             tray_id: trayId,
             tray_status: item.tray_status,
             division: item.division,
