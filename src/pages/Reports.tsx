@@ -187,7 +187,7 @@ const Reports = () => {
 
   // Tray Transaction columns (matching Python: Transaction Date, Tray ID, Tray Status, Division, Tray Weight (kg), Tray Height, Number of Items, Total Available Quantity, Has Item)
   const trayTransactionColumns: ColDef[] = [
-    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: (p) => p.value ?? "N/A" }),
+    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: dateValueFormatter }),
     { field: "tray_id", headerName: "Tray ID", flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" },
     {
       field: "tray_status",
