@@ -171,7 +171,10 @@ const agGridCspSafeIcons: Record<string, string> = {
   smallRight: createGridIcon("<path d='m10 6 6 6-6 6' />"),
 };
 
-const clamp = (val: number, min: number, max: number) => Math.min(Math.max(val, min), max);
+const clamp = (val: number, min: number, max: number) => {
+  if (max < min) return min;
+  return Math.min(Math.max(val, min), max);
+};
 
 /**
  * Reposition popups so they:
@@ -188,6 +191,11 @@ export const postProcessAgGridPopup = (params: PostProcessPopupParams) => {
     if (!popupEl) return;
 
     const margin = 8;
+    popupEl.style.maxHeight = `calc(100vh - ${margin * 2}px)`;
+    popupEl.style.overflowY = "auto";
+    popupEl.style.maxWidth = `calc(100vw - ${margin * 2}px)`;
+    popupEl.style.overflowX = "auto";
+
     const popupRect = popupEl.getBoundingClientRect();
 
     // If we have a source element, anchor to it (this fixes "wrong position" issues)
