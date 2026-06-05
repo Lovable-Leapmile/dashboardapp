@@ -155,10 +155,9 @@ class CrossBrowserDateInput {
     this.params = params;
     this.eGui.className = "ag-input-wrapper ag-date-filter-input";
     this.eInput.className = "ag-input-field-input ag-text-field-input";
-    this.eInput.type = "text";
-    this.eInput.placeholder = "yyyy-mm-dd";
-    this.eInput.setAttribute("inputmode", "numeric");
+    this.eInput.type = "date";
     this.eInput.setAttribute("autocomplete", "off");
+    this.eInput.style.minWidth = "150px";
     this.eInput.addEventListener("input", this.onInput);
     this.eInput.addEventListener("change", this.onInput);
     this.eInput.addEventListener("focus", () => this.params?.onFocusIn?.());
