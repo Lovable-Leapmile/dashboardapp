@@ -163,7 +163,7 @@ const Reports = () => {
 
   // Order Tray Transaction columns (matching Python: Transaction Date, Order Id, Status, Tray ID, Station, Item Id, Item Order Qty, Order Ref Id)
   const orderTrayColumns: ColDef[] = [
-    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: (p) => p.value ?? "N/A" }),
+    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: dateValueFormatter }),
     { field: "order_id", headerName: "Order Id", flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" },
     { field: "status", headerName: "Status", flex: 0.8, minWidth: 100, valueFormatter: (p) => p.value ?? "N/A" },
     { field: "tray_id", headerName: "Tray ID", flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" },
