@@ -110,7 +110,13 @@ export const dateTimeFilterComparator = (filterDate: Date, cellValue: unknown): 
  */
 export const dateFilterParams = {
   comparator: dateFilterComparator,
-  browserDatePicker: true,
+  // Use AG Grid's text date input instead of each browser's native picker.
+  // Firefox/Safari/Chrome handle native date inputs differently, which can leave
+  // the Apply button disabled or make typed values invalid in some browsers.
+  browserDatePicker: false,
+  includeTime: false,
+  useIsoSeparator: true,
+  isValidDate: (value: unknown) => parseToDate(value) !== null,
   minValidYear: 2000,
   maxValidYear: 2100,
   inRangeFloatingFilterDateFormat: "dd/MM/yyyy",
@@ -186,11 +192,13 @@ export const postProcessAgGridPopup = (params: PostProcessPopupParams) => {
 
   // Let AG Grid do its initial placement first
   window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => {
     const popupEl = params.ePopup as HTMLElement | null;
     const sourceEl = params.eventSource as HTMLElement | null;
     if (!popupEl) return;
 
     const margin = 8;
+    popupEl.style.pointerEvents = "auto";
     popupEl.style.maxHeight = `calc(100vh - ${margin * 2}px)`;
     popupEl.style.overflowY = "auto";
     popupEl.style.maxWidth = `calc(100vw - ${margin * 2}px)`;
@@ -237,6 +245,7 @@ export const postProcessAgGridPopup = (params: PostProcessPopupParams) => {
     popupEl.style.right = "auto";
     popupEl.style.bottom = "auto";
     popupEl.style.transform = "none";
+    });
   });
 };
 
