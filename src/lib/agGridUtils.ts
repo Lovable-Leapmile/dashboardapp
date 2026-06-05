@@ -27,16 +27,19 @@ const parseToDate = (value: unknown): Date | null => {
     return isValid(d) ? d : null;
   }
 
+  // Normalize "yyyy-MM-dd HH:mm:ss" -> "yyyy-MM-ddTHH:mm:ss" for Firefox/Safari compatibility
+  const isoLike = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}/.test(raw) ? raw.replace(" ", "T") : raw;
+
   // ISO (most common)
   try {
-    const d = parseISO(raw);
+    const d = parseISO(isoLike);
     if (isValid(d)) return d;
   } catch {
     // ignore
   }
 
   // Native Date parsing (covers many cases like RFC2822)
-  const native = new Date(raw);
+  const native = new Date(isoLike);
   if (isValid(native)) return native;
 
   // Common API string formats
