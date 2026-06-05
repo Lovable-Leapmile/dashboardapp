@@ -602,6 +602,8 @@ const Reports = () => {
             let value = row[field];
             if (field === "has_item") {
               value = value ? "Yes" : "No";
+            } else if (field === "transaction_date" || field === "receive_date") {
+              value = value ? formatDateTime(value) : "";
             }
             return `"${value ?? "N/A"}"`;
           })
