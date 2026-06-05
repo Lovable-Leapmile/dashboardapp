@@ -256,7 +256,7 @@ const Reports = () => {
 
   // Order Failure Transaction columns (matching Python: Transaction Date, Order Ref ID, Activity, Item ID, Movement Type, Order Type, Item Order Qty, Message)
   const orderFailureColumns: ColDef[] = [
-    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: (p) => p.value ?? "N/A" }),
+    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: dateValueFormatter }),
     {
       field: "order_ref_id",
       headerName: "Order Ref ID",
