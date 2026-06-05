@@ -1,4 +1,4 @@
-import { ColDef, PostProcessPopupParams } from "ag-grid-community";
+import { ColDef, IDateParams, PostProcessPopupParams } from "ag-grid-community";
 import { format, isValid, parse, parseISO } from "date-fns";
 
 /**
@@ -44,10 +44,14 @@ const parseToDate = (value: unknown): Date | null => {
 
   // Common API string formats
   const candidates: Array<[string, boolean]> = [
+    ["yyyy-MM-dd", false],
     ["yyyy-MM-dd HH:mm:ss.SSS", false],
     ["yyyy-MM-dd HH:mm:ss", false],
     ["yyyy-MM-dd'T'HH:mm:ss.SSS", false],
     ["yyyy-MM-dd'T'HH:mm:ss", false],
+    ["d/M/yyyy", false],
+    ["dd/MM/yyyy", false],
+    ["d-M-yyyy", false],
     ["dd-MM-yyyy hh:mm:ss a", true],
     ["dd-MM-yyyy HH:mm:ss", false],
     ["dd-MM-yyyy", false],
@@ -142,6 +146,68 @@ export const formatDateTime12 = (value: unknown): string => {
   }
 };
 
+class CrossBrowserDateInput {
+  private params: IDateParams | null = null;
+  private readonly eGui = document.createElement("div");
+  private readonly eInput = document.createElement("input");
+
+  init(params: IDateParams) {
+    this.params = params;
+    this.eGui.className = "ag-input-wrapper ag-date-filter-input";
+    this.eInput.className = "ag-input-field-input ag-text-field-input";
+    this.eInput.type = "text";
+    this.eInput.placeholder = "yyyy-mm-dd";
+    this.eInput.setAttribute("inputmode", "numeric");
+    this.eInput.setAttribute("autocomplete", "off");
+    this.eInput.addEventListener("input", this.onInput);
+    this.eInput.addEventListener("change", this.onInput);
+    this.eInput.addEventListener("focus", () => this.params?.onFocusIn?.());
+    this.eGui.appendChild(this.eInput);
+  }
+
+  getGui() {
+    return this.eGui;
+  }
+
+  getDate() {
+    return parseToDate(this.eInput.value);
+  }
+
+  setDate(date: Date | null) {
+    this.eInput.value = date ? format(date, "yyyy-MM-dd") : "";
+  }
+
+  setDisabled(disabled: boolean) {
+    this.eInput.disabled = disabled;
+  }
+
+  setInputPlaceholder(placeholder: string) {
+    this.eInput.placeholder = placeholder || "yyyy-mm-dd";
+  }
+
+  setInputAriaLabel(label: string) {
+    this.eInput.setAttribute("aria-label", label);
+  }
+
+  afterGuiAttached() {
+    this.eInput.focus({ preventScroll: true });
+  }
+
+  refresh(params: IDateParams) {
+    this.params = params;
+  }
+
+  destroy() {
+    this.eInput.removeEventListener("input", this.onInput);
+    this.eInput.removeEventListener("change", this.onInput);
+  }
+
+  private onInput = () => {
+    this.eInput.setCustomValidity("");
+    this.params?.onDateChanged();
+  };
+}
+
 /**
  * Creates a date column definition with proper filtering
  */
@@ -151,6 +217,7 @@ export const createDateColumnDef = (field: string, headerName: string, options: 
   sortable: true,
   filter: "agDateColumnFilter",
   filterParams: dateFilterParams,
+  dateComponent: CrossBrowserDateInput,
   flex: 1.2,
   minWidth: 150,
   valueFormatter: (params) => formatDateTime12(params.value),
