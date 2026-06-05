@@ -83,9 +83,10 @@ const Reports = () => {
   };
 
   // Product Stock Report columns (matching Python: Transaction Date, Receive Date, Item Id, Stock, Tray ID, Tray Weight (kg), Item Description)
+  const dateValueFormatter = (p: any) => (p.value ? formatDateTime(p.value) : "N/A");
   const productStockColumns: ColDef[] = [
-    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: (p) => p.value ?? "N/A" }),
-    createDateColumnDef("receive_date", "Receive Date", { flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" }),
+    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: dateValueFormatter }),
+    createDateColumnDef("receive_date", "Receive Date", { flex: 1, minWidth: 120, valueFormatter: dateValueFormatter }),
     { field: "item_id", headerName: "Item Id", flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" },
     { field: "tray_divider", headerName: "Division", flex: 1, minWidth: 120, valueFormatter: (p) => p.value ?? "N/A" },
     { field: "stock", headerName: "Stock", flex: 0.7, minWidth: 80, valueFormatter: (p) => p.value ?? 0 },
