@@ -131,7 +131,7 @@ const Reports = () => {
 
   // Order Product Transaction columns (matching Python: Transaction Date, Activity Type, Order Id, User Id, User Name, User Phone, Tray ID, Item Id, Item Processed Qty)
   const orderProductColumns: ColDef[] = [
-    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: (p) => p.value ?? "N/A" }),
+    createDateColumnDef("transaction_date", "Transaction Date", { flex: 1, minWidth: 150, valueFormatter: dateValueFormatter }),
     {
       field: "activity_type",
       headerName: "Activity Type",
