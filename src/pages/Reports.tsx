@@ -463,7 +463,7 @@ const Reports = () => {
     const totalSlotsPerRack = robotNumSlots * robotNumRows * robotNumDepths;
 
     const results: any[] = [];
-    const currentDateTime = formatDateTime(new Date().toISOString());
+    const currentDateTime = new Date().toISOString();
 
     // Fetch slots for each rack
     for (let rack = 0; rack < totalRacks; rack++) {
