@@ -1,4 +1,4 @@
-import { ColDef, PostProcessPopupParams } from "ag-grid-community";
+import { ColDef, IDateParams, PostProcessPopupParams } from "ag-grid-community";
 import { format, isValid, parse, parseISO } from "date-fns";
 
 /**
@@ -44,10 +44,14 @@ const parseToDate = (value: unknown): Date | null => {
 
   // Common API string formats
   const candidates: Array<[string, boolean]> = [
+    ["yyyy-MM-dd", false],
     ["yyyy-MM-dd HH:mm:ss.SSS", false],
     ["yyyy-MM-dd HH:mm:ss", false],
     ["yyyy-MM-dd'T'HH:mm:ss.SSS", false],
     ["yyyy-MM-dd'T'HH:mm:ss", false],
+    ["d/M/yyyy", false],
+    ["dd/MM/yyyy", false],
+    ["d-M-yyyy", false],
     ["dd-MM-yyyy hh:mm:ss a", true],
     ["dd-MM-yyyy HH:mm:ss", false],
     ["dd-MM-yyyy", false],
@@ -110,7 +114,11 @@ export const dateTimeFilterComparator = (filterDate: Date, cellValue: unknown): 
  */
 export const dateFilterParams = {
   comparator: dateFilterComparator,
+  // Keep AG Grid's YYYY-MM-DD date input so Apply is enabled consistently in Firefox/Chrome/Safari.
   browserDatePicker: true,
+  includeTime: false,
+  useIsoSeparator: true,
+  isValidDate: (value: unknown) => parseToDate(value) !== null,
   minValidYear: 2000,
   maxValidYear: 2100,
   inRangeFloatingFilterDateFormat: "dd/MM/yyyy",
@@ -138,6 +146,68 @@ export const formatDateTime12 = (value: unknown): string => {
   }
 };
 
+class CrossBrowserDateInput {
+  private params: IDateParams | null = null;
+  private readonly eGui = document.createElement("div");
+  private readonly eInput = document.createElement("input");
+
+  init(params: IDateParams) {
+    this.params = params;
+    this.eGui.className = "ag-input-wrapper ag-date-filter-input";
+    this.eInput.className = "ag-input-field-input ag-text-field-input";
+    this.eInput.type = "text";
+    this.eInput.placeholder = "yyyy-mm-dd";
+    this.eInput.setAttribute("inputmode", "numeric");
+    this.eInput.setAttribute("autocomplete", "off");
+    this.eInput.addEventListener("input", this.onInput);
+    this.eInput.addEventListener("change", this.onInput);
+    this.eInput.addEventListener("focus", () => this.params?.onFocusIn?.());
+    this.eGui.appendChild(this.eInput);
+  }
+
+  getGui() {
+    return this.eGui;
+  }
+
+  getDate() {
+    return parseToDate(this.eInput.value);
+  }
+
+  setDate(date: Date | null) {
+    this.eInput.value = date ? format(date, "yyyy-MM-dd") : "";
+  }
+
+  setDisabled(disabled: boolean) {
+    this.eInput.disabled = disabled;
+  }
+
+  setInputPlaceholder(placeholder: string) {
+    this.eInput.placeholder = placeholder || "yyyy-mm-dd";
+  }
+
+  setInputAriaLabel(label: string) {
+    this.eInput.setAttribute("aria-label", label);
+  }
+
+  afterGuiAttached() {
+    this.eInput.focus({ preventScroll: true });
+  }
+
+  refresh(params: IDateParams) {
+    this.params = params;
+  }
+
+  destroy() {
+    this.eInput.removeEventListener("input", this.onInput);
+    this.eInput.removeEventListener("change", this.onInput);
+  }
+
+  private onInput = () => {
+    this.eInput.setCustomValidity("");
+    this.params?.onDateChanged();
+  };
+}
+
 /**
  * Creates a date column definition with proper filtering
  */
@@ -147,6 +217,7 @@ export const createDateColumnDef = (field: string, headerName: string, options: 
   sortable: true,
   filter: "agDateColumnFilter",
   filterParams: dateFilterParams,
+  dateComponent: CrossBrowserDateInput,
   flex: 1.2,
   minWidth: 150,
   valueFormatter: (params) => formatDateTime12(params.value),
@@ -186,21 +257,23 @@ export const postProcessAgGridPopup = (params: PostProcessPopupParams) => {
 
   // Let AG Grid do its initial placement first
   window.requestAnimationFrame(() => {
-    const popupEl = params.ePopup as HTMLElement | null;
-    const sourceEl = params.eventSource as HTMLElement | null;
-    if (!popupEl) return;
+    window.requestAnimationFrame(() => {
+      const popupEl = params.ePopup as HTMLElement | null;
+      const sourceEl = params.eventSource as HTMLElement | null;
+      if (!popupEl) return;
 
-    const margin = 8;
-    popupEl.style.maxHeight = `calc(100vh - ${margin * 2}px)`;
-    popupEl.style.overflowY = "auto";
-    popupEl.style.maxWidth = `calc(100vw - ${margin * 2}px)`;
-    popupEl.style.overflowX = "auto";
+      const margin = 8;
+      popupEl.style.pointerEvents = "auto";
+      popupEl.style.maxHeight = `calc(100vh - ${margin * 2}px)`;
+      popupEl.style.overflowY = "auto";
+      popupEl.style.maxWidth = `calc(100vw - ${margin * 2}px)`;
+      popupEl.style.overflowX = "auto";
 
-    const popupRect = popupEl.getBoundingClientRect();
+      const popupRect = popupEl.getBoundingClientRect();
 
-    // If we have a source element, anchor to it (this fixes "wrong position" issues)
-    if (sourceEl?.getBoundingClientRect) {
-      const sourceRect = sourceEl.getBoundingClientRect();
+      // If we have a source element, anchor to it (this fixes "wrong position" issues)
+      if (sourceEl?.getBoundingClientRect) {
+        const sourceRect = sourceEl.getBoundingClientRect();
 
       // Default: open below, left-aligned with the source
       let left = sourceRect.left;
@@ -225,18 +298,19 @@ export const postProcessAgGridPopup = (params: PostProcessPopupParams) => {
       popupEl.style.right = "auto";
       popupEl.style.bottom = "auto";
       popupEl.style.transform = "none";
-      return;
-    }
+        return;
+      }
 
-    // Fallback: just clamp current position into the viewport
-    const desiredLeft = clamp(popupRect.left, margin, window.innerWidth - popupRect.width - margin);
-    const desiredTop = clamp(popupRect.top, margin, window.innerHeight - popupRect.height - margin);
+      // Fallback: just clamp current position into the viewport
+      const desiredLeft = clamp(popupRect.left, margin, window.innerWidth - popupRect.width - margin);
+      const desiredTop = clamp(popupRect.top, margin, window.innerHeight - popupRect.height - margin);
 
     popupEl.style.left = `${desiredLeft + window.scrollX}px`;
     popupEl.style.top = `${desiredTop + window.scrollY}px`;
     popupEl.style.right = "auto";
     popupEl.style.bottom = "auto";
     popupEl.style.transform = "none";
+    });
   });
 };
 

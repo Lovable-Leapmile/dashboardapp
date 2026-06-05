@@ -257,7 +257,7 @@ All colors MUST be HSL.
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15) !important;
   min-width: 200px !important;
   max-width: 300px !important;
-  overflow: visible !important;
+  overflow: auto !important;
 }
 
 .ag-filter-wrapper {
@@ -272,6 +272,18 @@ All colors MUST be HSL.
 .ag-filter-apply-panel {
   padding: 8px 12px !important;
   border-top: 1px solid hsl(var(--border)) !important;
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 2 !important;
+  background-color: hsl(var(--background)) !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: 8px !important;
+  pointer-events: auto !important;
+}
+
+.ag-filter-apply-panel button {
+  pointer-events: auto !important;
 }
 
 .ag-filter-condition {
