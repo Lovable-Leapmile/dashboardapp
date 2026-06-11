@@ -34,13 +34,42 @@ const LoginForm = () => {
   const [cpNewPassword, setCpNewPassword] = useState("");
   const [cpConfirmPassword, setCpConfirmPassword] = useState("");
   const [cpLoading, setCpLoading] = useState(false);
-  const phoneInputRef = useRef<HTMLInputElement>(null);
+  const phoneInputRef = useRef<HTMLDivElement>(null);
+  const passwordInputRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   const dynamicLogo = useLoginLogo();
   const logo = dynamicLogo || defaultLogo;
 
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_\-+=/\\[\];'`~]).{6,}$/;
+
+  const placeCaretAtEnd = (element: HTMLDivElement) => {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  };
+
+  const updateEditableText = (element: HTMLDivElement, value: string) => {
+    if (element.textContent !== value) {
+      element.textContent = value;
+      placeCaretAtEnd(element);
+    }
+  };
+
+  const handleMobileInput = (element: HTMLDivElement) => {
+    const value = (element.textContent || "").replace(/\D/g, "").slice(0, 10);
+    updateEditableText(element, value);
+    setMobileNumber(value);
+  };
+
+  const handlePasswordInput = (element: HTMLDivElement) => {
+    const value = (element.textContent || "").replace(/[\r\n]/g, "").slice(0, 10);
+    updateEditableText(element, value);
+    setPassword(value);
+  };
 
   const resetChangePasswordForm = () => {
     setCpPhone("");
@@ -168,6 +197,16 @@ const LoginForm = () => {
       return;
     }
 
+    if (!password) {
+      toast({
+        title: "Password Required",
+        description: "Please enter your password",
+        variant: "destructive",
+      });
+      passwordInputRef.current?.focus();
+      return;
+    }
+
     setIsLoading(true);
     
     try {
@@ -261,89 +300,69 @@ const LoginForm = () => {
         </div>
 
         {/* Form */}
-        <form
+          <form
           onSubmit={handleLogin}
           className="px-6 md:px-8 pb-6 space-y-5"
           autoComplete="off"
           {...({ "data-form-type": "other", "data-lpignore": "true" } as any)}
         >
-          {/* Dummy fields to trick browsers (Chrome/Edge) into not autofilling real fields */}
-          <input
-            type="text"
-            name="username"
-            autoComplete="username"
-            style={{ display: "none" }}
-            tabIndex={-1}
-            aria-hidden="true"
-          />
-          <input
-            type="password"
-            name="password"
-            autoComplete="new-password"
-            style={{ display: "none" }}
-            tabIndex={-1}
-            aria-hidden="true"
-          />
           {/* Mobile Number Field */}
           <div className="space-y-2">
-            <Label htmlFor="mobile" className="text-sm font-semibold text-gray-700">
+            <Label className="text-sm font-semibold text-gray-700">
               Enter Mobile Number
             </Label>
-            <Input
+            <div
               ref={phoneInputRef}
-              id="mobile"
-              name={`mobile_${Math.random().toString(36).slice(2)}`}
-              type="tel"
-              value={mobileNumber}
-              onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, '');
-                if (value.length <= 10) {
-                  setMobileNumber(value);
-                }
+              role="textbox"
+              inputMode="numeric"
+              contentEditable
+              suppressContentEditableWarning
+              onInput={(e) => handleMobileInput(e.currentTarget)}
+              onPaste={(e) => {
+                e.preventDefault();
+                const text = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 10);
+                document.execCommand("insertText", false, text);
+                handleMobileInput(e.currentTarget);
               }}
-              className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base"
-              placeholder="Enter your mobile number"
-              autoComplete="one-time-code"
-              autoCorrect="off"
-              autoCapitalize="none"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") e.preventDefault();
+              }}
+              className="w-full min-h-14 rounded-xl border-2 border-gray-200 bg-background px-4 py-4 text-base text-gray-700 transition-all focus:border-primary focus:outline-none empty:before:text-gray-500 empty:before:content-[attr(data-placeholder)]"
+              data-placeholder="Enter your mobile number"
+              aria-label="Enter Mobile Number"
               spellCheck={false}
-              {...({ "data-form-type": "other", "data-lpignore": "true", "data-1p-ignore": "true" } as any)}
-              minLength={10}
-              maxLength={10}
-              required
             />
           </div>
 
           {/* Password Field */}
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-sm font-semibold text-gray-700">
+            <Label className="text-sm font-semibold text-gray-700">
               Password
             </Label>
             <div className="relative">
-              <Input
-                id="password"
-                name={`password_${Math.random().toString(36).slice(2)}`}
-                type="text"
-                value={password}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  if (value.length <= 10) {
-                    setPassword(value);
-                  }
+              <div
+                ref={passwordInputRef}
+                role="textbox"
+                contentEditable
+                suppressContentEditableWarning
+                onInput={(e) => handlePasswordInput(e.currentTarget)}
+                onPaste={(e) => {
+                  e.preventDefault();
+                  const text = e.clipboardData.getData("text").replace(/[\r\n]/g, "").slice(0, 10);
+                  document.execCommand("insertText", false, text);
+                  handlePasswordInput(e.currentTarget);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") e.preventDefault();
                 }}
                 style={{
-                  WebkitTextSecurity: showPassword ? "none" : "disc",
-                  textSecurity: showPassword ? "none" : "disc",
+                  WebkitTextSecurity: password && !showPassword ? "disc" : "none",
+                  textSecurity: password && !showPassword ? "disc" : "none",
                 } as React.CSSProperties}
-                className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base pr-12"
-                placeholder="Enter your password"
-                autoComplete="off"
-                autoCorrect="off"
-                autoCapitalize="none"
+                className="w-full min-h-14 rounded-xl border-2 border-gray-200 bg-background px-4 py-4 pr-12 text-base text-gray-700 transition-all focus:border-primary focus:outline-none empty:before:text-gray-500 empty:before:content-[attr(data-placeholder)]"
+                data-placeholder="Enter your password"
+                aria-label="Password"
                 spellCheck={false}
-                {...({ "data-form-type": "other", "data-lpignore": "true", "data-1p-ignore": "true", "data-bwignore": "true" } as any)}
-                maxLength={10}
-                required
               />
               <button
                 type="button"
