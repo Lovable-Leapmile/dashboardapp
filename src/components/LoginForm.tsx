@@ -356,8 +356,8 @@ const LoginForm = () => {
                   if (e.key === "Enter") e.preventDefault();
                 }}
                 style={{
-                  WebkitTextSecurity: showPassword ? "none" : "disc",
-                  textSecurity: showPassword ? "none" : "disc",
+                  WebkitTextSecurity: password && !showPassword ? "disc" : "none",
+                  textSecurity: password && !showPassword ? "disc" : "none",
                 } as React.CSSProperties}
                 className="w-full min-h-14 rounded-xl border-2 border-gray-200 bg-background px-4 py-4 pr-12 text-base text-gray-700 transition-all focus:border-primary focus:outline-none empty:before:text-gray-500 empty:before:content-[attr(data-placeholder)]"
                 data-placeholder="Enter your password"
