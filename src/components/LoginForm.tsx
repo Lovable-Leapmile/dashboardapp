@@ -323,7 +323,7 @@ const LoginForm = () => {
               <Input
                 id="password"
                 name={`password_${Math.random().toString(36).slice(2)}`}
-                type={showPassword ? "text" : "password"}
+                type="text"
                 value={password}
                 onChange={(e) => {
                   const value = e.target.value;
@@ -331,13 +331,17 @@ const LoginForm = () => {
                     setPassword(value);
                   }
                 }}
+                style={{
+                  WebkitTextSecurity: showPassword ? "none" : "disc",
+                  textSecurity: showPassword ? "none" : "disc",
+                } as React.CSSProperties}
                 className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base pr-12"
                 placeholder="Enter your password"
-                autoComplete="new-password"
+                autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="none"
                 spellCheck={false}
-                {...({ "data-form-type": "other", "data-lpignore": "true", "data-1p-ignore": "true" } as any)}
+                {...({ "data-form-type": "other", "data-lpignore": "true", "data-1p-ignore": "true", "data-bwignore": "true" } as any)}
                 maxLength={10}
                 required
               />
