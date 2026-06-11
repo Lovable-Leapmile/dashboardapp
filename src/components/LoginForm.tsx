@@ -34,13 +34,42 @@ const LoginForm = () => {
   const [cpNewPassword, setCpNewPassword] = useState("");
   const [cpConfirmPassword, setCpConfirmPassword] = useState("");
   const [cpLoading, setCpLoading] = useState(false);
-  const phoneInputRef = useRef<HTMLInputElement>(null);
+  const phoneInputRef = useRef<HTMLDivElement>(null);
+  const passwordInputRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   const dynamicLogo = useLoginLogo();
   const logo = dynamicLogo || defaultLogo;
 
   const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_\-+=/\\[\];'`~]).{6,}$/;
+
+  const placeCaretAtEnd = (element: HTMLDivElement) => {
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection?.removeAllRanges();
+    selection?.addRange(range);
+  };
+
+  const updateEditableText = (element: HTMLDivElement, value: string) => {
+    if (element.textContent !== value) {
+      element.textContent = value;
+      placeCaretAtEnd(element);
+    }
+  };
+
+  const handleMobileInput = (element: HTMLDivElement) => {
+    const value = (element.textContent || "").replace(/\D/g, "").slice(0, 10);
+    updateEditableText(element, value);
+    setMobileNumber(value);
+  };
+
+  const handlePasswordInput = (element: HTMLDivElement) => {
+    const value = (element.textContent || "").replace(/[\r\n]/g, "").slice(0, 10);
+    updateEditableText(element, value);
+    setPassword(value);
+  };
 
   const resetChangePasswordForm = () => {
     setCpPhone("");
@@ -165,6 +194,16 @@ const LoginForm = () => {
         variant: "destructive",
       });
       phoneInputRef.current?.focus();
+      return;
+    }
+
+    if (!password) {
+      toast({
+        title: "Password Required",
+        description: "Please enter your password",
+        variant: "destructive",
+      });
+      passwordInputRef.current?.focus();
       return;
     }
 
