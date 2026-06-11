@@ -261,7 +261,29 @@ const LoginForm = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleLogin} className="px-6 md:px-8 pb-6 space-y-5">
+        <form
+          onSubmit={handleLogin}
+          className="px-6 md:px-8 pb-6 space-y-5"
+          autoComplete="off"
+          {...({ "data-form-type": "other", "data-lpignore": "true" } as any)}
+        >
+          {/* Dummy fields to trick browsers (Chrome/Edge) into not autofilling real fields */}
+          <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            style={{ display: "none" }}
+            tabIndex={-1}
+            aria-hidden="true"
+          />
+          <input
+            type="password"
+            name="password"
+            autoComplete="new-password"
+            style={{ display: "none" }}
+            tabIndex={-1}
+            aria-hidden="true"
+          />
           {/* Mobile Number Field */}
           <div className="space-y-2">
             <Label htmlFor="mobile" className="text-sm font-semibold text-gray-700">
