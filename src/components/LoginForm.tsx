@@ -292,6 +292,7 @@ const LoginForm = () => {
             <Input
               ref={phoneInputRef}
               id="mobile"
+              name={`mobile_${Math.random().toString(36).slice(2)}`}
               type="tel"
               value={mobileNumber}
               onChange={(e) => {
@@ -302,9 +303,11 @@ const LoginForm = () => {
               }}
               className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base"
               placeholder="Enter your mobile number"
-              autoComplete="off"
+              autoComplete="one-time-code"
               autoCorrect="off"
               autoCapitalize="none"
+              spellCheck={false}
+              {...({ "data-form-type": "other", "data-lpignore": "true", "data-1p-ignore": "true" } as any)}
               minLength={10}
               maxLength={10}
               required
