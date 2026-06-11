@@ -280,6 +280,9 @@ const LoginForm = () => {
               }}
               className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base"
               placeholder="Enter your mobile number"
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="none"
               minLength={10}
               maxLength={10}
               required
@@ -303,7 +306,8 @@ const LoginForm = () => {
                   }
                 }}
                 className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base pr-12"
-                placeholder="Enter your password"
+              placeholder="Enter your password"
+              autoComplete="off"
                 maxLength={10}
                 required
               />
