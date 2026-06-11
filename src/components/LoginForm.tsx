@@ -261,7 +261,29 @@ const LoginForm = () => {
         </div>
 
         {/* Form */}
-        <form onSubmit={handleLogin} className="px-6 md:px-8 pb-6 space-y-5">
+        <form
+          onSubmit={handleLogin}
+          className="px-6 md:px-8 pb-6 space-y-5"
+          autoComplete="off"
+          {...({ "data-form-type": "other", "data-lpignore": "true" } as any)}
+        >
+          {/* Dummy fields to trick browsers (Chrome/Edge) into not autofilling real fields */}
+          <input
+            type="text"
+            name="username"
+            autoComplete="username"
+            style={{ display: "none" }}
+            tabIndex={-1}
+            aria-hidden="true"
+          />
+          <input
+            type="password"
+            name="password"
+            autoComplete="new-password"
+            style={{ display: "none" }}
+            tabIndex={-1}
+            aria-hidden="true"
+          />
           {/* Mobile Number Field */}
           <div className="space-y-2">
             <Label htmlFor="mobile" className="text-sm font-semibold text-gray-700">
@@ -270,6 +292,7 @@ const LoginForm = () => {
             <Input
               ref={phoneInputRef}
               id="mobile"
+              name={`mobile_${Math.random().toString(36).slice(2)}`}
               type="tel"
               value={mobileNumber}
               onChange={(e) => {
@@ -280,9 +303,11 @@ const LoginForm = () => {
               }}
               className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base"
               placeholder="Enter your mobile number"
-              autoComplete="off"
+              autoComplete="one-time-code"
               autoCorrect="off"
               autoCapitalize="none"
+              spellCheck={false}
+              {...({ "data-form-type": "other", "data-lpignore": "true", "data-1p-ignore": "true" } as any)}
               minLength={10}
               maxLength={10}
               required
@@ -297,6 +322,7 @@ const LoginForm = () => {
             <div className="relative">
               <Input
                 id="password"
+                name={`password_${Math.random().toString(36).slice(2)}`}
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => {
@@ -306,8 +332,12 @@ const LoginForm = () => {
                   }
                 }}
                 className="w-full rounded-xl border-2 border-gray-200 focus:border-primary focus-visible:ring-0 focus-visible:ring-offset-0 transition-all py-6 text-base pr-12"
-              placeholder="Enter your password"
-              autoComplete="off"
+                placeholder="Enter your password"
+                autoComplete="new-password"
+                autoCorrect="off"
+                autoCapitalize="none"
+                spellCheck={false}
+                {...({ "data-form-type": "other", "data-lpignore": "true", "data-1p-ignore": "true" } as any)}
                 maxLength={10}
                 required
               />
